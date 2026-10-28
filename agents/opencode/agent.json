@@ -1,0 +1,55 @@
+{
+  "id": "opencode",
+  "label": "OpenCode",
+  "version": "2.0.0",
+  "pinnedCli": "1.18.29",
+  "verify": "Command templates and the JSON event mapping were written for opencode-ai 1.18.29; verify them when changing pinnedCli. 'opencode models' is parsed as one provider/model per line (OpenCodeAdapter.toModel); the models below are the fallback when it cannot be run. '--auto' is required: without it 'opencode run' answers every permission request with 'reject' (the default ruleset asks for any path outside the working directory, and for reading .env files), and the tool call fails with 'The user rejected permission to use this specific tool call'. The container is the permission boundary here, as it is for Claude Code's '--permission-mode bypassPermissions'. 'skillsDir' is the global skill location of this version, verified with 'opencode debug skill' against 1.18.29: it scans '{skill,skills}/**/SKILL.md' under $XDG_CONFIG_HOME/opencode, which is why the path starts with 'config/'.",
+  "requires": ["node22"],
+  "configDir": "/home/agent/.opencode-state",
+  "skillsDir": "config/opencode/skills",
+  "instructionFile": null,
+  "auth": { "modes": ["subscription", "api-key"], "default": "subscription" },
+  "egress": [
+    "api.anthropic.com",
+    "claude.ai",
+    "console.anthropic.com",
+    "models.opencode.ai",
+    "opencode.ai",
+    "models.dev",
+    "openrouter.ai",
+    { "host": "api.openai.com", "optional": true },
+    { "host": "generativelanguage.googleapis.com", "optional": true }
+  ],
+  "capabilities": { "streaming": true, "reasoning": false, "models": true, "usage": false, "attachments": ["image/png", "image/jpeg"], "resume": true },
+  "localModels": {
+    "provider": "lmstudio",
+    "configFile": "config/opencode/opencode.json",
+    "defaultBaseUrl": "http://host.containers.internal:1234/v1",
+    "apiKeyEnv": "LMSTUDIO_API_KEY"
+  },
+  "env": {
+    "XDG_CONFIG_HOME": "/home/agent/.opencode-state/config",
+    "XDG_DATA_HOME": "/home/agent/.opencode-state/data",
+    "XDG_STATE_HOME": "/home/agent/.opencode-state/state",
+    "XDG_CACHE_HOME": "/home/agent/.opencode-state/cache",
+    "OPENCODE_DISABLE_AUTOUPDATE": "1"
+  },
+  "models": [
+    { "id": "anthropic/claude-sonnet-4-5", "label": "Claude Sonnet 4.5 (Anthropic)", "default": true },
+    { "id": "anthropic/claude-opus-4-1", "label": "Claude Opus 4.1 (Anthropic)", "default": false }
+  ],
+  "commands": {
+    "ask": ["opencode", "run", "--format", "json", "--auto", "{model:--model}", "{session:|--session}"],
+    "suggest": ["opencode", "run", "--format", "json", "--auto", "{model:--model}"],
+    "models": ["opencode", "models"],
+    "login": {
+      "subscription": ["opencode", "auth", "login"],
+      "api-key": ["opencode", "auth", "login"]
+    },
+    "logout": ["opencode", "auth", "logout"]
+  },
+  "authFiles": {
+    "subscription": "data/opencode/auth.json",
+    "api-key": "data/opencode/auth.json"
+  }
+}

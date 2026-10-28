@@ -1,0 +1,6 @@
+{"type":"session.created","properties":{"info":{"id":"ses_01HZX","title":"Fix login"}}}
+{"type":"message.part.updated","properties":{"part":{"id":"prt_1","sessionID":"ses_01HZX","messageID":"msg_1","type":"text","text":"Looking at the code."}}}
+{"type":"message.part.updated","properties":{"part":{"id":"prt_2","sessionID":"ses_01HZX","messageID":"msg_1","type":"tool","tool":"bash","callID":"call_1","state":{"status":"running","input":{"command":"ls"}}}}}
+{"type":"message.part.updated","properties":{"part":{"id":"prt_2","sessionID":"ses_01HZX","messageID":"msg_1","type":"tool","tool":"bash","callID":"call_1","state":{"status":"completed","input":{"command":"ls"},"output":"README.md"}}}}
+{"type":"message.part.updated","properties":{"part":{"id":"prt_3","sessionID":"ses_01HZX","messageID":"msg_1","type":"text","text":" Done."}}}
+{"type":"message.updated","properties":{"info":{"id":"msg_1","sessionID":"ses_01HZX","role":"assistant","tokens":{"input":50,"output":30,"reasoning":0,"cache":{"read":5,"write":0}},"cost":0.002,"finish":"stop"}}}

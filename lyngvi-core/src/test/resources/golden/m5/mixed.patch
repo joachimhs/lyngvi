@@ -1,0 +1,65 @@
+diff --git a/src/auth.ts b/src/auth.ts
+index 1111111..2222222 100644
+--- a/src/auth.ts
++++ b/src/auth.ts
+@@ -1,3 +1,4 @@
+ export function login() {
+-  return false;
++  return true;
++  // fixed
+ }
+diff --git a/bin/run.sh b/bin/run.sh
+new file mode 100755
+index 0000000..3333333
+--- /dev/null
++++ b/bin/run.sh
+@@ -0,0 +1,2 @@
++#!/bin/sh
++echo run
+diff --git a/link b/link
+new file mode 120000
+index 0000000..4444444
+--- /dev/null
++++ b/link
+@@ -0,0 +1 @@
++/etc/passwd
+\ No newline at end of file
+diff --git a/img.png b/img.png
+new file mode 100644
+index 0000000..5555555
+Binary files /dev/null and b/img.png differ
+diff --git a/../secrets b/../secrets
+new file mode 100644
+index 0000000..6666666
+--- /dev/null
++++ b/../secrets
+@@ -0,0 +1 @@
++oops
+diff --git a/.git/hooks/pre-commit b/.git/hooks/pre-commit
+new file mode 100755
+index 0000000..7777777
+--- /dev/null
++++ b/.git/hooks/pre-commit
+@@ -0,0 +1 @@
++#!/bin/sh
+diff --git a//etc/motd b//etc/motd
+new file mode 100644
+index 0000000..8888888
+--- /dev/null
++++ b//etc/motd
+@@ -0,0 +1 @@
++hi
+diff --git a/old.txt b/new.txt
+similarity index 100%
+rename from old.txt
+rename to new.txt
+diff --git a/gone.txt b/gone.txt
+deleted file mode 100644
+index 9999999..0000000
+--- a/gone.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-bye
+diff --git a/tool b/tool
+old mode 100644
+new mode 100755

@@ -1,0 +1,56 @@
+# Known exfiltration and tunnelling endpoints. Evaluated before the allowlist.
+# One domain per line; a leading dot matches the domain and all subdomains.
+
+# -- Webhook and request-capture services --
+.webhook.site
+.pipedream.com
+.requestbin.com
+.requestbin.net
+.hookbin.com
+.beeceptor.com
+.requestcatcher.com
+
+# -- Paste sites --
+.pastebin.com
+.paste.ee
+.hastebin.com
+.dpaste.org
+.pastie.org
+.ghostbin.com
+.rentry.co
+.paste.mozilla.org
+
+# -- File sharing --
+.transfer.sh
+.file.io
+.0x0.st
+.catbox.moe
+.temp.sh
+.filedrop.io
+.gofile.io
+.tempsend.com
+.sendgb.com
+
+# -- Tunnels and reverse shells --
+.ngrok.io
+.ngrok-free.app
+.localtunnel.me
+.serveo.net
+.localhost.run
+.bore.digital
+.telebit.cloud
+.loca.lt
+
+# -- IP reconnaissance --
+.ipinfo.io
+.ifconfig.me
+.checkip.amazonaws.com
+.icanhazip.com
+.ipify.org
+.wtfismyip.com
+.ipecho.net
+.myexternalip.com
+
+# -- Messaging used as C2 (aggressive; add to profile blockExtra if wanted) --
+# .discord.com
+# .api.telegram.org

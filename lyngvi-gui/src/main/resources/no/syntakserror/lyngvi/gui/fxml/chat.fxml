@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import no.syntakserror.lyngvi.gui.view.Icon?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="no.syntakserror.lyngvi.gui.view.ChatController" styleClass="chat-root">
+  <left>
+    <!--
+      The list and the handle that sets its width: the handle is a child of the left region, not the border between
+      the regions, so dragging it changes the list's pref width and the transcript takes the rest. A pref width in
+      pixels keeps the list as wide as the user left it when the window is resized.
+    -->
+    <HBox fx:id="sidebarBox">
+      <VBox fx:id="sidebar" spacing="6" styleClass="chat-sidebar" prefWidth="240">
+        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+        <Button fx:id="newConversationButton" text="%gui.chat.new" onAction="#onNewConversation" styleClass="primary" maxWidth="Infinity">
+          <graphic><Icon fx:value="plus"/></graphic>
+        </Button>
+        <TextField fx:id="conversationFilter" promptText="%gui.chat.search" styleClass="conv-search"/>
+        <ListView fx:id="conversationList" VBox.vgrow="ALWAYS" styleClass="conversation-list"/>
+      </VBox>
+      <Region fx:id="sidebarResizer" styleClass="sidebar-resizer"/>
+    </HBox>
+  </left>
+  <center>
+    <VBox spacing="0">
+      <HBox spacing="10" alignment="CENTER_LEFT" styleClass="chat-header">
+        <padding><Insets top="8" right="12" bottom="8" left="14"/></padding>
+        <Label fx:id="sessionTitleLabel" text="" styleClass="section-title"/>
+        <Label fx:id="containerStateLabel" text="" styleClass="section-help"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="contextLabel" text="" styleClass="context-label"/>
+        <Label fx:id="costLabel" text="" styleClass="context-label"/>
+        <!--
+          «Ask the agent» hides the conversation list, and with it the button that starts a conversation: this is
+          that button for the ephemeral tab, where it throws the question on screen away and clears the composer.
+        -->
+        <Button fx:id="newQuestionButton" text="%gui.ask.new" onAction="#onNewConversation" visible="false" managed="false">
+          <graphic><Icon fx:value="plus"/></graphic>
+        </Button>
+      </HBox>
+      <StackPane VBox.vgrow="ALWAYS">
+        <ScrollPane fx:id="transcriptScroll" fitToWidth="true" styleClass="transcript-scroll">
+          <!--
+            The selection highlight is drawn on a pane over the transcript: same coordinates, scrolled and clipped
+            with it, and mouse-transparent, so the text underneath still takes every click.
+          -->
+          <StackPane alignment="TOP_LEFT">
+            <VBox fx:id="transcriptBox" spacing="6" styleClass="transcript">
+              <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+            </VBox>
+            <Pane fx:id="transcriptHighlight" mouseTransparent="true"/>
+          </StackPane>
+        </ScrollPane>
+        <Button fx:id="scrollToBottomButton" onAction="#onScrollToBottom" styleClass="scroll-to-bottom-button"
+                StackPane.alignment="BOTTOM_RIGHT" visible="false">
+          <graphic><Icon fx:value="arrow-down"/></graphic>
+        </Button>
+        <!--
+          While a conversation is being created: a card over the transcript, shown a second into the wait, because
+          a clone and a copy per repository take anything from a moment to the better part of a minute and nothing
+          else on screen says so. The pane around the card has no background of its own, so it takes no clicks.
+        -->
+        <StackPane fx:id="creatingOverlay" visible="false" managed="false">
+          <VBox alignment="CENTER" spacing="8" styleClass="creating-card" maxWidth="-Infinity" maxHeight="-Infinity">
+            <padding><Insets top="22" right="28" bottom="22" left="28"/></padding>
+            <ProgressIndicator prefWidth="38" prefHeight="38" styleClass="creating-spinner"/>
+            <Label text="%gui.chat.creating" styleClass="creating-title"/>
+            <Label fx:id="creatingDetail" text="" wrapText="true" maxWidth="360" textAlignment="CENTER" styleClass="creating-detail"/>
+            <Label fx:id="creatingElapsed" text="" styleClass="creating-elapsed"/>
+          </VBox>
+        </StackPane>
+      </StackPane>
+      <!--
+        What is waiting for delivery, right above the composer: the button used to sit in the header without saying
+        what it would deliver. Hidden for conversations without repositories, and in ephemeral mode.
+      -->
+      <HBox fx:id="changesStrip" spacing="10" alignment="CENTER_LEFT" styleClass="changes-strip" visible="false" managed="false">
+        <padding><Insets top="6" right="12" bottom="6" left="14"/></padding>
+        <Icon fx:value="upload"/>
+        <Label fx:id="changesLabel" text="" styleClass="changes-label"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <!--
+          The way out that depends on nothing else (spec §5.9): never disabled by what a review found, because
+          a review that finds nothing — or fails — is one of the reasons to reach for it.
+        -->
+        <Button fx:id="exportButton" text="%gui.chat.export" onAction="#onExportZip">
+          <graphic><Icon fx:value="package"/></graphic>
+          <tooltip><Tooltip text="%gui.chat.export.tooltip"/></tooltip>
+        </Button>
+        <Button fx:id="showDiffButton" text="%gui.chat.diff" onAction="#onShowDiff">
+          <graphic><Icon fx:value="diff"/></graphic>
+        </Button>
+        <Button fx:id="deliverButton" text="%gui.chat.deliver" onAction="#onDeliver" styleClass="primary">
+          <graphic><Icon fx:value="upload"/></graphic>
+          <tooltip><Tooltip text="%gui.chat.deliver.tooltip"/></tooltip>
+        </Button>
+      </HBox>
+      <VBox fx:id="composerBox" spacing="8" styleClass="composer">
+        <padding><Insets top="10" right="12" bottom="12" left="12"/></padding>
+        <HBox fx:id="attachmentBar" spacing="6"/>
+        <HBox spacing="8" alignment="CENTER_LEFT">
+          <ProgressIndicator fx:id="busyIndicator" prefWidth="16" prefHeight="16" visible="false" managed="false"/>
+          <Label fx:id="busyLabel" text="%gui.chat.working" visible="false" managed="false" styleClass="busy-label"/>
+          <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+        <TextArea fx:id="input" promptText="%gui.chat.input.prompt" prefRowCount="3" wrapText="true"/>
+        <HBox spacing="8" alignment="CENTER_LEFT">
+          <Button fx:id="attachButton" onAction="#onAttach" styleClass="icon-button">
+            <graphic><Icon fx:value="paperclip"/></graphic>
+            <tooltip><Tooltip text="%gui.chat.attach.tooltip"/></tooltip>
+          </Button>
+          <!--
+            Who answers, and with which model. The agent is shown only in «Ask the agent»: a conversation in the
+            chat is tied to the agent it was made with, while a question here picks one every time it is asked.
+          -->
+          <ComboBox fx:id="agentSelector" prefWidth="220" visible="false" managed="false">
+            <tooltip><Tooltip text="%gui.session.new.agent"/></tooltip>
+          </ComboBox>
+          <ComboBox fx:id="modelSelector" promptText="%gui.session.new.model.auto" prefWidth="220"/>
+          <Button fx:id="favouriteButton" onAction="#onToggleFavourite" styleClass="icon-button">
+            <graphic><Icon fx:value="star"/></graphic>
+            <tooltip><Tooltip text="%gui.model.star"/></tooltip>
+          </Button>
+          <Button fx:id="browseModelsButton" onAction="#onBrowseModels" styleClass="icon-button">
+            <graphic><Icon fx:value="search"/></graphic>
+            <tooltip><Tooltip text="%gui.model.picker.open"/></tooltip>
+          </Button>
+          <Region HBox.hgrow="ALWAYS"/>
+          <Button fx:id="stopButton" text="%gui.chat.stop" onAction="#onStop" styleClass="danger" visible="false" managed="false">
+            <graphic><Icon fx:value="stop"/></graphic>
+          </Button>
+          <Button fx:id="sendButton" text="%gui.chat.send" onAction="#onSend" styleClass="primary">
+            <graphic><Icon fx:value="send"/></graphic>
+            <tooltip><Tooltip text="%gui.chat.send.tooltip"/></tooltip>
+          </Button>
+        </HBox>
+      </VBox>
+    </VBox>
+  </center>
+</BorderPane>

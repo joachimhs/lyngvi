@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>no.syntakserror.lyngvi</groupId>
+    <artifactId>lyngvi-parent</artifactId>
+    <version>2.0.0</version>
+  </parent>
+
+  <artifactId>lyngvi-core</artifactId>
+  <name>lyngvi-core</name>
+  <description>Core: configuration, sessions, delivery, rendering, adapters. No UI.</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>no.syntakserror.lyngvi</groupId>
+      <artifactId>lyngvi-gateway-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <!-- Build-time only: the shaded gateway runtime and the reference plugin jars are copied into the bundle. -->
+    <dependency>
+      <groupId>no.syntakserror.lyngvi</groupId>
+      <artifactId>lyngvi-gateway</artifactId>
+      <classifier>all</classifier>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>no.syntakserror.lyngvi</groupId>
+      <artifactId>lyngvi-gateway-plugins</artifactId>
+      <classifier>confluence</classifier>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>no.syntakserror.lyngvi</groupId>
+      <artifactId>lyngvi-gateway-plugins</artifactId>
+      <classifier>jira</classifier>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- gateway/gateway.jar and gateway/plugins/*.jar in the bundle come from the gateway modules' build output. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>bundle-gateway</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>no.syntakserror.lyngvi</groupId>
+                  <artifactId>lyngvi-gateway</artifactId>
+                  <classifier>all</classifier>
+                  <outputDirectory>${project.build.outputDirectory}/bundle/gateway</outputDirectory>
+                  <destFileName>gateway.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>no.syntakserror.lyngvi</groupId>
+                  <artifactId>lyngvi-gateway-plugins</artifactId>
+                  <classifier>confluence</classifier>
+                  <outputDirectory>${project.build.outputDirectory}/bundle/gateway/plugins</outputDirectory>
+                  <destFileName>confluence.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>no.syntakserror.lyngvi</groupId>
+                  <artifactId>lyngvi-gateway-plugins</artifactId>
+                  <classifier>jira</classifier>
+                  <outputDirectory>${project.build.outputDirectory}/bundle/gateway/plugins</outputDirectory>
+                  <destFileName>jira.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+              <overWriteReleases>true</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Publish test doubles (FakeRunner) for the other modules' tests. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <!-- The single source of truth for the product version is the root VERSION file. -->
+      <resource>
+        <directory>${project.basedir}/..</directory>
+        <includes>
+          <include>VERSION</include>
+        </includes>
+      </resource>
+      <!-- Files that 'init' writes into a sandbox directory; bundle/index.txt lists them. -->
+      <resource>
+        <directory>${project.basedir}/..</directory>
+        <targetPath>bundle</targetPath>
+        <includes>
+          <include>agents/**</include>
+          <include>gateway/**</include>
+          <include>image/**</include>
+          <include>profiles/**</include>
+          <include>proxy/**</include>
+          <include>scripts/**</include>
+          <include>setup.sh</include>
+          <include>templates/**</include>
+        </includes>
+        <!-- The includes are directories, so whatever the developer's desktop leaves in them would be
+             shipped in the jar and written into every sandbox. These are the ones .gitignore names. -->
+        <excludes>
+          <exclude>**/.DS_Store</exclude>
+          <exclude>**/*.iml</exclude>
+          <exclude>**/.idea/**</exclude>
+          <exclude>**/.vscode/**</exclude>
+        </excludes>
+      </resource>
+    </resources>
+  </build>
+</project>

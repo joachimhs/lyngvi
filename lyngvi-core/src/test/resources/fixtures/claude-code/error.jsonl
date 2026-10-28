@@ -1,0 +1,2 @@
+{"type":"system","subtype":"init","cwd":"/work","session_id":"err-1","model":"claude-sonnet-4-5-20250929"}
+{"type":"result","subtype":"error_max_turns","is_error":true,"duration_ms":10,"num_turns":50,"session_id":"err-1","total_cost_usd":1.5,"usage":{"input_tokens":1,"output_tokens":1}}

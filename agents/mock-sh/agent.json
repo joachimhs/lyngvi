@@ -1,0 +1,12 @@
+{
+  "id": "mock-sh",
+  "label": "Mock agent (shell adapter)",
+  "version": "1.0.0",
+  "configDir": null,
+  "needsContainer": false,
+  "instructionFile": null,
+  "auth": { "modes": ["none"], "default": "none" },
+  "egress": [],
+  "capabilities": { "streaming": true, "reasoning": false, "models": true, "usage": true, "attachments": [], "resume": true },
+  "env": {}
+}

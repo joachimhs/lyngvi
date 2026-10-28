@@ -1,0 +1,9 @@
+{
+  "ip_suffix": 10,
+  "adapters": [
+    { "id": "confluence", "label": "Confluence Wiki", "icon": "🔵", "hostname": "wiki.example.test", "hostAliases": ["wiki-gateway"],
+      "read": { "secret": "CONFLUENCE_PAT", "allowlist": "confluence-read.txt" }, "legacy": { "setupCommand": "wiki" } },
+    { "id": "jira", "label": "Jira", "icon": "🔴", "hostname": "jira.example.test", "hostAliases": ["jira-gateway"],
+      "read": { "secret": "JIRA_PAT", "allowlist": "jira-read.txt" }, "legacy": { "setupCommand": "jira" } }
+  ]
+}

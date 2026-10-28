@@ -1,0 +1,20 @@
+{
+  "id": "3f2a1b0c-1111-2222-3333-444455556666",
+  "title": "Fix login bug",
+  "copilotSessionId": "cp-9999",
+  "createdAt": 1699000000000,
+  "updatedAt": 1699000010000,
+  "messages": [
+    { "id": "m1", "role": "user", "content": "Please fix the login redirect", "timestamp": 1699000001000 },
+    { "id": "m2", "role": "assistant", "content": "Done: changed LoginController.", "timestamp": 1699000005000 }
+  ],
+  "repos": ["api"],
+  "containerName": "compose-project_copilot_1",
+  "model": "gpt-4",
+  "baselineShas": { "api": "abc123abc123abc123abc123abc123abc123abc1" },
+  "deliveredShas": { "api": "def456def456def456def456def456def456def4" },
+  "deliveries": [
+    { "at": 1699000008000, "shas": { "api": "def456def456def456def456def456def456def4" }, "branch": "copilot-fix-1", "message": "Fix login redirect", "repos": ["api"], "files": 3 }
+  ],
+  "deliveredAt": 1699000008000
+}

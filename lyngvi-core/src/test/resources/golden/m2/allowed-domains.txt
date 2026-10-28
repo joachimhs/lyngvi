@@ -1,0 +1,17 @@
+# Lyngvi egress allowlist. Rendered by 'setup.sh rebuild-config'.
+# One domain per line; a leading dot matches the domain and all subdomains.
+# profile
+registry.npmjs.org
+# agents
+api.anthropic.com  # claude-code
+claude.ai  # claude-code
+console.anthropic.com  # claude-code
+platform.claude.com  # claude-code
+api.anthropic.com  # opencode
+claude.ai  # opencode
+console.anthropic.com  # opencode
+models.opencode.ai  # opencode
+opencode.ai  # opencode
+models.dev  # opencode
+openrouter.ai  # opencode
+# user (kept across rebuilds; edit with 'setup.sh domain add|remove')

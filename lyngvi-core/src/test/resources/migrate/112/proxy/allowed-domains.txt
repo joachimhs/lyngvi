@@ -1,0 +1,4 @@
+# Domener sandkassen får nå
+registry.npmjs.org
+.example.test
+repo.maven.example.test

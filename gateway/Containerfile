@@ -1,0 +1,28 @@
+# lyngvi gateway image (spec §8.8): a jlink runtime on a pinned Debian base.
+# Build context is the sandbox's gateway/ directory; gateway.jar is copied there by 'setup.sh init'.
+# Plugins, manifest, allowlists, secrets and certificates are mounted at run time, never baked in.
+
+FROM docker.io/eclipse-temurin:25-jdk@sha256:e787e08ef76f4c16866108cd7f9fcd96a68eef3ac6cc76866897d4d02d5a2262 AS jre
+RUN "$JAVA_HOME/bin/jlink" \
+      --add-modules java.base,java.net.http,jdk.httpserver,jdk.crypto.ec,java.xml,java.logging,jdk.unsupported \
+      --strip-debug --no-man-pages --no-header-files --compress zip-6 \
+      --output /opt/jre
+
+FROM docker.io/library/debian:bookworm-slim@sha256:88200866dfff7ea7f5cbcb6ec7c8a701889efe6fe859fe64d6990e4b07ea4171
+ARG USER_UID=1000
+ARG USER_GID=1000
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ca-certificates \
+ && rm -rf /var/lib/apt/lists/* \
+ && (getent group "${USER_GID}" >/dev/null || groupadd --gid "${USER_GID}" gateway) \
+ && useradd --uid "${USER_UID}" --gid "${USER_GID}" --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin gateway \
+ && mkdir -p /app/plugins /etc/gateway/allowlists /etc/gateway/certs /certs \
+ && chown -R "${USER_UID}:${USER_GID}" /app
+COPY --from=jre /opt/jre /opt/jre
+COPY gateway.jar /app/gateway.jar
+USER ${USER_UID}:${USER_GID}
+WORKDIR /app
+ENV JAVA_TOOL_OPTIONS="-XX:+UseSerialGC -Xmx160m -Xss512k -XX:TieredStopAtLevel=1 -Djava.io.tmpdir=/tmp -Djava.security.egd=file:/dev/./urandom"
+EXPOSE 8080 80 443
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 CMD ["/opt/jre/bin/java", "-jar", "/app/gateway.jar", "--health"]
+ENTRYPOINT ["/opt/jre/bin/java", "-jar", "/app/gateway.jar"]

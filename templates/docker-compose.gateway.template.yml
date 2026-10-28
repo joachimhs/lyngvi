@@ -1,0 +1,55 @@
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Containerfile
+      args:
+        USER_UID: {{UID}}
+        USER_GID: {{GID}}
+    image: localhost/lyngvi-gateway:{{VERSION}}
+    container_name: {{PROJECT}}-gateway
+    userns_mode: "keep-id:uid={{UID}},gid={{GID}}"
+    environment:
+      PORT: "8080"
+      HTTP_ALT_PORT: "80"
+      TLS_PORT: "443"
+      TLS_CERT_FILE: /etc/gateway/certs/gateway.crt
+      TLS_KEY_FILE: /etc/gateway/certs/gateway.key
+      CA_CERT_DIR: /certs
+      ALLOWLIST_DIR: /etc/gateway/allowlists
+      ALLOWLIST_ENFORCED: "true"
+      GATEWAY_MANIFEST: /etc/gateway/gateway.manifest.json
+      PLUGIN_DIR: /app/plugins
+      ALLOW_WRITE: "{{GATEWAY_ALLOW_WRITE}}"
+    env_file:
+{{GATEWAY_ENV_FILES}}
+    volumes:
+      - ./gateway/gateway.manifest.json:/etc/gateway/gateway.manifest.json:ro,z
+      - ./gateway/allowlists:/etc/gateway/allowlists:ro,z
+      - ./gateway/certs/gateway.crt:/etc/gateway/certs/gateway.crt:ro,z
+      - ./gateway/certs/gateway.key:/etc/gateway/certs/gateway.key:ro,z
+      - ./gateway/plugins:/app/plugins:ro,z
+      - {{CA_CERTS_DIR}}:/certs:ro,z
+    networks:
+      internal:
+        ipv4_address: {{PREFIX}}.10
+      external: {}
+    mem_limit: ${GATEWAY_MEM_LIMIT:-256m}
+    cpus: ${GATEWAY_CPU_LIMIT:-1.0}
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: "0"
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "/opt/jre/bin/java", "-jar", "/app/gateway.jar", "--health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    restart: unless-stopped

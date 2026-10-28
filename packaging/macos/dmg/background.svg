@@ -1,0 +1,32 @@
+<!-- The background of the disk image's Finder window: 640 x 400 points, the size lyngvi-dmg-setup.scpt
+     gives the window. The icons sit on top of it at {160, 190} and {480, 190} — the two ends of the arrow.
+     The type is the landing page's: Instrument Serif for the name, Geist for the rest. background.png and
+     background@2x.png are rendered from this file with those fonts and the build turns the pair into the
+     .tiff jpackage asks for; the band below the caption is white on purpose, see the script. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <defs>
+    <linearGradient id="wash" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e4f1f7"/>
+      <stop offset="0.5" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" fill="#ffffff"/>
+  <rect width="640" height="400" fill="url(#wash)"/>
+
+  <text x="320" y="54" text-anchor="middle" font-family="Instrument Serif" font-size="36" fill="#0a1422">Lyngvi</text>
+  <text x="320" y="78" text-anchor="middle" font-family="Geist" font-size="10" letter-spacing="1.6"
+        fill="#6c8296">A HARDENED SANDBOX FOR AUTONOMOUS CODING AGENTS</text>
+  <line x1="56" y1="100" x2="584" y2="100" stroke="#0a1422" stroke-opacity="0.09" stroke-width="1"/>
+
+  <g stroke="#0e7c93" stroke-width="8" stroke-linecap="round">
+    <line x1="252" y1="186" x2="270" y2="186" stroke-opacity="0.25"/>
+    <line x1="280" y1="186" x2="302" y2="186" stroke-opacity="0.5"/>
+    <line x1="312" y1="186" x2="334" y2="186" stroke-opacity="0.78"/>
+  </g>
+  <path d="M350 175 L382 186 L350 197 Z" fill="#0e7c93" stroke="#0e7c93"
+        stroke-width="4" stroke-linejoin="round"/>
+
+  <text x="320" y="326" text-anchor="middle" font-family="Geist" font-size="13" fill="#45596b">
+    Drag Lyngvi to your Applications folder</text>
+</svg>

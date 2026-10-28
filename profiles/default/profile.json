@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "name": "default",
+  "label": "Default profile",
+  "language": "en",
+  "agents": {
+    "default": "claude-code",
+    "enabled": ["claude-code", "opencode"]
+  },
+  "toolchains": ["node22"],
+  "egress": {
+    "allow": [
+      "registry.npmjs.org"
+    ],
+    "block": "bundled",
+    "blockExtra": []
+  },
+  "localModels": {
+    "host": "host.containers.internal",
+    "ports": [11434, 1234]
+  },
+  "mirrors": {
+    "npm": null,
+    "maven": null,
+    "pypi": null
+  },
+  "ca": {
+    "certsDir": "~/.cache/lyngvi/ca",
+    "macKeychainNames": []
+  },
+  "gateway": {
+    "manifest": "gateway/gateway.manifest.json",
+    "plugins": "gateway/plugins",
+    "allowWrite": []
+  },
+  "git": {
+    "protectedBranches": ["main", "master", "develop"],
+    "branchPrefix": "agent/",
+    "committer": { "name": "lyngvi", "email": "lyngvi@local" }
+  },
+  "resources": { "mem": "8g", "memswap": "12g", "cpus": "4.0", "pids": "2048" },
+  "resourcePresets": [
+    { "id": "review", "limits": { "mem": "2g",  "memswap": "3g",  "cpus": "1.0", "pids": "1024" } },
+    { "id": "dev",    "limits": { "mem": "8g",  "memswap": "12g", "cpus": "4.0", "pids": "2048" } },
+    { "id": "build",  "limits": { "mem": "16g", "memswap": "24g", "cpus": "6.0", "pids": "4096" } }
+  ],
+  "copy": {
+    "history": "shallow",
+    "depth": 100,
+    "excludes": ["node_modules", "build", "target", "dist",
+                 ".gradle", ".idea", ".venv", "venv", "__pycache__",
+                 ".next", "out", ".pytest_cache", "*.egg-info"],
+    "maxFileMiB": 50
+  },
+  "session": {
+    "idleStopMinutes": 60,
+    "idleRemoveHours": 72
+  },
+  "cache": {
+    "mode": "shared",
+    "paths": ["npm", "pip", "go-mod", "go-build"]
+  }
+}

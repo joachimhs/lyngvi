@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import no.syntakserror.lyngvi.gui.view.Icon?>
+
+<SplitPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="no.syntakserror.lyngvi.gui.view.FilesController" dividerPositions="0.35" styleClass="files-pane">
+  <fx:define>
+    <ToggleGroup fx:id="viewMode"/>
+  </fx:define>
+  <VBox spacing="8" styleClass="files-sidebar">
+    <padding><Insets top="10" right="8" bottom="10" left="8"/></padding>
+    <HBox spacing="6">
+      <TextField fx:id="fileFilter" promptText="%gui.files.filter" HBox.hgrow="ALWAYS"/>
+      <Button fx:id="refreshFilesButton" onAction="#onRefreshFiles" styleClass="icon-button">
+        <graphic><Icon fx:value="refresh"/></graphic>
+        <tooltip><Tooltip text="%gui.button.refresh"/></tooltip>
+      </Button>
+    </HBox>
+    <TreeView fx:id="fileTree" VBox.vgrow="ALWAYS"/>
+  </VBox>
+  <BorderPane>
+    <top>
+      <HBox spacing="8" alignment="CENTER_LEFT" styleClass="editor-header">
+        <padding><Insets top="8" right="10" bottom="8" left="12"/></padding>
+        <Label fx:id="fileNameLabel" text="%gui.files.none" styleClass="section-title"/>
+        <Label fx:id="fileStatusLabel" text="" styleClass="section-help"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox fx:id="viewModeBox" spacing="10" alignment="CENTER_LEFT" visible="false" managed="false">
+          <RadioButton fx:id="rawModeButton" text="%gui.files.raw" toggleGroup="$viewMode"/>
+          <RadioButton fx:id="previewModeButton" text="%gui.files.preview" toggleGroup="$viewMode"/>
+        </HBox>
+        <Button fx:id="reloadButton" text="%gui.files.discard" onAction="#onReload">
+          <graphic><Icon fx:value="undo"/></graphic>
+        </Button>
+        <Button fx:id="saveButton" text="%gui.files.save" onAction="#onSave" styleClass="primary">
+          <graphic><Icon fx:value="save"/></graphic>
+          <tooltip><Tooltip text="%gui.files.save.tooltip"/></tooltip>
+        </Button>
+      </HBox>
+    </top>
+    <center>
+      <StackPane fx:id="editorHolder"/>
+    </center>
+  </BorderPane>
+</SplitPane>

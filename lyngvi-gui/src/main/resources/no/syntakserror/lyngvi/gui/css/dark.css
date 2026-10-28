@@ -1,0 +1,71 @@
+/*
+ * Lyngvi — dark theme overlay. Loaded after app.css: it swaps the -app-* tokens and repeats the few
+ * rules that carry literal colours (severity text, notices) so warning and error stay distinct.
+ */
+
+.root {
+    -app-bg: #1b1917;
+    -app-canvas: #221f1c;
+    -app-surface: #2a2622;
+    -app-surface-hover: #332e28;
+    -app-border: #3a342d;
+    -app-border-strong: #514940;
+    -app-text: #ece5da;
+    -app-muted: #a79c8c;
+    -app-icon: #cfc5b6;
+    -app-accent: #e08b5f;
+    -app-accent-hover: #f0a175;
+    -app-accent-soft: #3d261a;
+    -app-selection: #4a2f20;
+    -app-success: #8fbf6e;
+    -app-success-soft: #26331c;
+    -app-warning: #e0b054;
+    -app-warning-soft: #3a2d13;
+    -app-danger: #f08a83;
+    -app-danger-hover: #ff9f98;
+    -app-danger-soft: #3d1f1d;
+    -app-inline-code: #f0b98a;
+    -app-scroll-thumb: #544c42;
+    -app-tooltip-bg: #3a342d;
+    -app-purple: #b9a4e8;
+    -app-purple-soft: #302a44;
+    -app-teal: #7ab3d0;
+    -app-teal-soft: #1e2f3a;
+
+    -app-diff-add-bg: #24331c;
+    -app-diff-add-gutter: #3a5230;
+    -app-diff-add-fg: #9ccf7c;
+    -app-diff-del-bg: #3d211f;
+    -app-diff-del-gutter: #5c3330;
+    -app-diff-del-fg: #f4948d;
+    -app-diff-hunk-bg: #1e2f3a;
+    -app-diff-hunk-gutter: #2e4a5c;
+    -app-diff-hunk-fg: #8cc0dd;
+    -app-diff-gutter-bg: #1b1917;
+    -app-diff-gutter-fg: #8c8172;
+
+    -fx-text-fill: -app-text;
+}
+
+/* literal colours the severity test checks: warning and error must differ in both themes */
+.status-label.logged-in, .status-done { -fx-text-fill: #8fbf6e; }
+.status-label.logged-out, .status-warn { -fx-text-fill: #e0b054; }
+.status-error { -fx-text-fill: #f08a83; }
+.cell-warn { -fx-text-fill: #e0b054; }
+.cell-error { -fx-text-fill: #f08a83; }
+.dialog-warning { -fx-text-fill: #e0b054; }
+.console-warning { -fx-text-fill: #e0b054; }
+.console-error { -fx-text-fill: #f08a83; }
+.context-warn { -fx-text-fill: #e0b054; }
+.context-danger { -fx-text-fill: #f08a83; }
+.msg-system.warning { -fx-text-fill: #f5d79a; -fx-background-color: #3a2d13; }
+.msg-system.error { -fx-text-fill: #f8bdb8; -fx-background-color: #3d1f1d; }
+.work-notice.warning { -fx-text-fill: #f5d79a; -fx-background-color: #3a2d13; }
+.work-notice.error { -fx-text-fill: #f8bdb8; -fx-background-color: #3d1f1d; }
+.deliver-warning-title { -fx-font-weight: bold; -fx-text-fill: #f5d79a; }
+.deliver-warning-line { -fx-font-size: 12px; -fx-text-fill: #f5d79a; }
+
+/* shadows read better a little heavier on dark surfaces */
+.context-menu, .combo-box-popup > .list-view { -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 16, 0, 0, 6); }
+.tooltip { -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 0, 3); }
+.creating-card { -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 18, 0, 0, 6); }

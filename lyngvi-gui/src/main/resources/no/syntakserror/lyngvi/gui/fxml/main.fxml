@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import no.syntakserror.lyngvi.gui.view.Icon?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="no.syntakserror.lyngvi.gui.MainController" styleClass="main-root">
+  <top>
+    <ToolBar styleClass="main-toolbar">
+      <!--
+        The open sandbox, and the drop-down that changes it: the sandboxes this machine has worked with, each one
+        to switch to here or to open in a window of its own. The items are built when the menu opens
+        (MainController#buildSandboxMenu), so the list is never older than the click that showed it.
+      -->
+      <MenuButton fx:id="sandboxSwitcher" text="%gui.sandbox.none" styleClass="ghost,sandbox-dir,sandbox-switcher">
+        <tooltip><Tooltip text="%gui.sandbox.switch.tooltip"/></tooltip>
+      </MenuButton>
+      <Button fx:id="versionButton" text="v–" onAction="#onVersion" styleClass="ghost,version-button">
+        <tooltip><Tooltip text="%gui.toolbar.version.tooltip"/></tooltip>
+      </Button>
+      <Hyperlink fx:id="chooseSandboxLink" text="%gui.sandbox.none.hint" onAction="#onChooseSandboxDir"
+                 styleClass="status-label"/>
+      <Label fx:id="statusLabel" text="" styleClass="status-label"/>
+      <Button text="%gui.button.refresh" onAction="#onRefreshAll" styleClass="ghost">
+        <graphic><Icon fx:value="refresh"/></graphic>
+      </Button>
+      <MenuButton fx:id="sandboxMenu" styleClass="ghost,icon-button">
+        <graphic><Icon fx:value="more"/></graphic>
+        <items>
+          <MenuItem text="%gui.sandbox.choose" onAction="#onChooseSandboxDir"/>
+          <MenuItem text="%gui.sandbox.new.menu" onAction="#onNewSandbox"/>
+        </items>
+      </MenuButton>
+      <Region HBox.hgrow="ALWAYS"/>
+      <Button fx:id="upgradeButton" text="%gui.upgrade.button" onAction="#onUpgrade" visible="false" managed="false" styleClass="primary">
+        <graphic><Icon fx:value="arrow-up-circle"/></graphic>
+      </Button>
+      <ToggleButton fx:id="filesToggle" text="%gui.toolbar.files" onAction="#onToggleFiles" styleClass="ghost">
+        <graphic><Icon fx:value="folder"/></graphic>
+        <tooltip><Tooltip text="%gui.toolbar.files.tooltip"/></tooltip>
+      </ToggleButton>
+      <MenuButton fx:id="helpMenu" styleClass="ghost,icon-button">
+        <graphic><Icon fx:value="help"/></graphic>
+        <items>
+          <MenuItem text="%gui.help.welcome" onAction="#onShowWelcome"/>
+          <MenuItem text="%gui.help.changelog" onAction="#onShowChangelog"/>
+          <MenuItem text="%gui.help.report" onAction="#onReportProblem"/>
+        </items>
+      </MenuButton>
+      <Button fx:id="themeToggleButton" onAction="#onToggleTheme" styleClass="ghost,icon-button">
+        <graphic><Icon fx:value="moon"/></graphic>
+        <tooltip><Tooltip text="%gui.toolbar.theme.tooltip"/></tooltip>
+      </Button>
+    </ToolBar>
+  </top>
+  <left>
+    <!--
+      Icon rail: one line of text under each icon, in place of the old two-level rail with group headings. The
+      short labels are what the rail is wide enough for; the full name is in the tooltip and in accessibleText,
+      so nothing is lost by shortening. The rail takes its width from the widest label — no fixed width to clip
+      a translation. Groups are kept as hairlines: sandbox things, then the agent, then setup.
+    -->
+    <VBox styleClass="nav-rail" spacing="1" alignment="TOP_CENTER">
+      <padding><Insets top="8" right="6" bottom="8" left="6"/></padding>
+      <ToggleButton fx:id="navSandbox" text="%gui.nav.short.sandbox" styleClass="rail-button" contentDisplay="TOP"
+                    maxWidth="Infinity" accessibleText="%gui.nav.sandbox">
+        <graphic><Icon fx:value="box"/></graphic>
+        <tooltip><Tooltip text="%gui.nav.sandbox"/></tooltip>
+      </ToggleButton>
+      <ToggleButton fx:id="navEgress" text="%gui.nav.short.egress" styleClass="rail-button" contentDisplay="TOP"
+                    maxWidth="Infinity" accessibleText="%gui.nav.egress">
+        <graphic><Icon fx:value="shield"/></graphic>
+        <tooltip><Tooltip text="%gui.nav.egress"/></tooltip>
+      </ToggleButton>
+      <ToggleButton fx:id="navAgents" text="%gui.nav.short.agents" styleClass="rail-button" contentDisplay="TOP"
+                    maxWidth="Infinity" accessibleText="%gui.nav.agents">
+        <graphic><Icon fx:value="bot"/></graphic>
+        <tooltip><Tooltip text="%gui.nav.agents"/></tooltip>
+      </ToggleButton>
+      <!-- What the agent can do, next to who answers: skills are per sandbox, so they belong on the rail. -->
+      <ToggleButton fx:id="navSkills" text="%gui.nav.short.skills" styleClass="rail-button" contentDisplay="TOP"
+                    maxWidth="Infinity" accessibleText="%gui.nav.skills">
+        <graphic><Icon fx:value="book"/></graphic>
+        <tooltip><Tooltip text="%gui.nav.skills"/></tooltip>
+      </ToggleButton>
+      <ToggleButton fx:id="navGateway" text="%gui.nav.short.gateway" styleClass="rail-button" contentDisplay="TOP"
+                    maxWidth="Infinity" accessibleText="%gui.nav.gateway">
+        <graphic><Icon fx:value="server"/></graphic>
+        <tooltip><Tooltip text="%gui.nav.gateway"/></tooltip>
+      </ToggleButton>
+      <Separator styleClass="rail-divider" maxWidth="26">
+        <VBox.margin><Insets top="7" bottom="7"/></VBox.margin>
+      </Separator>
+      <!-- The chat item carries activity marks: work in progress top left, unread results top right. -->
+      <StackPane maxWidth="Infinity">
+        <ToggleButton fx:id="navChat" text="%gui.nav.short.chat" styleClass="rail-button" contentDisplay="TOP"
+                      maxWidth="Infinity" accessibleText="%gui.nav.chat">
+          <graphic><Icon fx:value="chat"/></graphic>
+        </ToggleButton>
+        <ProgressIndicator fx:id="navChatSpinner" prefWidth="12" prefHeight="12" maxWidth="12" maxHeight="12"
+                           styleClass="rail-spinner" mouseTransparent="true" visible="false" managed="false"
+                           StackPane.alignment="TOP_LEFT">
+          <StackPane.margin><Insets top="3" left="3"/></StackPane.margin>
+        </ProgressIndicator>
+        <HBox spacing="2" alignment="TOP_RIGHT" mouseTransparent="true" StackPane.alignment="TOP_RIGHT">
+          <StackPane.margin><Insets top="2" right="2"/></StackPane.margin>
+          <Label fx:id="navChatDoneBadge" text="0" styleClass="rail-badge,rail-badge-done" visible="false" managed="false"/>
+          <Label fx:id="navChatErrorBadge" text="0" styleClass="rail-badge,rail-badge-error" visible="false" managed="false"/>
+        </HBox>
+      </StackPane>
+      <ToggleButton fx:id="navAsk" text="%gui.nav.short.ask" styleClass="rail-button" contentDisplay="TOP"
+                    maxWidth="Infinity" accessibleText="%gui.nav.ask">
+        <graphic><Icon fx:value="sparkles"/></graphic>
+        <tooltip><Tooltip text="%gui.nav.ask"/></tooltip>
+      </ToggleButton>
+      <Separator styleClass="rail-divider" maxWidth="26">
+        <VBox.margin><Insets top="7" bottom="7"/></VBox.margin>
+      </Separator>
+      <ToggleButton fx:id="navSetup" text="%gui.nav.short.setup" styleClass="rail-button" contentDisplay="TOP"
+                    maxWidth="Infinity" accessibleText="%gui.nav.setup">
+        <graphic><Icon fx:value="sliders"/></graphic>
+        <tooltip><Tooltip text="%gui.nav.setup"/></tooltip>
+      </ToggleButton>
+    </VBox>
+  </left>
+  <center>
+    <SplitPane fx:id="contentSplit" orientation="VERTICAL" dividerPositions="0.78">
+      <TabPane fx:id="mainTabs" tabClosingPolicy="UNAVAILABLE" styleClass="hidden-tabs">
+        <Tab fx:id="sandboxTab" text="%gui.nav.sandbox">
+          <TabPane tabClosingPolicy="UNAVAILABLE">
+            <Tab text="%gui.sandbox.run">
+              <VBox spacing="10" styleClass="page">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <HBox spacing="8" styleClass="action-bar">
+                  <Button fx:id="startButton" text="%gui.sandbox.start" onAction="#onStart" styleClass="primary">
+                    <graphic><Icon fx:value="play"/></graphic>
+                  </Button>
+                  <Button fx:id="stopButton" text="%gui.sandbox.stop" onAction="#onStop">
+                    <graphic><Icon fx:value="stop"/></graphic>
+                  </Button>
+                  <Button text="%gui.sandbox.status" onAction="#onStatus">
+                    <graphic><Icon fx:value="info"/></graphic>
+                  </Button>
+                  <Separator orientation="VERTICAL"/>
+                  <Button text="%gui.sandbox.build" onAction="#onBuild">
+                    <graphic><Icon fx:value="hammer"/></graphic>
+                  </Button>
+                  <Button text="%gui.sandbox.doctor" onAction="#onDoctor">
+                    <graphic><Icon fx:value="activity"/></graphic>
+                  </Button>
+                  <Button text="%gui.sandbox.rebuildconfig" onAction="#onRebuildConfig">
+                    <graphic><Icon fx:value="settings"/></graphic>
+                  </Button>
+                </HBox>
+                <Label text="%gui.sandbox.stack" styleClass="section-title"/>
+                <TableView fx:id="containerTable" prefHeight="120">
+                  <columns>
+                    <TableColumn fx:id="containerServiceColumn" text="%gui.sandbox.col.service" prefWidth="120"/>
+                    <TableColumn fx:id="containerNameColumn" text="%gui.sandbox.col.container" prefWidth="200"/>
+                    <TableColumn fx:id="containerStateColumn" text="%gui.sandbox.col.state" prefWidth="120"/>
+                    <TableColumn fx:id="containerHealthColumn" text="%gui.sandbox.col.health" prefWidth="120"/>
+                  </columns>
+                </TableView>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                  <Label text="%gui.sandbox.sessions" styleClass="section-title"/>
+                  <Region HBox.hgrow="ALWAYS"/>
+                  <Button text="%gui.sandbox.cleanup" onAction="#onCleanup">
+                    <graphic><Icon fx:value="trash"/></graphic>
+                  </Button>
+                </HBox>
+                <Label text="%gui.sandbox.sessions.hint" styleClass="hint" wrapText="true"/>
+                <TableView fx:id="sessionContainerTable" VBox.vgrow="ALWAYS">
+                  <columns>
+                    <TableColumn fx:id="sessionConversationColumn" text="%gui.sandbox.col.conversation" prefWidth="220"/>
+                    <TableColumn fx:id="sessionContainerColumn" text="%gui.sandbox.col.container" prefWidth="220"/>
+                    <TableColumn fx:id="sessionStateColumn" text="%gui.sandbox.col.state" prefWidth="100"/>
+                    <TableColumn fx:id="sessionImageColumn" text="%gui.sandbox.col.image" prefWidth="260"/>
+                  </columns>
+                </TableView>
+                <HBox spacing="8" styleClass="action-bar">
+                  <Button text="%gui.button.refresh" onAction="#onRefreshContainers">
+                    <graphic><Icon fx:value="refresh"/></graphic>
+                  </Button>
+                  <Button fx:id="followProxyLogButton" text="%gui.sandbox.log.proxy" onAction="#onFollowProxyLog">
+                    <graphic><Icon fx:value="file-text"/></graphic>
+                  </Button>
+                  <Button fx:id="followGatewayLogButton" text="%gui.sandbox.log.gateway" onAction="#onFollowGatewayLog">
+                    <graphic><Icon fx:value="file-text"/></graphic>
+                  </Button>
+                  <Button fx:id="stopLogButton" text="%gui.sandbox.log.stop" onAction="#onStopLog">
+                    <graphic><Icon fx:value="stop"/></graphic>
+                  </Button>
+                </HBox>
+              </VBox>
+            </Tab>
+            <Tab text="%gui.sandbox.resources">
+              <VBox spacing="10" styleClass="page">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="%resources.header" styleClass="section-title"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                  <Label text="%gui.resources.preset" styleClass="field-label"/>
+                  <ComboBox fx:id="resourcePresetChoice" onAction="#onChooseResourcePreset"/>
+                </HBox>
+                <GridPane hgap="10" vgap="8">
+                  <Label text="mem" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                  <TextField fx:id="memLimitField" promptText="8g" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                  <Label text="memswap" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                  <TextField fx:id="memswapLimitField" promptText="12g" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                  <Label text="cpus" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                  <TextField fx:id="cpusField" promptText="4.0" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                  <Label text="pids" styleClass="field-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                  <TextField fx:id="pidsLimitField" promptText="2048" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                </GridPane>
+                <HBox spacing="8" styleClass="action-bar">
+                  <Button text="%gui.button.save" onAction="#onSaveResources" styleClass="primary">
+                    <graphic><Icon fx:value="save"/></graphic>
+                  </Button>
+                  <Button text="%gui.resources.machine.refresh" onAction="#onRefreshMachine">
+                    <graphic><Icon fx:value="refresh"/></graphic>
+                  </Button>
+                  <Button text="%gui.resources.machine.help" onAction="#onShowMachineHelp">
+                    <graphic><Icon fx:value="help"/></graphic>
+                  </Button>
+                </HBox>
+                <Label fx:id="machineInfoLabel" text="" wrapText="true"/>
+                <Label fx:id="machineWarningLabel" text="" wrapText="true" styleClass="status-warn" visible="false" managed="false"/>
+              </VBox>
+            </Tab>
+          </TabPane>
+        </Tab>
+        <!--
+          Egress: what was refused, then what is allowed. The two were separate rail items, but adding a domain is
+          what you do about a refusal, so they are one page and the refusals come first.
+        -->
+        <Tab fx:id="egressTab" text="%gui.nav.egress">
+          <VBox spacing="10" styleClass="page">
+            <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+            <Label text="%gui.nav.traffic" styleClass="section-title"/>
+            <Label text="%gui.traffic.help" wrapText="true" styleClass="section-help"/>
+            <TableView fx:id="blockedTable" VBox.vgrow="ALWAYS" prefHeight="180">
+              <columns>
+                <TableColumn fx:id="blockedHostColumn" text="%gui.traffic.col.host" prefWidth="320"/>
+                <TableColumn fx:id="blockedStatusColumn" text="%gui.traffic.col.status" prefWidth="80"/>
+                <TableColumn fx:id="blockedCountColumn" text="%gui.traffic.col.count" prefWidth="80"/>
+              </columns>
+            </TableView>
+            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="action-bar">
+              <Button fx:id="allowBlockedButton" text="%gui.traffic.allow.button" onAction="#onAllowBlocked" styleClass="primary">
+                <graphic><Icon fx:value="shield-check"/></graphic>
+              </Button>
+              <Button text="%gui.button.refresh" onAction="#onRefreshBlocked">
+                <graphic><Icon fx:value="refresh"/></graphic>
+              </Button>
+              <Button fx:id="followBlockedButton" text="%gui.traffic.follow" onAction="#onFollowBlocked">
+                <graphic><Icon fx:value="eye"/></graphic>
+              </Button>
+              <Button fx:id="stopBlockedButton" text="%gui.traffic.stop" onAction="#onStopBlocked">
+                <graphic><Icon fx:value="stop"/></graphic>
+              </Button>
+              <Label fx:id="blockedStatusLabel" text="" styleClass="section-help"/>
+            </HBox>
+            <Separator/>
+            <Label text="%gui.nav.domains" styleClass="section-title"/>
+            <Label text="%gui.domains.help" wrapText="true" styleClass="section-help"/>
+            <TableView fx:id="domainTable" VBox.vgrow="ALWAYS" prefHeight="220">
+              <columns>
+                <TableColumn fx:id="domainColumn" text="%gui.domains.col.domain" prefWidth="260"/>
+                <TableColumn fx:id="domainSourceColumn" text="%gui.domains.col.source" prefWidth="170"/>
+                <TableColumn fx:id="domainNoteColumn" text="%gui.domains.col.note" prefWidth="200"/>
+              </columns>
+            </TableView>
+            <HBox spacing="8" styleClass="action-bar">
+              <TextField fx:id="domainInput" promptText="example.com" HBox.hgrow="ALWAYS" onAction="#onAddDomain"/>
+              <Button text="%gui.button.add" onAction="#onAddDomain" styleClass="primary">
+                <graphic><Icon fx:value="plus"/></graphic>
+              </Button>
+              <Button fx:id="removeDomainButton" text="%gui.button.remove.selected" onAction="#onRemoveDomain">
+                <graphic><Icon fx:value="trash"/></graphic>
+              </Button>
+              <Button text="%gui.domains.reload" onAction="#onReloadProxy">
+                <graphic><Icon fx:value="refresh"/></graphic>
+              </Button>
+            </HBox>
+          </VBox>
+        </Tab>
+        <Tab fx:id="chatTab" text="%gui.nav.chat">
+          <fx:include fx:id="chat" source="chat.fxml"/>
+        </Tab>
+        <Tab fx:id="askTab" text="%gui.nav.ask">
+          <fx:include fx:id="ask" source="chat.fxml"/>
+        </Tab>
+        <!--
+          Setup: one scrolling page, read top to bottom the way a sandbox is decided. The profile first, as a line
+          of context with no buttons (refresh and rebuild-config live in the toolbar and on the Sandbox tab); then
+          what is copied in, what is baked into the image, and which branches deliveries keep off. Ticking a
+          toolchain saves it: the only pending state the page knows is "the image has not been rebuilt yet".
+        -->
+        <Tab fx:id="setupTab" text="%gui.nav.setup">
+          <ScrollPane fitToWidth="true" styleClass="usage-scroll">
+            <VBox spacing="10" styleClass="page">
+              <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+              <Label text="%gui.profile.title" styleClass="section-title"/>
+              <HBox spacing="10" alignment="BASELINE_LEFT">
+                <Label fx:id="profileNameLabel" text=""/>
+                <Label fx:id="profileVersionLabel" text="" styleClass="section-help"/>
+              </HBox>
+              <Label fx:id="profilePackLabel" text="" styleClass="mono,section-help"/>
+              <Label text="%gui.profile.help" wrapText="true" styleClass="section-help"/>
+
+              <Separator/>
+              <Label text="%gui.nav.repos" styleClass="section-title"/>
+              <Label text="%gui.repos.help" wrapText="true" styleClass="section-help"/>
+              <TableView fx:id="repoTable" prefHeight="150">
+                <columns>
+                  <TableColumn fx:id="repoPathColumn" text="%gui.repos.col.path" prefWidth="380"/>
+                  <TableColumn fx:id="repoMountColumn" text="%gui.repos.col.mount" prefWidth="140"/>
+                  <TableColumn fx:id="repoHistoryColumn" text="%gui.repos.col.history" prefWidth="100"/>
+                </columns>
+              </TableView>
+              <HBox spacing="8" styleClass="action-bar">
+                <Button text="%gui.repos.add" onAction="#onAddRepo" styleClass="primary">
+                  <graphic><Icon fx:value="plus"/></graphic>
+                </Button>
+                <Button fx:id="removeRepoButton" text="%gui.button.remove.selected" onAction="#onRemoveRepo">
+                  <graphic><Icon fx:value="trash"/></graphic>
+                </Button>
+              </HBox>
+
+              <Separator/>
+              <Label text="%gui.nav.toolchain" styleClass="section-title"/>
+              <Label text="%gui.toolchain.help" wrapText="true" styleClass="section-help"/>
+              <VBox fx:id="toolchainBox" spacing="6"/>
+              <HBox spacing="8" alignment="CENTER_LEFT" styleClass="action-bar">
+                <Button fx:id="rebuildImageButton" text="%gui.toolchain.rebuild" onAction="#onSaveAndRebuild" styleClass="primary">
+                  <graphic><Icon fx:value="hammer"/></graphic>
+                </Button>
+                <ProgressIndicator fx:id="toolchainProgress" prefWidth="18" prefHeight="18" visible="false" managed="false"/>
+                <Label fx:id="toolchainStatusLabel" text="" wrapText="true" styleClass="status-label"/>
+              </HBox>
+              <Label text="%gui.toolchain.sessions" wrapText="true" styleClass="section-help"/>
+
+              <Separator/>
+              <Label text="%gui.profile.protected" styleClass="section-title"/>
+              <Label text="%gui.profile.protected.help" wrapText="true" styleClass="section-help"/>
+              <ListView fx:id="protectedBranchesList" prefHeight="110"/>
+              <HBox spacing="8" styleClass="action-bar">
+                <TextField fx:id="protectedBranchInput" promptText="%gui.profile.protected.prompt" HBox.hgrow="ALWAYS" onAction="#onAddProtectedBranch"/>
+                <Button text="%gui.button.add" onAction="#onAddProtectedBranch">
+                  <graphic><Icon fx:value="plus"/></graphic>
+                </Button>
+                <Button fx:id="removeProtectedBranchButton" text="%gui.button.remove.selected" onAction="#onRemoveProtectedBranch">
+                  <graphic><Icon fx:value="trash"/></graphic>
+                </Button>
+              </HBox>
+            </VBox>
+          </ScrollPane>
+        </Tab>
+        <!--
+          Skills: the list on the left, one skill's SKILL.md in the editor on the right. The tick in the first
+          column is the whole of «active» — a skill that is off stays where it is, it is only kept out of the
+          agents' skills directories. The page says which agents take skills at all, since not every one does.
+        -->
+        <Tab fx:id="skillsTab" text="%gui.nav.skills">
+          <VBox spacing="10" styleClass="page">
+            <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+            <Label text="%gui.skills.help" wrapText="true" styleClass="section-help"/>
+            <Label fx:id="skillsAgentsLabel" text="" wrapText="true" styleClass="section-help"/>
+            <SplitPane dividerPositions="0.4" VBox.vgrow="ALWAYS">
+              <VBox spacing="8">
+                <TableView fx:id="skillTable" VBox.vgrow="ALWAYS">
+                  <columns>
+                    <TableColumn fx:id="skillEnabledColumn" text="%gui.skills.col.active" prefWidth="70"/>
+                    <TableColumn fx:id="skillNameColumn" text="%gui.skills.col.name" prefWidth="150"/>
+                    <TableColumn fx:id="skillDescriptionColumn" text="%gui.skills.col.description" prefWidth="240"/>
+                  </columns>
+                </TableView>
+                <HBox spacing="8" styleClass="action-bar">
+                  <Button text="%gui.skills.new" onAction="#onNewSkill" styleClass="primary">
+                    <graphic><Icon fx:value="plus"/></graphic>
+                  </Button>
+                  <Button fx:id="removeSkillButton" text="%gui.button.remove.selected" onAction="#onRemoveSkill">
+                    <graphic><Icon fx:value="trash"/></graphic>
+                  </Button>
+                  <Button text="%gui.button.refresh" onAction="#onRefreshSkills">
+                    <graphic><Icon fx:value="refresh"/></graphic>
+                  </Button>
+                </HBox>
+              </VBox>
+              <BorderPane>
+                <top>
+                  <HBox spacing="8" alignment="CENTER_LEFT" styleClass="editor-header">
+                    <padding><Insets top="8" right="10" bottom="8" left="12"/></padding>
+                    <Label fx:id="skillNameLabel" text="%gui.skills.none" styleClass="section-title"/>
+                    <Label fx:id="skillStatusLabel" text="" styleClass="section-help"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="skillDiscardButton" text="%gui.files.discard" onAction="#onDiscardSkill">
+                      <graphic><Icon fx:value="undo"/></graphic>
+                    </Button>
+                    <Button fx:id="skillSaveButton" text="%gui.files.save" onAction="#onSaveSkill" styleClass="primary">
+                      <graphic><Icon fx:value="save"/></graphic>
+                      <tooltip><Tooltip text="%gui.files.save.tooltip"/></tooltip>
+                    </Button>
+                  </HBox>
+                </top>
+                <center>
+                  <!-- Wrapped: a skill is prose with a line per sentence, and a horizontal scrollbar under it
+                       would hide the end of every line the agent actually reads. -->
+                  <TextArea fx:id="skillEditor" styleClass="mono" wrapText="true" promptText="%gui.skills.editor.prompt"/>
+                </center>
+                <bottom>
+                  <VBox spacing="4">
+                    <padding><Insets top="8" right="12" bottom="4" left="12"/></padding>
+                    <Label fx:id="skillProblemLabel" text="" wrapText="true" styleClass="status-warn" visible="false" managed="false"/>
+                    <Label text="%gui.skills.effect" wrapText="true" styleClass="hint"/>
+                  </VBox>
+                </bottom>
+              </BorderPane>
+            </SplitPane>
+          </VBox>
+        </Tab>
+        <Tab fx:id="gatewayTab" text="%gui.nav.gateway">
+          <VBox spacing="10" styleClass="page">
+            <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="action-bar">
+              <Button text="%gui.gateway.add.button" onAction="#onAddSystem" styleClass="primary">
+                <graphic><Icon fx:value="plus"/></graphic>
+              </Button>
+              <Button fx:id="removeSystemButton" text="%gui.gateway.remove.button" onAction="#onRemoveSystem">
+                <graphic><Icon fx:value="trash"/></graphic>
+              </Button>
+              <Separator orientation="VERTICAL"/>
+              <Button text="%gui.gateway.status.button" onAction="#onGatewayStatus">
+                <graphic><Icon fx:value="info"/></graphic>
+              </Button>
+              <Button text="%gui.gateway.restart" onAction="#onGatewayRestart">
+                <graphic><Icon fx:value="play"/></graphic>
+              </Button>
+              <Button text="%gui.gateway.rebuild" onAction="#onGatewayRebuild">
+                <graphic><Icon fx:value="hammer"/></graphic>
+              </Button>
+              <Button text="%gui.button.refresh" onAction="#onRefreshGateway">
+                <graphic><Icon fx:value="refresh"/></graphic>
+              </Button>
+            </HBox>
+            <TabPane fx:id="gatewayTabs" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS"/>
+            <Label fx:id="gatewayStatusLabel" text="" wrapText="true" styleClass="mono,section-help"/>
+            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="action-bar">
+              <Label fx:id="gatewayCertLabel" text="" styleClass="status-label"/>
+              <Button text="%gui.gateway.cert.renew" onAction="#onRenewCert">
+                <graphic><Icon fx:value="key"/></graphic>
+              </Button>
+            </HBox>
+            <Label text="%gui.gateway.plugins" styleClass="section-title"/>
+            <ListView fx:id="pluginList" prefHeight="90"/>
+            <HBox spacing="8" styleClass="action-bar">
+              <Button text="%gui.gateway.plugin.install" onAction="#onInstallPlugin">
+                <graphic><Icon fx:value="package"/></graphic>
+              </Button>
+            </HBox>
+          </VBox>
+        </Tab>
+        <Tab fx:id="agentsTab" text="%gui.nav.agents">
+          <TabPane fx:id="agentsTabs" tabClosingPolicy="UNAVAILABLE">
+            <Tab text="%gui.agents.tab.agents">
+              <VBox spacing="10" styleClass="page">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="%gui.agents.help" wrapText="true" styleClass="section-help"/>
+                <TableView fx:id="agentTable" VBox.vgrow="ALWAYS">
+                  <columns>
+                    <TableColumn fx:id="agentIdColumn" text="%gui.agents.col.id" prefWidth="120"/>
+                    <TableColumn fx:id="agentLabelColumn" text="%gui.agents.col.label" prefWidth="160"/>
+                    <TableColumn fx:id="agentStatusColumn" text="%gui.agents.col.status" prefWidth="200"/>
+                    <TableColumn fx:id="agentAccountColumn" text="%gui.agents.col.account" prefWidth="160"/>
+                    <TableColumn fx:id="agentModelsColumn" text="%gui.agents.col.models" prefWidth="180"/>
+                  </columns>
+                </TableView>
+                <HBox spacing="8" styleClass="action-bar">
+                  <Button fx:id="loginButton" text="%gui.agents.login" onAction="#onLogin" styleClass="primary">
+                    <graphic><Icon fx:value="login"/></graphic>
+                  </Button>
+                  <Button fx:id="logoutButton" text="%gui.agents.logout" onAction="#onLogout">
+                    <graphic><Icon fx:value="logout"/></graphic>
+                  </Button>
+                  <Separator orientation="VERTICAL"/>
+                  <Button fx:id="localModelsButton" text="%gui.agents.localmodels" onAction="#onLocalModels">
+                    <graphic><Icon fx:value="server"/></graphic>
+                  </Button>
+                  <Separator orientation="VERTICAL"/>
+                  <Button text="%gui.agents.usage" onAction="#onShowUsage">
+                    <graphic><Icon fx:value="chart"/></graphic>
+                  </Button>
+                  <Button text="%gui.button.refresh" onAction="#onRefreshAgents">
+                    <graphic><Icon fx:value="refresh"/></graphic>
+                  </Button>
+                </HBox>
+              </VBox>
+            </Tab>
+            <Tab fx:id="usageTab" text="%gui.usage.tab">
+              <VBox spacing="10" styleClass="page">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="%gui.usage.help" wrapText="true" styleClass="section-help"/>
+                <HBox spacing="8" alignment="CENTER_LEFT" styleClass="action-bar">
+                  <Label text="%gui.usage.agent" styleClass="field-label"/>
+                  <ChoiceBox fx:id="usageAgentChoice" prefWidth="220"/>
+                  <Button text="%gui.button.refresh" onAction="#onRefreshUsage">
+                    <graphic><Icon fx:value="refresh"/></graphic>
+                  </Button>
+                  <Label fx:id="usageStatusLabel" text="" styleClass="section-help"/>
+                </HBox>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="usage-scroll">
+                  <VBox fx:id="usageBox" spacing="12">
+                    <padding><Insets top="2" right="8" bottom="2" left="2"/></padding>
+                  </VBox>
+                </ScrollPane>
+              </VBox>
+            </Tab>
+          </TabPane>
+        </Tab>
+      </TabPane>
+      <VBox fx:id="consoleHolder" styleClass="console-box" minHeight="80">
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="console-bar">
+          <Label text="%gui.console.title" styleClass="section-title"/>
+          <CheckBox fx:id="onlyImportantCheck" text="%gui.console.onlyimportant" onAction="#onToggleOnlyImportant"/>
+        </HBox>
+      </VBox>
+    </SplitPane>
+  </center>
+</BorderPane>

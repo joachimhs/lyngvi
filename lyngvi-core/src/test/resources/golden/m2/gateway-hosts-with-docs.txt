@@ -1,0 +1,3 @@
+# Hostnames routed to the gateway. Rendered by 'setup.sh rebuild-config' from gateway/gateway.manifest.json.
+docs.internal.example
+docs

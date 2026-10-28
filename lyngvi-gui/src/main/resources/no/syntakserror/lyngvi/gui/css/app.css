@@ -1,0 +1,1092 @@
+/*
+ * Lyngvi — base stylesheet (light theme).
+ *
+ * Everything is built on the -app-* tokens below; dark.css only overrides the tokens and a handful of
+ * literal colours. Controls are flat, share one height (32px) and one corner radius (9px), so rows of
+ * buttons, fields and pickers line up. Diff views keep the usual colour language: green for added,
+ * red for removed, blue for hunk headers.
+ */
+
+.root {
+    -fx-font-size: 13px;
+
+    /* ---- design tokens ---- */
+    -app-bg: #faf7f2;               /* window / content background */
+    -app-canvas: #f2ede3;           /* sidebars, headers, toolbars, composer */
+    -app-surface: #ffffff;          /* cards, fields, lists */
+    -app-surface-hover: #f6f1e8;
+    -app-border: #e3dacb;
+    -app-border-strong: #cdc0aa;
+    -app-text: #1c1a17;
+    -app-muted: #6b6355;
+    -app-icon: #57503f;
+    -app-accent: #b4532a;
+    -app-accent-hover: #94401f;
+    -app-accent-soft: #f7e9e1;
+    -app-selection: #f2ddd1;
+    -app-success: #4c6b3c;
+    -app-success-soft: #e6eede;
+    -app-warning: #8a5a00;
+    -app-warning-soft: #faf0d8;
+    -app-danger: #a32b26;
+    -app-danger-hover: #86201c;
+    -app-danger-soft: #f8e5e2;
+    -app-inline-code: #8a4b1c;
+    -app-scroll-thumb: #d4c8b4;
+    -app-tooltip-bg: #2a241d;
+    -app-purple: #5b4b8a;           /* agent / delegated work */
+    -app-purple-soft: #eae4f3;
+    -app-teal: #2f5d7c;             /* web access */
+    -app-teal-soft: #e0edf3;
+
+    /* diff colours: the usual green/red/blue language, warmed so it sits on paper */
+    -app-diff-add-bg: #e9f1e2;
+    -app-diff-add-gutter: #cfe0c2;
+    -app-diff-add-fg: #41602f;
+    -app-diff-del-bg: #faeae7;
+    -app-diff-del-gutter: #f0cec8;
+    -app-diff-del-fg: #a32b26;
+    -app-diff-hunk-bg: #e6edf2;
+    -app-diff-hunk-gutter: #c8d8e4;
+    -app-diff-hunk-fg: #2f5d7c;
+    -app-diff-gutter-bg: #f2ede3;
+    -app-diff-gutter-fg: #948a79;
+
+    /* ---- Modena hooks: built-in controls pick these up ---- */
+    -fx-base: -app-surface;
+    -fx-background: -app-bg;
+    -fx-control-inner-background: -app-surface;
+    -fx-control-inner-background-alt: -app-surface;
+    -fx-accent: -app-accent;
+    -fx-focus-color: -app-accent;
+    -fx-faint-focus-color: transparent;
+    -fx-selection-bar: -app-selection;
+    -fx-selection-bar-non-focused: -app-selection;
+    -fx-selection-bar-text: -app-text;
+    -fx-text-base-color: -app-text;
+    -fx-text-background-color: -app-text;
+    -fx-text-inner-color: -app-text;
+    -fx-mark-color: -app-icon;
+    -fx-mark-highlight-color: transparent;
+    -fx-outer-border: -app-border;
+    -fx-box-border: -app-border;
+    -fx-shadow-highlight-color: transparent;
+    -fx-text-fill: -app-text;
+    -fx-background-color: -app-bg;
+}
+
+.main-root { -fx-background-color: -app-bg; }
+.mono { -fx-font-family: monospace; }
+
+/* =====================================================================
+ * Buttons and toggles: one height, one radius, flat
+ * ===================================================================== */
+.button, .toggle-button, .menu-button, .split-menu-button {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 9, 8;
+    -fx-padding: 0 12 0 12;
+    -fx-pref-height: 32px;
+    -fx-min-height: 32px;
+    -fx-max-height: 32px;
+    -fx-text-fill: -app-text;
+    -fx-font-weight: normal;
+    -fx-graphic-text-gap: 7;
+    -fx-alignment: CENTER;
+    -fx-cursor: hand;
+    -fx-effect: null;
+}
+.button:hover, .toggle-button:hover, .menu-button:hover, .split-menu-button:hover {
+    -fx-background-color: -app-border-strong, -app-surface-hover;
+}
+.button:armed, .toggle-button:armed, .menu-button:showing, .button:pressed {
+    -fx-background-color: -app-border-strong, derive(-app-surface-hover, -4%);
+}
+.button:focus-visible, .toggle-button:focus-visible, .menu-button:focus-visible {
+    -fx-background-color: -app-accent, -app-surface;
+    -fx-background-insets: 0, 1.5;
+}
+.button:disabled, .toggle-button:disabled, .menu-button:disabled { -fx-opacity: 0.45; }
+.toggle-button:selected {
+    -fx-background-color: -app-accent, -app-accent-soft;
+    -fx-text-fill: -app-accent;
+    -fx-font-weight: bold;
+}
+.toggle-button:selected .icon-stroke { -fx-stroke: -app-accent; }
+.toggle-button:selected .icon-fill { -fx-fill: -app-accent; }
+
+.menu-button { -fx-padding: 0 6 0 10; }
+.menu-button > .label { -fx-padding: 0 2 0 0; -fx-text-fill: -app-text; }
+.menu-button > .arrow-button { -fx-padding: 0 0 0 2; }
+.menu-button > .arrow-button > .arrow { -fx-background-color: -app-icon; -fx-padding: 2.5 4 2.5 4; }
+
+.button.primary, .button:default {
+    -fx-background-color: -app-accent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 9;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.button.primary:hover, .button:default:hover { -fx-background-color: -app-accent-hover; }
+.button.primary:armed, .button:default:armed { -fx-background-color: derive(-app-accent-hover, -10%); }
+.button.primary:focus-visible, .button:default:focus-visible {
+    -fx-background-color: -app-text, -app-accent;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 9, 7;
+}
+.button.primary .icon-stroke, .button:default .icon-stroke { -fx-stroke: white; }
+.button.primary .icon-fill, .button:default .icon-fill { -fx-fill: white; }
+
+.button.danger {
+    -fx-background-color: -app-danger;
+    -fx-background-insets: 0;
+    -fx-background-radius: 9;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.button.danger:hover { -fx-background-color: -app-danger-hover; }
+.button.danger .icon-stroke { -fx-stroke: white; }
+.button.danger .icon-fill { -fx-fill: white; }
+
+/* borderless buttons for toolbars and chrome */
+.button.ghost, .toggle-button.ghost, .menu-button.ghost {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 9;
+}
+.button.ghost:hover, .toggle-button.ghost:hover, .menu-button.ghost:hover, .menu-button.ghost:showing {
+    -fx-background-color: -app-surface-hover;
+}
+.toggle-button.ghost:selected { -fx-background-color: -app-accent-soft; }
+
+/* square icon-only buttons */
+.icon-button {
+    -fx-pref-width: 32px;
+    -fx-min-width: 32px;
+    -fx-max-width: 32px;
+    -fx-padding: 0;
+    -fx-graphic-text-gap: 0;
+}
+.icon-button.menu-button { -fx-padding: 0; }
+.icon-button.menu-button > .arrow-button { -fx-padding: 0; -fx-pref-width: 0; -fx-min-width: 0; -fx-max-width: 0; }
+.icon-button.menu-button > .arrow-button > .arrow { -fx-padding: 0; -fx-shape: " "; -fx-background-color: transparent; }
+.icon-button.menu-button > .label { -fx-padding: 0; }
+
+.version-button { -fx-font-size: 11.5px; -fx-text-fill: -app-muted; -fx-padding: 0 8 0 8; -fx-font-family: monospace; }
+
+/* ---- icons ---- */
+.icon { -fx-pref-width: 16px; -fx-pref-height: 16px; -fx-min-width: 16px; -fx-min-height: 16px; -fx-max-width: 16px; -fx-max-height: 16px; }
+.icon-stroke {
+    -fx-fill: transparent;
+    -fx-stroke: -app-icon;
+    -fx-stroke-width: 1.9;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+.icon-fill { -fx-fill: -app-icon; -fx-stroke: transparent; }
+
+/* =====================================================================
+ * Text input
+ * ===================================================================== */
+.text-field, .password-field {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 9, 8;
+    -fx-padding: 0 10 0 10;
+    -fx-pref-height: 32px;
+    -fx-min-height: 32px;
+    -fx-text-fill: -app-text;
+    -fx-prompt-text-fill: -app-muted;
+    -fx-highlight-fill: -app-selection;
+    -fx-highlight-text-fill: -app-text;
+}
+.text-field:hover, .password-field:hover { -fx-background-color: -app-border-strong, -app-surface; }
+.text-field:focused, .password-field:focused {
+    -fx-background-color: -app-accent, -app-surface;
+    -fx-background-insets: 0, 1.5;
+}
+.text-area {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 12, 11;
+    -fx-text-fill: -app-text;
+    -fx-prompt-text-fill: -app-muted;
+    -fx-highlight-fill: -app-selection;
+    -fx-highlight-text-fill: -app-text;
+    -fx-padding: 0;
+}
+.text-area:focused { -fx-background-color: -app-accent, -app-surface; -fx-background-insets: 0, 1.5; }
+.text-area .content, .text-area:focused .content {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 8 10 8 10;
+}
+.text-area .scroll-pane, .text-area .scroll-pane > .viewport { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0; }
+.text-area:disabled, .text-field:disabled { -fx-opacity: 0.6; }
+
+/* =====================================================================
+ * Pickers
+ * ===================================================================== */
+.combo-box-base, .choice-box, .date-picker {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 9, 8;
+    -fx-pref-height: 32px;
+    -fx-min-height: 32px;
+    -fx-max-height: 32px;
+    -fx-padding: 0;
+}
+.combo-box-base:hover, .choice-box:hover { -fx-background-color: -app-border-strong, -app-surface; }
+.combo-box-base:focused, .choice-box:focused { -fx-background-color: -app-accent, -app-surface; -fx-background-insets: 0, 1.5; }
+.combo-box-base:editable > .text-field {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0 0 0 10;
+    -fx-pref-height: 28px;
+    -fx-min-height: 28px;
+    -fx-max-height: 28px;
+}
+.combo-box > .list-cell { -fx-padding: 0 4 0 10; -fx-text-fill: -app-text; -fx-background-color: transparent; }
+.choice-box > .label { -fx-padding: 0 4 0 10; -fx-text-fill: -app-text; }
+.combo-box-base > .arrow-button, .choice-box > .open-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8 0 4;
+}
+.combo-box-base > .arrow-button > .arrow, .choice-box > .open-button > .arrow {
+    -fx-background-color: -app-icon;
+    -fx-padding: 2.5 4 2.5 4;
+}
+.combo-box-popup > .list-view {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 8, 7;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.16), 12, 0, 0, 4);
+}
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-padding: 6 10 6 10;
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+    -fx-background-color: transparent;
+    -fx-text-fill: -app-text;
+}
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
+    -fx-background-color: -app-accent-soft;
+    -fx-text-fill: -app-text;
+}
+
+/* =====================================================================
+ * Check boxes and radios
+ * ===================================================================== */
+.check-box { -fx-text-fill: -app-text; -fx-label-padding: 0 0 0 7; }
+.check-box > .box {
+    -fx-background-color: -app-border-strong, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 4, 3;
+    -fx-padding: 3;
+}
+.check-box:hover > .box { -fx-background-color: -app-accent, -app-surface; }
+.check-box:selected > .box { -fx-background-color: -app-accent; -fx-background-insets: 0; }
+.check-box > .box > .mark { -fx-background-color: transparent; -fx-padding: 5 5 5 5; }
+.check-box:selected > .box > .mark { -fx-background-color: white; }
+.check-box:focus-visible > .box { -fx-background-color: -app-accent, -app-surface; -fx-background-insets: 0, 1.5; }
+.radio-button { -fx-text-fill: -app-text; -fx-label-padding: 0 0 0 7; }
+.radio-button > .radio {
+    -fx-background-color: -app-border-strong, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 1em;
+    -fx-padding: 3.5;
+}
+.radio-button:hover > .radio { -fx-background-color: -app-accent, -app-surface; }
+.radio-button:selected > .radio { -fx-background-color: -app-accent; -fx-background-insets: 0; }
+.radio-button > .radio > .dot { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 3; }
+.radio-button:selected > .radio > .dot { -fx-background-color: white; }
+
+/* =====================================================================
+ * Lists, tables, trees
+ * ===================================================================== */
+.list-view, .table-view, .tree-view {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 8, 7;
+    -fx-padding: 1;
+}
+.list-view:focused, .table-view:focused, .tree-view:focused { -fx-background-color: -app-border, -app-surface; -fx-background-insets: 0, 1; }
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 6 10 6 10;
+    -fx-text-fill: -app-text;
+}
+.list-cell:filled:hover { -fx-background-color: -app-surface-hover; }
+.list-cell:filled:selected, .list-view:focused .list-cell:filled:selected { -fx-background-color: -app-selection; -fx-text-fill: -app-text; }
+.list-cell:filled:selected .label { -fx-text-fill: -app-text; }
+.list-view .placeholder .label, .table-view .placeholder .label, .tree-view .placeholder .label { -fx-text-fill: -app-muted; }
+
+.table-view { -fx-table-cell-border-color: transparent; }
+.table-view > .column-header-background {
+    -fx-background-color: -app-border, -app-canvas;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-background-radius: 7 7 0 0;
+}
+.table-view > .column-header-background > .filler { -fx-background-color: transparent; }
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent -app-border transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-size: 32px;
+    -fx-padding: 0;
+}
+.table-view .column-header .label {
+    -fx-text-fill: -app-muted;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 8 0 8;
+}
+.table-view .column-header .arrow { -fx-background-color: -app-muted; }
+.table-view .column-header:last-visible { -fx-border-color: transparent; }
+.table-row-cell {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-cell-size: 30px;
+    -fx-padding: 0;
+    -fx-text-fill: -app-text;
+}
+.table-row-cell:empty { -fx-background-color: transparent; }
+.table-row-cell:filled:hover { -fx-background-color: -app-border, -app-surface-hover; }
+.table-row-cell:filled:selected, .table-view:focused .table-row-cell:filled:selected {
+    -fx-background-color: -app-border, -app-selection;
+    -fx-text-fill: -app-text;
+}
+.table-row-cell:filled:selected .table-cell { -fx-text-fill: -app-text; }
+.table-cell {
+    -fx-padding: 0 8 0 8;
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-fill: -app-text;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+.table-view:focused .table-row-cell:focused, .table-view .table-row-cell:focused { -fx-background-insets: 0, 0 0 1 0; }
+
+.tree-cell {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 3 6 3 6;
+    -fx-text-fill: -app-text;
+    -fx-indent: 14;
+}
+.tree-cell:filled:hover { -fx-background-color: -app-surface-hover; }
+.tree-cell:filled:selected, .tree-view:focused .tree-cell:filled:selected { -fx-background-color: -app-selection; -fx-text-fill: -app-text; }
+.tree-cell > .tree-disclosure-node > .arrow { -fx-background-color: -app-muted; }
+.tree-cell:filled:selected > .tree-disclosure-node > .arrow { -fx-background-color: -app-text; }
+
+.cell-warn { -fx-text-fill: #8a5a00; }
+.cell-error { -fx-text-fill: #a32b26; }
+
+/* =====================================================================
+ * Tabs, split panes, scroll bars, toolbars, separators
+ * ===================================================================== */
+.tab-pane { -fx-tab-min-height: 34px; -fx-tab-max-height: 34px; -fx-background-color: -app-bg; }
+.tab-pane > .tab-header-area { -fx-padding: 0 0 0 6; -fx-background-insets: 0; }
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: -app-border, -app-bg;
+    -fx-background-insets: 0, 0 0 1 0;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0 12 0 12;
+    -fx-border-color: transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-cursor: hand;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab:selected { -fx-border-color: transparent transparent -app-accent transparent; }
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-text-fill: -app-muted;
+    -fx-font-weight: bold;
+    -fx-padding: 0;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab:hover > .tab-container > .tab-label,
+.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label { -fx-text-fill: -app-text; }
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator { -fx-border-color: transparent; }
+.tab-pane > .tab-content-area { -fx-background-color: -app-bg; -fx-padding: 0; }
+.hidden-tabs > .tab-header-area { -fx-max-height: 0; -fx-pref-height: 0; -fx-padding: 0; visibility: hidden; }
+
+.split-pane { -fx-background-color: -app-bg; -fx-background-insets: 0; -fx-padding: 0; }
+.split-pane > .split-pane-divider { -fx-background-color: -app-border; -fx-padding: 0 0.5 0 0.5; }
+.split-pane:vertical > .split-pane-divider { -fx-padding: 0.5 0 0.5 0; }
+
+.scroll-pane { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0; }
+.scroll-pane > .viewport { -fx-background-color: transparent; }
+.scroll-pane > .corner { -fx-background-color: transparent; }
+.scroll-bar { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0; }
+.scroll-bar:vertical { -fx-pref-width: 10px; }
+.scroll-bar:horizontal { -fx-pref-height: 10px; }
+.scroll-bar > .track { -fx-background-color: transparent; -fx-background-insets: 0; }
+.scroll-bar > .track-background { -fx-background-color: transparent; }
+.scroll-bar > .thumb { -fx-background-color: -app-scroll-thumb; -fx-background-insets: 2; -fx-background-radius: 5; }
+.scroll-bar > .thumb:hover, .scroll-bar > .thumb:pressed { -fx-background-color: -app-muted; }
+.scroll-bar > .increment-button, .scroll-bar > .decrement-button { -fx-padding: 0; -fx-pref-width: 0; -fx-pref-height: 0; -fx-background-color: transparent; }
+.scroll-bar > .increment-button > .increment-arrow, .scroll-bar > .decrement-button > .decrement-arrow { -fx-shape: " "; -fx-padding: 0; -fx-background-color: transparent; }
+.corner { -fx-background-color: transparent; }
+
+.tool-bar, .main-toolbar {
+    -fx-background-color: -app-border, -app-canvas;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 6 10 6 12;
+    -fx-spacing: 6;
+}
+.tool-bar > .container > .separator { -fx-padding: 0 4 0 4; }
+.separator:horizontal > .line { -fx-border-color: -app-border transparent transparent transparent; -fx-border-width: 1 0 0 0; -fx-border-insets: 0; }
+.separator:vertical > .line { -fx-border-color: transparent transparent transparent -app-border; -fx-border-width: 0 0 0 1; -fx-border-insets: 0; }
+
+.titled-pane { -fx-text-fill: -app-text; }
+.titled-pane > .title {
+    -fx-background-color: -app-border, -app-canvas;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 6, 5;
+    -fx-padding: 5 10 5 8;
+    -fx-font-weight: normal;
+    -fx-color: -app-canvas;
+}
+.titled-pane:expanded > .title { -fx-background-radius: 6 6 0 0, 5 5 0 0; }
+.titled-pane:focused > .title { -fx-color: -app-canvas; -fx-background-color: -app-border-strong, -app-canvas; }
+.titled-pane > .title > .text { -fx-fill: -app-text; }
+.titled-pane > .title > .arrow-button > .arrow, .titled-pane:focused > .title > .arrow-button > .arrow { -fx-background-color: -app-muted; -fx-background-insets: 0; }
+.titled-pane > .content {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 0 1 1 1;
+    -fx-background-radius: 0 0 6 6, 0 0 5 5;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.progress-bar { -fx-indeterminate-bar-flip: true; -fx-pref-height: 8px; }
+.progress-bar > .track { -fx-background-color: -app-border; -fx-background-insets: 0; -fx-background-radius: 4; }
+.progress-bar > .bar { -fx-background-color: -app-accent; -fx-background-insets: 0; -fx-background-radius: 4; -fx-padding: 4; }
+.progress-indicator { -fx-progress-color: -app-accent; }
+.progress-indicator > .percentage { visibility: hidden; -fx-padding: 0; }
+
+.hyperlink { -fx-text-fill: -app-accent; -fx-underline: false; -fx-padding: 0; -fx-border-color: transparent; -fx-cursor: hand; }
+.hyperlink:hover { -fx-underline: true; }
+.hyperlink:visited { -fx-text-fill: -app-accent; }
+
+.tooltip {
+    -fx-background-color: -app-tooltip-bg;
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 6 10 6 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 8, 0, 0, 2);
+}
+.context-menu {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 8, 7;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 14, 0, 0, 4);
+}
+.menu-item { -fx-padding: 6 14 6 12; -fx-background-radius: 5; -fx-background-insets: 0; }
+.menu-item > .label { -fx-text-fill: -app-text; -fx-padding: 0; }
+.menu-item:focused, .menu-item:hover { -fx-background-color: -app-accent-soft; }
+.menu-item:focused > .label, .menu-item:hover > .label { -fx-text-fill: -app-text; }
+.context-menu .separator:horizontal > .line { -fx-border-color: -app-border transparent transparent transparent; }
+
+/* =====================================================================
+ * Dialogs
+ * ===================================================================== */
+.dialog-pane { -fx-background-color: -app-bg; -fx-padding: 0; }
+.dialog-pane > .header-panel {
+    -fx-background-color: -app-border, -app-canvas;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 16 20 16 20;
+}
+.dialog-pane > .header-panel > .label { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -app-text; -fx-wrap-text: true; }
+.dialog-pane > .content { -fx-padding: 16 20 8 20; }
+.dialog-pane > .content.label { -fx-text-fill: -app-text; -fx-padding: 16 20 8 20; }
+.dialog-pane > .expandable-content { -fx-padding: 0 20 8 20; }
+.dialog-pane > .button-bar > .container { -fx-padding: 10 16 14 16; }
+.dialog-pane > .button-bar > .container > .details-button { -fx-padding: 0 12 0 12; }
+.dialog-warning { -fx-text-fill: #9a6700; }
+.repo-path { -fx-text-fill: -app-muted; -fx-font-size: 12px; -fx-font-family: monospace; -fx-cursor: hand; }
+
+/* =====================================================================
+ * Main window chrome
+ * ===================================================================== */
+.sandbox-dir { -fx-font-family: monospace; -fx-text-fill: -app-muted; -fx-font-size: 12px; }
+/*
+ * The sandbox switcher wears the path the way the plain label used to — the drop-down must not turn the quietest
+ * text in the toolbar into a button. The label inside a MenuButton takes its own colour, so it is set here too.
+ */
+.sandbox-switcher > .label { -fx-text-fill: -app-muted; -fx-font-family: monospace; -fx-font-size: 12px; }
+.sandbox-switcher:hover > .label, .sandbox-switcher:showing > .label { -fx-text-fill: -app-text; }
+.status-label { -fx-padding: 0 6 0 6; }
+.status-label.logged-in, .status-done { -fx-text-fill: #4c6b3c; }
+.status-label.logged-out, .status-warn { -fx-text-fill: #8a5a00; }
+.status-error { -fx-text-fill: #a32b26; }
+
+/*
+ * The nav rail: a 16px icon over a one-word label, seven items and two hairlines. No fixed width — the rail is
+ * as wide as its widest label, so a longer translation widens the rail rather than being cut in half. The
+ * selected item keeps its weight and size and changes only colour, so the rail does not shift when you move.
+ */
+.nav-rail {
+    -fx-background-color: -app-border, -app-canvas;
+    -fx-background-insets: 0, 0 1 0 0;
+    -fx-min-width: 58px;
+}
+.rail-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0 8 8 0;
+    -fx-alignment: CENTER;
+    -fx-padding: 7 5 5 5;
+    /*
+     * A rail item is two rows — icon over label — so it must be as tall as its content. The shared
+     * .button/.toggle-button rule pins every button to 32px, which leaves room for one row only: the label is
+     * then clipped to zero height (LabeledSkinBase clips the text to what is left after the graphic) and the
+     * rail silently looks icon-only. -1 is USE_COMPUTED_SIZE: the item grows with the font, it does not clip.
+     */
+    -fx-min-height: -1;
+    -fx-pref-height: -1;
+    -fx-max-height: -1;
+    -fx-graphic-text-gap: 4;
+    -fx-font-family: monospace;
+    -fx-font-size: 10.5px;
+    -fx-text-fill: -app-muted;
+    -fx-font-weight: normal;
+}
+.rail-button:hover { -fx-background-color: -app-surface-hover; }
+.rail-button:armed { -fx-background-color: derive(-app-surface-hover, -4%); -fx-background-insets: 0; }
+/* two layers: the accent bar down the left edge, then the soft fill over everything but those 3px */
+.rail-button:selected, .rail-button:selected:armed {
+    -fx-background-color: -app-accent, -app-accent-soft;
+    -fx-background-insets: 0, 0 0 0 3;
+    -fx-background-radius: 0 8 8 0, 0 8 8 0;
+    -fx-text-fill: -app-accent;
+    /* the label keeps its weight: bold would change the label width, and the rail is sized by its labels */
+    -fx-font-weight: normal;
+}
+.rail-button:focus-visible { -fx-background-color: -app-accent, -app-canvas; -fx-background-insets: 0, 1.5; }
+.rail-button:selected:focus-visible { -fx-background-color: -app-accent, -app-accent-soft; -fx-background-insets: 0, 1.5; }
+.rail-divider *.line { -fx-border-color: -app-border-strong transparent transparent transparent; -fx-border-width: 1 0 0 0; }
+.rail-spinner { -fx-progress-color: -app-accent; }
+/* activity marks sit in the corners of the chat item: small enough not to cover the icon */
+.rail-badge {
+    -fx-background-radius: 7;
+    -fx-padding: 0 4 0 4;
+    -fx-min-height: 14px;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+.rail-badge-done { -fx-background-color: -app-success; }
+.rail-badge-error { -fx-background-color: -app-danger; }
+
+.page { -fx-background-color: -app-bg; }
+.section-title { -fx-font-weight: bold; -fx-font-size: 13.5px; -fx-text-fill: -app-text; }
+.section-help { -fx-text-fill: -app-muted; -fx-font-size: 12px; }
+.action-bar { -fx-spacing: 8; -fx-alignment: CENTER_LEFT; }
+.field-label { -fx-text-fill: -app-muted; -fx-font-size: 12px; -fx-min-width: 70px; }
+
+.console-box { -fx-background-color: -app-canvas; }
+.console-bar { -fx-background-color: -app-border, -app-canvas; -fx-background-insets: 0, 1 0 0 0; -fx-padding: 5 10 5 12; }
+.console-bar .section-title { -fx-font-size: 12px; -fx-text-fill: -app-muted; }
+.console-bar .check-box { -fx-font-size: 12px; -fx-text-fill: -app-muted; }
+.console {
+    -fx-font-family: monospace;
+    -fx-font-size: 11.5px;
+    -fx-background-color: -app-canvas;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 2 0 2 0;
+}
+.console .list-cell { -fx-padding: 1 12 1 12; -fx-background-radius: 0; }
+.console-warning { -fx-text-fill: #8a5a00; }
+.console-error { -fx-text-fill: #a32b26; }
+
+/* =====================================================================
+ * Chat
+ * ===================================================================== */
+.chat-sidebar { -fx-background-color: -app-canvas; }
+/*
+ * The drag handle at the sidebar's right edge carries the border between the list and the transcript: the line is
+ * where it was, with four pixels of the sidebar's own colour in front of it so there is something to grab. It takes
+ * the accent colour under the pointer, which is the only hint that it can be dragged.
+ */
+.sidebar-resizer {
+    -fx-min-width: 5px;
+    -fx-pref-width: 5px;
+    -fx-max-width: 5px;
+    -fx-cursor: h-resize;
+    -fx-background-color: -app-canvas, -app-border;
+    -fx-background-insets: 0, 0 0 0 4;
+}
+.sidebar-resizer:hover, .sidebar-resizer:pressed {
+    -fx-background-color: -app-canvas, -app-accent;
+    -fx-background-insets: 0, 0 0 0 3;
+}
+.conversation-list { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0; }
+.conversation-list .list-cell { -fx-background-color: transparent; -fx-padding: 8 10 8 10; -fx-background-radius: 6; -fx-background-insets: 0; }
+.conversation-list .list-cell:filled:hover { -fx-background-color: -app-surface-hover; }
+.conversation-list .list-cell:filled:selected, .conversation-list:focused .list-cell:filled:selected { -fx-background-color: -app-selection; }
+.session-title { -fx-text-fill: -app-text; }
+.session-subtitle { -fx-font-size: 11px; -fx-text-fill: -app-muted; }
+
+/* ---- the grouped conversation list (running / waiting / recent / older) ---- */
+.conv-search { -fx-pref-height: 28px; -fx-min-height: 28px; -fx-font-size: 12px; }
+.conv-group {
+    -fx-font-family: monospace;
+    -fx-font-size: 10px;
+    -fx-text-fill: -app-muted;
+    -fx-padding: 12 2 3 2;
+}
+.conv-group-count { -fx-font-family: monospace; -fx-font-size: 10px; -fx-text-fill: -app-muted; }
+.conv-more { -fx-font-size: 11.5px; -fx-text-fill: -app-accent; -fx-padding: 2 2 2 2; }
+/* group headers and the «show all» row are not selectable, so they must not light up */
+.conversation-list .list-cell:filled.conv-static:hover,
+.conversation-list .list-cell:filled.conv-static:selected,
+.conversation-list:focused .list-cell:filled.conv-static:selected { -fx-background-color: transparent; }
+.conv-dot { -fx-min-width: 7px; -fx-min-height: 7px; -fx-max-width: 7px; -fx-max-height: 7px; -fx-background-radius: 4; }
+.conv-dot.running { -fx-background-color: -app-warning; }
+.conv-dot.waiting { -fx-background-color: -app-accent; }
+.conv-dot.failed { -fx-background-color: -app-danger; }
+.conv-dot.delivered { -fx-background-color: -app-success; }
+.conv-dot.idle { -fx-background-color: -app-border-strong; }
+.conv-hit { -fx-font-size: 10.5px; -fx-text-fill: -app-muted; }
+/* which repositories a conversation works in: outlined rather than filled, so the tag reads the same on a
+ * hovered and a selected row, and stays quieter than the title above it */
+.conv-repo {
+    -fx-font-size: 10px;
+    -fx-text-fill: -app-muted;
+    -fx-background-color: transparent;
+    -fx-border-color: -app-border-strong;
+    -fx-border-radius: 4;
+    -fx-padding: 0 5 0 5;
+}
+.conv-repo-more { -fx-text-fill: -app-muted; -fx-border-color: transparent; -fx-padding: 0 1 0 1; }
+/* what the agent is doing in a conversation: spinner while running, «Done»/«Failed» until it is opened */
+.session-spinner { -fx-progress-color: -app-accent; }
+.session-status {
+    -fx-font-size: 10.5px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 1 6 1 4;
+    -fx-background-radius: 9;
+    -fx-min-height: 18px;
+    -fx-graphic-text-gap: 3;
+}
+.session-status.done { -fx-background-color: -app-success; }
+.session-status.failed { -fx-background-color: -app-danger; }
+.session-status .icon-stroke { -fx-stroke: white; -fx-stroke-width: 2.4; }
+.chat-header { -fx-background-color: -app-border, -app-bg; -fx-background-insets: 0, 0 0 1 0; }
+.transcript-scroll { -fx-background-color: transparent; }
+.transcript { -fx-background-color: -app-bg; }
+.msg-bubble { -fx-background-radius: 12; -fx-padding: 10 14 10 14; }
+.msg-user { -fx-background-color: -app-accent-soft; -fx-border-color: transparent; -fx-border-radius: 12; -fx-border-width: 1; }
+.msg-assistant { -fx-background-color: -app-canvas; -fx-border-color: -app-border; -fx-border-radius: 12; -fx-border-width: 1; }
+.msg-live { -fx-border-color: -app-accent; }
+/* selected text, in the transcript and in a diff view: drawn over the glyphs, so it is tinted rather than opaque */
+.transcript-selection, .diff-selection { -fx-fill: -app-accent; -fx-stroke: null; -fx-opacity: 0.28; }
+.msg-author { -fx-font-size: 11.5px; -fx-text-fill: -app-muted; }
+/* reading text: the transcript is a work journal, so it is set larger and looser than the chrome */
+.msg-text { -fx-font-size: 14.5px; -fx-text-fill: -app-text; -fx-line-spacing: 3; }
+.msg-usage { -fx-font-size: 11px; -fx-text-fill: -app-muted; -fx-font-family: monospace; }
+.msg-system { -fx-font-size: 12px; -fx-padding: 5 10 5 10; -fx-background-radius: 8; }
+.msg-system.warning { -fx-text-fill: #6b4700; -fx-background-color: #faf0d8; }
+.msg-system.error { -fx-text-fill: #7c2420; -fx-background-color: #f8e5e2; }
+/* how the conversation was set up, above the first message: a note in the margin, not a message of its own */
+.setup-log { -fx-border-color: transparent transparent transparent -app-border; -fx-border-width: 0 0 0 2; -fx-padding: 2 0 2 10; }
+.setup-log .label { -fx-font-size: 11.5px; -fx-text-fill: -app-muted; }
+/* the card over the transcript while a conversation is being created */
+.creating-card {
+    -fx-background-color: -app-surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -app-border;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 18, 0, 0, 6);
+}
+.creating-spinner { -fx-progress-color: -app-accent; }
+.creating-title { -fx-font-size: 13.5px; -fx-font-weight: bold; -fx-text-fill: -app-text; }
+.creating-detail { -fx-font-size: 12px; -fx-text-fill: -app-muted; }
+.creating-elapsed { -fx-font-size: 11px; -fx-text-fill: -app-muted; -fx-font-family: monospace; }
+/* what is waiting for delivery, between the transcript and the composer */
+.changes-strip { -fx-background-color: -app-border, -app-accent-soft; -fx-background-insets: 0, 1 0 0 0; }
+.changes-label { -fx-font-size: 12.5px; -fx-text-fill: -app-text; }
+.changes-strip .icon-stroke { -fx-stroke: -app-accent; }
+.composer { -fx-background-color: -app-border, -app-canvas; -fx-background-insets: 0, 1 0 0 0; }
+.composer .text-area { -fx-font-size: 13px; }
+.busy-label { -fx-text-fill: -app-muted; -fx-font-size: 12px; }
+.context-label { -fx-font-size: 11.5px; -fx-text-fill: -app-muted; }
+/* a group heading in the model dropdown: a label over the rows under it, not one of them */
+.list-cell.model-group {
+    -fx-font-size: 11px;
+    -fx-text-fill: -app-muted;
+    -fx-padding: 6 8 2 8;
+    -fx-opacity: 1;
+}
+.context-warn { -fx-text-fill: #8a5a00; }
+.context-danger { -fx-text-fill: #a32b26; }
+.attachment-chip {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 12, 11;
+    -fx-padding: 3 10 3 10;
+    -fx-font-size: 11.5px;
+    -fx-text-fill: -app-text;
+}
+/* what the human attached, under the message: images as themselves, the rest as chips */
+.attachment-row { -fx-padding: 2 0 0 0; }
+.attachment-image {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 8, 7;
+    -fx-padding: 3;
+}
+.attachment-image:hover { -fx-background-color: -app-accent, -app-surface; }
+/* the full-size window the thumbnail opens: the picture and nothing else */
+.image-window { -fx-background-color: -app-bg; }
+.attachment-remove {
+    -fx-pref-width: 22px; -fx-min-width: 22px; -fx-max-width: 22px;
+    -fx-pref-height: 22px; -fx-min-height: 22px; -fx-max-height: 22px;
+    -fx-padding: 0;
+}
+.scroll-to-bottom-button {
+    -fx-background-radius: 16, 15;
+    -fx-pref-width: 32px; -fx-min-width: 32px; -fx-max-width: 32px;
+    -fx-pref-height: 32px; -fx-min-height: 32px; -fx-max-height: 32px;
+    -fx-padding: 0;
+    -fx-translate-x: -16;
+    -fx-translate-y: -16;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 0, 2);
+}
+
+/* ---- markdown ---- */
+.markdown { }
+.md-heading { -fx-font-weight: bold; -fx-text-fill: -app-text; }
+.md-h1 { -fx-font-size: 18px; }
+.md-h2 { -fx-font-size: 16px; }
+.md-h3 { -fx-font-size: 14px; }
+.md-text { -fx-fill: -app-text; -fx-font-size: 14.5px; }
+.md-bold { -fx-font-weight: bold; }
+.md-italic { -fx-font-style: italic; }
+.md-inline-code { -fx-font-family: monospace; -fx-fill: -app-inline-code; }
+.md-link { -fx-fill: -app-accent; }
+.md-link:hover { -fx-underline: true; }
+.md-code {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 8, 7;
+}
+.md-code-scroll { -fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0; }
+.md-code-scroll > .viewport { -fx-background-color: transparent; }
+.md-code-text { -fx-font-family: monospace; -fx-font-size: 12px; -fx-text-fill: -app-text; }
+.md-quote { -fx-border-color: -app-border-strong; -fx-border-width: 0 0 0 3; }
+.md-bullet { -fx-fill: -app-muted; }
+.md-table { -fx-padding: 2 0 6 0; }
+.md-table-cell {
+    -fx-padding: 4 10 4 0;
+    -fx-border-color: -app-border;
+    -fx-border-width: 0 0 1 0;
+}
+.md-table-head { -fx-border-color: -app-border-strong; -fx-border-width: 0 0 1.5 0; }
+.md-table-head > .md-text { -fx-font-weight: bold; }
+/* a rendered .md file in the files pane: a page, with a line length that can be read across a wide window */
+.md-preview { -fx-padding: 16 20 24 20; -fx-background-color: -app-bg; -fx-spacing: 10; }
+.md-preview > .markdown { -fx-max-width: 860; }
+
+/* ---- work log under a bubble ---- */
+.work-log { -fx-padding: 4 0 0 0; }
+.work-reasoning > .title > .text { -fx-font-style: italic; -fx-fill: -app-muted; }
+.work-tool > .content, .work-reasoning > .content { -fx-background-color: -app-border, -app-surface; }
+/* what the agent says between tool calls: a quiet tint and a thin stripe set it off from the cards, no bold */
+.work-text { -fx-background-color: -app-accent, -app-surface; -fx-background-insets: 0, 0 0 0 3; -fx-background-radius: 6, 0 6 6 0; -fx-padding: 8 12 8 12; }
+.work-notice { -fx-font-size: 12px; -fx-padding: 4 10 4 10; -fx-background-radius: 6; }
+.work-notice.info { -fx-text-fill: -app-text; -fx-background-color: -app-accent-soft; }
+.work-notice.warning { -fx-text-fill: #6b4700; -fx-background-color: #faf0d8; }
+.work-notice.error { -fx-text-fill: #7c2420; -fx-background-color: #f8e5e2; }
+
+/*
+ * Tool calls: the kind of call is told at a glance by a badge in the title and a coloured stripe down the left
+ * of the title bar. Edits are amber, lookups (read, search) blue, commands neutral, web teal, agents purple,
+ * failures red. The per-kind colours are looked-up so the title rules below stay generic.
+ */
+.work-tool { -app-tool-stripe: -app-border-strong; -app-tool-badge-fg: -app-muted; -app-tool-badge-bg: -app-surface-hover; }
+.work-tool.tool-edit { -app-tool-stripe: -app-warning; -app-tool-badge-fg: -app-warning; -app-tool-badge-bg: -app-warning-soft; }
+.work-tool.tool-read, .work-tool.tool-search { -app-tool-stripe: -app-accent; -app-tool-badge-fg: -app-accent; -app-tool-badge-bg: -app-accent-soft; }
+.work-tool.tool-web { -app-tool-stripe: -app-teal; -app-tool-badge-fg: -app-teal; -app-tool-badge-bg: -app-teal-soft; }
+.work-tool.tool-agent { -app-tool-stripe: -app-purple; -app-tool-badge-fg: -app-purple; -app-tool-badge-bg: -app-purple-soft; }
+.work-tool.error { -app-tool-stripe: -app-danger; -app-tool-badge-fg: -app-danger; -app-tool-badge-bg: -app-danger-soft; }
+.work-tool > .title {
+    -fx-background-color: -app-border, -app-tool-stripe, -app-canvas;
+    -fx-background-insets: 0, 1, 1 1 1 4;
+    -fx-background-radius: 6, 5 0 0 5, 0 5 5 0;
+    -fx-graphic-text-gap: 8;
+}
+.work-tool:expanded > .title { -fx-background-radius: 6 6 0 0, 5 0 0 0, 0 5 0 0; }
+.work-tool:focused > .title { -fx-background-color: -app-border-strong, -app-tool-stripe, -app-canvas; }
+.work-tool > .title > .text { -fx-font-family: monospace; -fx-font-size: 11.5px; }
+.work-tool.error > .title > .text { -fx-fill: -app-danger; }
+/* the header row replaces the title text: badge, ellipsized title, +/- counts at the right edge */
+.tool-header { -fx-padding: 0; }
+.tool-title { -fx-font-family: monospace; -fx-font-size: 11.5px; -fx-text-fill: -app-text; -fx-text-overrun: center-ellipsis; }
+.work-tool.error .tool-title { -fx-text-fill: -app-danger; }
+.tool-header > .diff-count-add, .tool-header > .diff-count-del { -fx-font-size: 11.5px; }
+.tool-badge {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-tool-badge-fg;
+    -fx-background-color: -app-tool-badge-bg;
+    -fx-background-radius: 4;
+    -fx-padding: 1 6 1 6;
+    -fx-min-width: 48px;
+    -fx-alignment: CENTER;
+}
+
+/* the opened call: input parts first, then the output */
+.tool-body { -fx-background-color: transparent; }
+.tool-command {
+    -fx-font-family: monospace;
+    -fx-font-size: 11.5px;
+    -fx-text-fill: -app-text;
+    -fx-padding: 6 10 6 10;
+    -fx-background-color: -app-border, -app-canvas;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 6, 5;
+}
+.tool-field { -fx-alignment: BASELINE_LEFT; }
+.tool-field-key { -fx-font-size: 11.5px; -fx-text-fill: -app-muted; -fx-min-width: 72px; }
+.tool-field-value { -fx-font-family: monospace; -fx-font-size: 11.5px; -fx-text-fill: -app-text; }
+.tool-section { -fx-font-size: 10.5px; -fx-font-weight: bold; -fx-text-fill: -app-muted; -fx-padding: 4 0 0 0; }
+.tool-pending { -fx-font-size: 11.5px; -fx-font-style: italic; -fx-text-fill: -app-muted; }
+.tool-output {
+    -fx-font-family: monospace;
+    -fx-font-size: 11.5px;
+    -fx-background-color: -app-border, -app-canvas;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 6, 5;
+}
+.tool-output:focused { -fx-background-color: -app-border-strong, -app-canvas; -fx-background-insets: 0, 1; }
+.tool-output.error, .tool-output.error:focused { -fx-background-color: -app-danger, -app-danger-soft; }
+.diff-changes { -fx-padding: 0; }
+.diff-changes > .diff-file-header { -fx-padding: 5 10 5 10; }
+
+/* =====================================================================
+ * Diff views (GitHub colour language)
+ * ===================================================================== */
+.diff-area { -fx-background-color: transparent; }
+.diff-toolbar { -fx-background-color: -app-border, -app-canvas; -fx-background-insets: 0, 0 0 1 0; -fx-padding: 8 12 8 12; -fx-spacing: 8; -fx-alignment: CENTER_LEFT; }
+.diff-status { -fx-text-fill: -app-muted; -fx-font-size: 12px; }
+.diff-empty { -fx-text-fill: -app-muted; -fx-padding: 24; -fx-alignment: CENTER; }
+.diff-file {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 8, 7;
+    -fx-padding: 1;
+}
+.diff-file-header {
+    -fx-background-color: -app-border, -app-canvas;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-background-radius: 7 7 0 0, 7 7 0 0;
+    -fx-padding: 7 12 7 12;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER_LEFT;
+}
+.diff-file-path { -fx-font-family: monospace; -fx-font-size: 12.5px; -fx-font-weight: bold; -fx-text-fill: -app-text; }
+.diff-file-old { -fx-font-family: monospace; -fx-font-size: 12px; -fx-text-fill: -app-muted; }
+.diff-count-add { -fx-font-family: monospace; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: -app-diff-add-fg; }
+.diff-count-del { -fx-font-family: monospace; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: -app-diff-del-fg; }
+.diff-change-badge {
+    -fx-font-size: 10.5px;
+    -fx-font-weight: bold;
+    -fx-padding: 1 7 1 7;
+    -fx-background-radius: 9;
+    -fx-text-fill: -app-muted;
+    -fx-background-color: -app-surface-hover;
+}
+.diff-change-badge.added { -fx-text-fill: -app-diff-add-fg; -fx-background-color: -app-diff-add-bg; }
+.diff-change-badge.deleted { -fx-text-fill: -app-diff-del-fg; -fx-background-color: -app-diff-del-bg; }
+.diff-change-badge.modified { -fx-text-fill: -app-warning; -fx-background-color: -app-warning-soft; }
+.diff-change-badge.renamed { -fx-text-fill: -app-diff-hunk-fg; -fx-background-color: -app-diff-hunk-bg; }
+.diff-conflict { -fx-text-fill: -app-warning; -fx-font-size: 12px; }
+
+/* «Deliver changes»: the standing warning about the files the delivery would leave behind */
+.deliver-warning {
+    -fx-background-color: -app-warning, -app-warning-soft;
+    -fx-background-insets: 0, 0 0 0 3;
+    -fx-background-radius: 6, 0 6 6 0;
+    -fx-padding: 8 12 8 12;
+}
+.deliver-warning-title { -fx-font-weight: bold; -fx-text-fill: #6b4700; }
+.deliver-warning-line { -fx-font-size: 12px; -fx-text-fill: #6b4700; }
+
+/* the file list to the left of the Git Diff window */
+.diff-file-list { -fx-background-color: -app-canvas; -fx-background-insets: 0; -fx-background-radius: 0; -fx-padding: 6; }
+.diff-file-list:focused { -fx-background-color: -app-canvas; -fx-background-insets: 0; }
+.diff-file-list .list-cell { -fx-background-color: transparent; -fx-padding: 6 8 6 8; -fx-background-radius: 6; -fx-background-insets: 0; }
+.diff-file-list .list-cell:filled:hover { -fx-background-color: -app-surface-hover; }
+.diff-file-list .list-cell:filled:selected, .diff-file-list:focused .list-cell:filled:selected { -fx-background-color: -app-selection; }
+.diff-file-name { -fx-font-family: monospace; -fx-font-size: 12.5px; -fx-font-weight: bold; -fx-text-fill: -app-text; }
+.diff-file-dir { -fx-font-family: monospace; -fx-font-size: 11px; -fx-text-fill: -app-muted; }
+
+.diff-list {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+    -fx-fixed-cell-size: 22px;
+    -fx-font-family: monospace;
+    -fx-font-size: 12px;
+}
+.diff-list:focused { -fx-background-color: transparent; }
+.diff-list .list-cell {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: -app-surface;
+    -fx-text-fill: -app-text;
+}
+.diff-list .list-cell:filled:hover { -fx-background-color: -app-surface-hover; }
+.diff-list .list-cell.diff-added { -fx-background-color: -app-diff-add-bg; }
+.diff-list .list-cell.diff-removed { -fx-background-color: -app-diff-del-bg; }
+.diff-list .list-cell.diff-hunk { -fx-background-color: -app-diff-hunk-bg; }
+.diff-list .list-cell.diff-meta { -fx-background-color: -app-canvas; }
+/* a diff line is selected by the character, not by the row, so the row never takes a selected background */
+.diff-copy-file { -fx-font-size: 11.5px; -fx-padding: 1 8 1 8; -fx-min-height: 20px; -fx-pref-height: 20px; }
+
+.diff-line { -fx-background-color: transparent; -fx-alignment: CENTER_LEFT; }
+.diff-line.diff-added { -fx-background-color: -app-diff-add-bg; }
+.diff-line.diff-removed { -fx-background-color: -app-diff-del-bg; }
+.diff-line.diff-hunk { -fx-background-color: -app-diff-hunk-bg; }
+.diff-block {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 8, 7;
+    -fx-padding: 1;
+}
+
+.diff-gutter {
+    -fx-font-family: monospace;
+    -fx-font-size: 11.5px;
+    -fx-text-fill: -app-diff-gutter-fg;
+    -fx-background-color: -app-diff-gutter-bg;
+    -fx-pref-width: 46px;
+    -fx-min-width: 46px;
+    -fx-max-width: 46px;
+    -fx-alignment: CENTER_RIGHT;
+    -fx-padding: 0 8 0 0;
+}
+.diff-added .diff-gutter { -fx-background-color: -app-diff-add-gutter; -fx-text-fill: -app-diff-add-fg; }
+.diff-removed .diff-gutter { -fx-background-color: -app-diff-del-gutter; -fx-text-fill: -app-diff-del-fg; }
+.diff-hunk .diff-gutter { -fx-background-color: -app-diff-hunk-gutter; }
+.diff-sign {
+    -fx-font-family: monospace;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 22px;
+    -fx-min-width: 22px;
+    -fx-max-width: 22px;
+    -fx-alignment: CENTER;
+    -fx-text-fill: -app-muted;
+}
+.diff-added .diff-sign { -fx-text-fill: -app-diff-add-fg; }
+.diff-removed .diff-sign { -fx-text-fill: -app-diff-del-fg; }
+.diff-code { -fx-font-family: monospace; -fx-font-size: 12px; -fx-fill: -app-text; }
+.diff-hunk .diff-code { -fx-fill: -app-diff-hunk-fg; }
+.diff-meta .diff-code { -fx-fill: -app-muted; -fx-font-style: italic; }
+
+/* =====================================================================
+ * Files, gateway, usage, login
+ * ===================================================================== */
+.code-editor {
+    -fx-font-family: monospace;
+    -fx-font-size: 12.5px;
+    -fx-background-color: -app-surface;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+.code-editor:focused { -fx-background-color: -app-surface; -fx-background-insets: 0; }
+.editor-header { -fx-background-color: -app-border, -app-canvas; -fx-background-insets: 0, 0 0 1 0; }
+.files-pane { }
+.files-sidebar { -fx-background-color: -app-canvas; }
+.files-sidebar .tree-view { -fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0; }
+.gateway-pane { }
+.login-code {
+    -fx-font-size: 22px;
+    -fx-font-family: monospace;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-accent;
+    -fx-background-color: -app-accent-soft;
+    -fx-background-radius: 8;
+    -fx-padding: 6 14 6 14;
+}
+.usage-card {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 10, 9;
+    -fx-padding: 14;
+}
+.usage-card .progress-bar { -fx-pref-height: 8px; }
+.usage-bar-warn > .bar { -fx-background-color: -app-warning; }
+.usage-bar-danger > .bar { -fx-background-color: -app-danger; }
+.usage-scroll { -fx-background-color: transparent; }
+.usage-scroll > .viewport { -fx-background-color: transparent; }
+
+/* =====================================================================
+ * Splash
+ * ===================================================================== */
+.splash-root {
+    -fx-background-color: -app-border, -app-bg;   /* the window is undecorated, so the border is ours to draw */
+    -fx-background-insets: 0, 1;
+    -fx-padding: 10;                              /* the inset the close button sits in; the mark is centred */
+}
+/* The mark is navy on nothing: on the dark theme only its cyan ring would survive, so it gets the light
+   surface it was drawn for. A literal white in both themes, which is why dark.css does not repeat it. */
+.splash-mark {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 50%;
+    -fx-padding: 10;
+}
+.splash-title { -fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: -app-text; }
+.splash-tagline { -fx-font-size: 14px; -fx-text-fill: -app-muted; }
+.splash-version { -fx-font-size: 12px; -fx-text-fill: -app-muted; }   /* under the tagline, so a step smaller */
+/* Square, flat and quiet until pointed at: the shared .button rule is one class deep, and this one comes later. */
+.splash-close {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-padding: 0 0 3 0;
+    -fx-min-width: 28px; -fx-pref-width: 28px; -fx-max-width: 28px;
+    -fx-min-height: 28px; -fx-pref-height: 28px; -fx-max-height: 28px;
+    -fx-font-size: 19px;
+    -fx-text-fill: -app-muted;
+}
+.splash-close:hover { -fx-background-color: -app-surface-hover; -fx-text-fill: -app-text; }
+.splash-close:pressed { -fx-background-color: -app-selection; }
+
+/* =====================================================================
+ * New-sandbox wizard
+ * ===================================================================== */
+.wizard-rail { -fx-background-color: -app-canvas; -fx-min-width: 190px; -fx-pref-width: 190px; }
+.wizard-rail-row { -fx-padding: 6 10 6 12; -fx-background-radius: 9; }
+.wizard-rail-row-current { -fx-background-color: -app-surface; }
+.wizard-step-title { -fx-text-fill: -app-muted; }
+.wizard-step-title-current { -fx-text-fill: -app-text; -fx-font-weight: bold; }
+/* The mark is a disc: the step's number while it is ahead, a tick once it is behind. */
+.wizard-mark {
+    -fx-background-color: -app-border;
+    -fx-background-radius: 50%;
+    -fx-min-width: 20px; -fx-pref-width: 20px; -fx-min-height: 20px; -fx-pref-height: 20px;
+    -fx-alignment: CENTER;
+    -fx-font-size: 11px;
+    -fx-text-fill: -app-muted;
+}
+.wizard-mark-current { -fx-background-color: -app-accent; -fx-text-fill: white; }
+.wizard-mark-done { -fx-background-color: -app-success; -fx-text-fill: white; }
+.wizard-mark-failed { -fx-background-color: -app-danger; -fx-text-fill: white; }
+.wizard-count { -fx-font-size: 11.5px; -fx-text-fill: -app-muted; }
+.wizard-output { -fx-font-family: monospace; -fx-font-size: 11.5px; }

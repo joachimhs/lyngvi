@@ -1,0 +1,61 @@
+# Lyngvi base image: a minimal Debian with git and tini, one unprivileged user,
+# and hardening applied through environment variables. Toolchains come from
+# image/fragments/*.Containerfile, agents from agents/<id>/image.Containerfile.
+# Rendered into ./Containerfile by 'setup.sh rebuild-config'; do not edit the result.
+#
+# Pinned multi-arch digest (amd64 + arm64); CI verifies the pin. Update with: setup.sh doctor --images (M12).
+FROM docker.io/library/debian:bookworm-slim@sha256:88200866dfff7ea7f5cbcb6ec7c8a701889efe6fe859fe64d6990e4b07ea4171
+
+ARG USER_UID=1234
+ARG USER_GID=5678
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      git ca-certificates curl tini openssh-client zip unzip ripgrep jq nano less procps \
+ && rm -rf /var/lib/apt/lists/*
+
+# One unprivileged user whose UID/GID match the host user, so bind-mounted files keep their owner.
+RUN (getent group "${USER_GID}" >/dev/null || groupadd --gid "${USER_GID}" agent) \
+ && useradd --uid "${USER_UID}" --gid "${USER_GID}" --create-home --home-dir /home/agent --shell /bin/bash agent \
+ && mkdir -p /work /etc/lyngvi \
+ && chown -R agent: /work /home/agent
+
+COPY scripts/docker-entrypoint.sh /home/agent/docker-entrypoint.sh
+RUN chmod 755 /home/agent/docker-entrypoint.sh && chown agent: /home/agent/docker-entrypoint.sh
+
+# Hardening (spec §7.1): no package lifecycle scripts, no git prompts or system config, no signing.
+ENV npm_config_ignore_scripts=true \
+    YARN_ENABLE_SCRIPTS=false \
+    GIT_TERMINAL_PROMPT=0 \
+    GIT_CONFIG_NOSYSTEM=1 \
+    GIT_CONFIG_COUNT=4 \
+    GIT_CONFIG_KEY_0=commit.gpgsign GIT_CONFIG_VALUE_0=false \
+    GIT_CONFIG_KEY_1=tag.gpgsign    GIT_CONFIG_VALUE_1=false \
+    GIT_CONFIG_KEY_2=user.name      GIT_CONFIG_VALUE_2=lyngvi \
+    GIT_CONFIG_KEY_3=user.email     GIT_CONFIG_VALUE_3=lyngvi@local \
+    JAVA_TOOL_OPTIONS="-Dcom.sun.jndi.dns.timeout=1000 -Dcom.sun.jndi.dns.connect.timeout=1000 -Dsun.net.inetaddr.ttl=10 -Dnetworkaddress.cache.ttl=10 -Dnetworkaddress.cache.negative.ttl=1" \
+    LANG=C.UTF-8 \
+    TERM=xterm-256color
+
+USER agent
+WORKDIR /work
+ENTRYPOINT ["/usr/bin/tini", "--", "/home/agent/docker-entrypoint.sh"]
+CMD ["sleep", "infinity"]
+
+# --- toolchain: node22 ---
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends xz-utils \
+ && rm -rf /var/lib/apt/lists/* \
+ && arch="$(dpkg --print-architecture)" \
+ && case "$arch" in amd64) node_arch=x64 ;; arm64) node_arch=arm64 ;; *) echo "unsupported arch $arch" >&2; exit 1 ;; esac \
+ && curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION:-22.20.0}/node-v${NODE_VERSION:-22.20.0}-linux-${node_arch}.tar.xz" -o /tmp/node.tar.xz \
+ && curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION:-22.20.0}/SHASUMS256.txt" -o /tmp/SHASUMS256.txt \
+ && grep " node-v${NODE_VERSION:-22.20.0}-linux-${node_arch}.tar.xz\$" /tmp/SHASUMS256.txt | sed 's#  .*# /tmp/node.tar.xz#' | sha256sum -c - \
+ && tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1 \
+ && rm -f /tmp/node.tar.xz /tmp/SHASUMS256.txt
+ENV NPM_CONFIG_PREFIX=/home/agent/.npm-global \
+    PATH=/home/agent/.npm-global/bin:$PATH
+USER agent
+
+LABEL no.syntakserror.lyngvi.toolchains="node22"

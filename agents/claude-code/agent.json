@@ -1,0 +1,49 @@
+{
+  "id": "claude-code",
+  "label": "Claude Code",
+  "version": "2.0.0",
+  "pinnedCli": "2.1.261",
+  "verify": "Command templates and the stream-json mapping were written for @anthropic-ai/claude-code 2.1.261; verify them when changing pinnedCli.",
+  "requires": ["node22"],
+  "configDir": "/home/agent/.claude",
+  "skillsDir": "skills",
+  "instructionFile": "CLAUDE.md",
+  "auth": { "modes": ["subscription", "token", "api-key"], "default": "subscription" },
+  "egress": [
+    "api.anthropic.com",
+    "claude.ai",
+    "console.anthropic.com",
+    "platform.claude.com",
+    { "host": "statsig.anthropic.com", "optional": true },
+    { "host": "sentry.io", "optional": true }
+  ],
+  "capabilities": { "streaming": true, "reasoning": true, "models": true, "usage": false, "attachments": ["image/png", "image/jpeg"], "resume": true },
+  "env": {
+    "CLAUDE_CONFIG_DIR": "/home/agent/.claude",
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_AUTOUPDATER": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
+  "models": [
+    { "id": "sonnet", "label": "Claude Sonnet (latest)", "default": true },
+    { "id": "opus", "label": "Claude Opus (latest)", "default": false },
+    { "id": "fable", "label": "Claude Fable (latest)", "default": false },
+    { "id": "haiku", "label": "Claude Haiku (latest)", "default": false }
+  ],
+  "commands": {
+    "ask": ["claude", "-p", "--output-format", "stream-json", "--verbose", "--permission-mode", "bypassPermissions", "{model:--model}", "{session:--session-id|--resume}"],
+    "suggest": ["claude", "-p", "--output-format", "json", "--permission-mode", "bypassPermissions", "{model:--model}"],
+    "login": {
+      "subscription": ["claude", "auth", "login", "--claudeai"],
+      "token": ["claude", "setup-token"],
+      "api-key": []
+    },
+    "logout": ["claude", "auth", "logout"]
+  },
+  "authFiles": {
+    "subscription": ".credentials.json",
+    "token": "env:CLAUDE_CODE_OAUTH_TOKEN",
+    "api-key": "env:ANTHROPIC_API_KEY"
+  }
+}
