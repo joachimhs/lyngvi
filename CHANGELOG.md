@@ -262,6 +262,16 @@ Nothing in a sandbox has to be rebuilt or re-initialised, and no session is lost
   build offered.
 
 ### Fixed
+- **A delivery that holds a rename no longer dies on the last step.** `session apply` marks the working copy as
+  delivered with one `:(literal)` pathspec per delivered path, the old name of a rename included — and a pathspec
+  that matches nothing makes git refuse the whole command: `fatal: pathspec '…' did not match any files`, exit 128,
+  raised as «git commit in the working copy failed» *after* the files were already applied and committed on the
+  host. It took no more than the agent staging or committing the rename in its own working copy, which Lyngvi
+  tells it to do as often as it likes: once it has, the old name is gone from the index, and once it has committed,
+  from `HEAD` as well. The paths are now filtered per command before they are used — `git add` gets the ones in
+  the index or on disk, `git commit` those and the ones only `HEAD` still has, which is what keeps a staged
+  rename's deletion in the delivery commit. The host side already did this (`HostGit.matchable`); the working-copy
+  side did not.
 - **«Ask the agent» works again, and picks the agent as well as the model.** The tab hides the conversation list,
   and the only button that started a conversation sat in that list — so nothing on screen could make one, the
   composer stayed disabled with an empty model dropdown, and ⌘↵ did nothing at all. The question itself now makes

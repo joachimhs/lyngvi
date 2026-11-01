@@ -320,16 +320,39 @@ public final class DeliveryService {
      * Records the delivered files in the working copy so the next review starts after them, and returns the
      * commit that made. Only those files: anything else the agent left staged stays out of the commit, and so
      * shows up in the next review. The paths go in as a pathspec file, one {@code :(literal)} line each, so no
-     * name the agent chose is ever read as a pathspec pattern or as shell.
+     * name the agent chose is ever read as a pathspec pattern or as shell, and a path the copy no longer has is
+     * left out rather than taking the delivery down with it — see the script.
      */
     private String recordDelivery(Conversation c, String repo, List<String> includes, String branch) {
         StringBuilder paths = new StringBuilder();
         for (String i : includes) paths.append(HostGit.literal(i)).append('\n');
         Runner.Result r = copy(c, repo).sh("""
                 set -e
-                printf '%s' "$PATHS" > /tmp/lyngvi-paths
-                $GIT add -A --pathspec-from-file=/tmp/lyngvi-paths
-                $GIT commit --quiet --allow-empty -m "$MESSAGE" --pathspec-from-file=/tmp/lyngvi-paths
+                printf '%s' "$PATHS" > /tmp/lyngvi-all-paths
+                # Only the paths git can still resolve, and the two commands do not resolve the same ones: git add
+                # looks in the index and on disk, git commit there and in HEAD as well. The old name of a rename
+                # the agent has staged itself lives only in HEAD until the delivery commits it, and the old name of
+                # one it has committed is in none of the three. A single pathspec that matches nothing makes git
+                # refuse the whole command — after the host has already been written to — so each list holds what
+                # its own command can resolve, the way the host side does it (HostGit.matchable).
+                : > /tmp/lyngvi-add-paths
+                : > /tmp/lyngvi-commit-paths
+                while IFS= read -r spec; do
+                    [ -n "$spec" ] || continue
+                    path=${spec#:(literal)}
+                    if [ -e "$path" ] || $GIT ls-files --error-unmatch -- "$spec" >/dev/null 2>&1; then
+                        printf '%s\\n' "$spec" >> /tmp/lyngvi-add-paths
+                        printf '%s\\n' "$spec" >> /tmp/lyngvi-commit-paths
+                    elif [ -n "$($GIT ls-tree -r --name-only HEAD -- "$spec" 2>/dev/null)" ]; then
+                        printf '%s\\n' "$spec" >> /tmp/lyngvi-commit-paths
+                    fi
+                done < /tmp/lyngvi-all-paths
+                if [ -s /tmp/lyngvi-add-paths ]; then
+                    $GIT add -A --pathspec-from-file=/tmp/lyngvi-add-paths
+                fi
+                if [ -s /tmp/lyngvi-commit-paths ]; then
+                    $GIT commit --quiet --allow-empty -m "$MESSAGE" --pathspec-from-file=/tmp/lyngvi-commit-paths
+                fi
                 exec $GIT rev-parse HEAD
                 """, Map.of("PATHS", paths.toString(), "MESSAGE", "lyngvi: delivered to " + branch), timeout());
         return r.requireSuccess("git commit in the working copy").stdout().strip();

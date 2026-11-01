@@ -1100,6 +1100,12 @@ Per repo, på hosten:
 8. I arbeidskopien: `git add -A -- <valgte stier> && git commit -m "lyngvi: delivered <branch>" -- <valgte stier>`
    → `copyCommit`. Filer som ikke ble valgt forblir uncommitet i kopien og
    dukker opp ved neste `review` — også det agenten måtte ha staget selv.
+   Stiene filtreres per kommando før de brukes: `add` får dem som finnes i
+   indeksen eller på disk, `commit` i tillegg dem som bare finnes i `HEAD`.
+   Ved en omdøping er det gamle navnet bare i `HEAD` når agenten har staget
+   den selv, og ingen av stedene når agenten har commitet den, og én pathspec
+   som ikke treffer noe får git til å avvise hele kommandoen. Samme regel som
+   på vertssiden (`HostGit.matchable`).
 9. Oppdater samtalefilen med uttakspunktet.
 
 JSON: `{ok, deliveryIndex, repos: {api: {branch, hostCommit, copyCommit, files: 3, stashed: true, stashPopConflict: false}}}`.

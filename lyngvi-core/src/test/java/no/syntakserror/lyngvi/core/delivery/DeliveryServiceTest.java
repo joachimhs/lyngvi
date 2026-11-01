@@ -160,6 +160,58 @@ class DeliveryServiceTest {
     }
 
     /**
+     * An agent may commit in its working copy — Lyngvi tells it to commit as often as it likes — and once it has
+     * committed a rename, the old name is in neither the index nor the working tree. The delivery records itself
+     * with one {@code :(literal)} pathspec per delivered path, the old names included, since that is what the
+     * host needs to apply the rename; a pathspec that matches nothing makes {@code git add} refuse the whole
+     * command («fatal: pathspec … did not match any files»), and the delivery used to die on that after the host
+     * had already been written to.
+     */
+    @Test
+    void aRenameTheAgentCommittedInTheCopyIsDeliveredAndRecorded() throws Exception {
+        Conversation c = session(History.NONE);
+        Path w = copy(c);
+        git(runner.real, w, "mv", "README.md", "GUIDE.md");
+        git(runner.real, w, "commit", "-q", "-m", "agent: rename the readme");
+        Files.writeString(w.resolve("keep.txt"), "keep\nmore\n");  // left behind, so the next review has something to show
+
+        ApplyResult a = delivery.apply(c.id(), new ApplyOptions("agent/rename", Optional.of("Rename the readme"), "commit",
+                List.of(), List.of("GUIDE.md"), Optional.empty()));
+
+        ApplyResult.RepoOutcome out = a.repos().get("api");
+        assertThat(host.resolve("GUIDE.md")).exists();
+        assertThat(host.resolve("README.md")).doesNotExist();
+        assertThat(git(runner.real, host, "log", "-1", "--format=%s")).isEqualTo("Rename the readme");
+        // the copy is marked as delivered, which is what keeps the rename out of the next review
+        assertThat(out.copyCommit()).isNotNull();
+        assertThat(git(runner.real, copy(c), "rev-parse", "HEAD")).isEqualTo(out.copyCommit());
+        ReviewResult next = delivery.review(c.id(), Optional.empty());
+        assertThat(next.repos().get("api").files()).extracting(FileChange::path).containsExactly("keep.txt");
+    }
+
+    /**
+     * The same rename, staged in the copy but not committed. Here the old name is gone from the index while
+     * {@code HEAD} still has it, so it is a path the copy can still resolve — and it has to stay in, or the
+     * deletion would never be committed in the copy and the next review would offer the rename all over again.
+     */
+    @Test
+    void aRenameTheAgentOnlyStagedInTheCopyIsRecordedWholeInTheCopy() throws Exception {
+        Conversation c = session(History.NONE);
+        Path w = copy(c);
+        git(runner.real, w, "mv", "README.md", "GUIDE.md");
+
+        ApplyResult a = delivery.apply(c.id(), new ApplyOptions("agent/rename", Optional.of("Rename the readme"), "commit",
+                List.of(), List.of("GUIDE.md"), Optional.empty()));
+
+        assertThat(host.resolve("GUIDE.md")).exists();
+        assertThat(host.resolve("README.md")).doesNotExist();
+        assertThat(git(runner.real, copy(c), "show", "--name-status", "--format=", "HEAD"))
+                .contains("README.md").contains("GUIDE.md");
+        assertThat(git(runner.real, copy(c), "rev-parse", "HEAD")).isEqualTo(a.repos().get("api").copyCommit());
+        assertThat(git(runner.real, copy(c), "status", "--porcelain")).isEmpty();
+    }
+
+    /**
      * The working copy's {@code .git} is the agent's to write, and a delivery commits in it. A hook or a
      * {@code core.fsmonitor} planted there must never be run on our behalf (spec §5.2).
      */
