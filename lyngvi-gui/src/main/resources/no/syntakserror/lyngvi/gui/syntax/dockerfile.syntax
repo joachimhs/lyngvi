@@ -1,0 +1,10 @@
+name          = Dockerfile
+extensions    = dockerfile
+filenames     = dockerfile containerfile
+line.comment  = #
+string.quote  = " '
+escape        = \\
+function.calls = false
+ignore.case   = true
+keywords      = add arg cmd copy entrypoint env expose from healthcheck label maintainer onbuild run shell stopsignal user volume workdir as
+constants     = true false

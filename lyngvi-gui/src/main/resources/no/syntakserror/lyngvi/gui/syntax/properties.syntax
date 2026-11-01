@@ -1,0 +1,7 @@
+name          = Properties
+extensions    = properties ini cfg toml
+line.comment  = # ;
+string.quote  = " '
+escape        = \\
+function.calls = false
+constants     = true false

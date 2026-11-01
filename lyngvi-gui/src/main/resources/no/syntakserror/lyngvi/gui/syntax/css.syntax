@@ -1,0 +1,9 @@
+name          = CSS
+extensions    = css
+block.comment = /* */
+string.quote  = " '
+escape        = \\
+annotation    = @
+keywords      = and from important inherit initial not only to unset
+types         = absolute auto block bold center fixed flex grid hidden inline inline-block none relative solid transparent
+constants     = currentColor

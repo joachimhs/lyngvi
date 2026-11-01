@@ -1,0 +1,9 @@
+name          = Shell
+extensions    = sh bash zsh
+filenames      = .bashrc .zshrc .profile
+line.comment  = #
+string.quote  = " '
+escape        = \\
+keywords      = alias case cd do done elif else esac eval exec exit export fi for function if in local read return set shift source then trap unset until while
+constants     = true false
+sample        = #!/usr/bin/env bash\nset -euo pipefail\n\n# the first file in a folder\nfor f in "$1"/*; do\n  [ -f "$f" ] && { echo "$f"; break; }\ndone

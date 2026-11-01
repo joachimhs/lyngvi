@@ -1,0 +1,12 @@
+name             = Kotlin
+extensions       = kt kts
+line.comment     = //
+block.comment    = /* */
+multiline.string = """ """
+string.quote     = "
+char.quote       = '
+escape           = \\
+annotation       = @
+keywords         = as break by catch class companion constructor continue crossinline data delegate do else enum external final finally for fun get if import in infix init inline interface internal is lateinit noinline object open operator out override package private protected public reified return sealed set super suspend tailrec this throw try typealias val var vararg when where while
+types            = Any Boolean Byte Char Double Float Int Long Nothing Number Short String Unit List Map MutableList MutableMap Set Pair
+constants        = true false null

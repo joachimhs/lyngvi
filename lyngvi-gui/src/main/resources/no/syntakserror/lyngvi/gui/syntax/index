@@ -1,0 +1,17 @@
+# The languages Lyngvi ships. A jar cannot be asked what a folder in it holds, so they are listed here.
+# A file of the same name in ~/.lyngvi-syntax/ replaces the one named here.
+c
+css
+dockerfile
+go
+java
+javascript
+json
+kotlin
+properties
+python
+rust
+shell
+sql
+typescript
+yaml

@@ -44,6 +44,16 @@
     -app-diff-gutter-bg: #1b1917;
     -app-diff-gutter-fg: #8c8172;
 
+    -app-syntax-keyword: #d79ae0;
+    -app-syntax-type: #7ab3d0;
+    -app-syntax-constant: #f0b98a;
+    -app-syntax-string: #9ccf7c;
+    -app-syntax-number: #f4948d;
+    -app-syntax-comment: #938876;
+    -app-syntax-annotation: #e0b054;
+    -app-syntax-function: #b9a4e8;
+    -app-syntax-punct: #a79c8c;
+
     -fx-text-fill: -app-text;
 }
 

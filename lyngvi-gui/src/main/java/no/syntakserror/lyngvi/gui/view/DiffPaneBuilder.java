@@ -177,16 +177,7 @@ public final class DiffPaneBuilder {
      * {@link TranscriptCopy.Range} over line numbers, the same arithmetic the transcript selects with.
      */
     public static String selectedText(List<Line> lines, TranscriptCopy.Range range) {
-        if (range == null || range.isEmpty()) return "";
-        StringBuilder sb = new StringBuilder();
-        for (int i = Math.max(0, range.fromRun()); i < lines.size() && i <= range.toRun(); i++) {
-            String code = lines.get(i).code();
-            int from = range.startIn(i, code.length());
-            int to = range.endIn(i, code.length());
-            if (i > range.fromRun()) sb.append('\n');
-            if (from >= 0 && to > from) sb.append(code, from, to);
-        }
-        return sb.toString();
+        return TranscriptCopy.selected(lines.stream().map(Line::code).toList(), range);
     }
 
     /**

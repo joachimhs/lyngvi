@@ -40,6 +40,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -69,7 +70,10 @@ import no.syntakserror.lyngvi.gui.view.ConsoleView;
 import no.syntakserror.lyngvi.gui.view.Dialogs;
 import no.syntakserror.lyngvi.gui.view.FilesController;
 import no.syntakserror.lyngvi.gui.view.GatewayPane;
+import no.syntakserror.lyngvi.gui.view.CodeView;
 import no.syntakserror.lyngvi.gui.view.Icon;
+import no.syntakserror.lyngvi.gui.view.Languages;
+import no.syntakserror.lyngvi.gui.view.Syntax;
 import no.syntakserror.lyngvi.gui.view.LocalModelsDialog;
 import no.syntakserror.lyngvi.gui.view.LoginDialog;
 import no.syntakserror.lyngvi.gui.view.PresetChoices;
@@ -126,6 +130,7 @@ public final class MainController {
     @FXML private ToggleButton navGateway;
     @FXML private ToggleButton navAgents;
     @FXML private ToggleButton navSkills;
+    @FXML private ToggleButton navSyntax;
     // content
     @FXML private SplitPane contentSplit;
     @FXML private TabPane mainTabs;
@@ -137,6 +142,7 @@ public final class MainController {
     @FXML private Tab gatewayTab;
     @FXML private Tab agentsTab;
     @FXML private Tab skillsTab;
+    @FXML private Tab syntaxTab;
     @FXML private ChatController chatController;
     @FXML private ChatController askController;
     @FXML private VBox consoleHolder;
@@ -237,6 +243,27 @@ public final class MainController {
     private boolean skillDirty;
     /** True while the selection is being put back after a discard was declined, so the listener skips that round. */
     private boolean restoringSkillSelection;
+    // syntax colours
+    @FXML private Label syntaxDirLabel;
+    @FXML private TableView<Languages.Entry> languageTable;
+    @FXML private TableColumn<Languages.Entry, String> languageNameColumn;
+    @FXML private TableColumn<Languages.Entry, String> languageFilesColumn;
+    @FXML private TableColumn<Languages.Entry, String> languageSourceColumn;
+    @FXML private Button removeLanguageButton;
+    @FXML private Label languageNameLabel;
+    @FXML private Label languageStatusLabel;
+    @FXML private Label languageProblemLabel;
+    @FXML private Button languageSaveButton;
+    @FXML private Button languageDiscardButton;
+    @FXML private TextArea languageEditor;
+    @FXML private StackPane languagePreviewBox;
+    /** The language in the editor, the text it was loaded with, and whether the user has changed it since. */
+    private String editingLanguage;
+    private String editingLanguageOriginal = "";
+    private boolean languageDirty;
+    private boolean restoringLanguageSelection;
+    private CodeView languagePreview;
+
     // agents: usage
     @FXML private Tab usageTab;
     @FXML private ChoiceBox<String> usageAgentChoice;
@@ -264,6 +291,7 @@ public final class MainController {
         setupNavRail();
         setupTables();
         setupSkills();
+        setupSyntax();
         setupUsage();
         setupFilesWindow();
         setupChat();
@@ -289,7 +317,8 @@ public final class MainController {
     private void setupNavRail() {
         ToggleGroup group = new ToggleGroup();
         Map<ToggleButton, Tab> map = Map.of(navSandbox, sandboxTab, navEgress, egressTab, navChat, chatTab, navAsk, askTab,
-                navSetup, setupTab, navGateway, gatewayTab, navAgents, agentsTab, navSkills, skillsTab);
+                navSetup, setupTab, navGateway, gatewayTab, navAgents, agentsTab, navSkills, skillsTab,
+                navSyntax, syntaxTab);
         map.forEach((btn, tab) -> {
             btn.setToggleGroup(group);
             btn.selectedProperty().addListener((o, a, v) -> { if (v) mainTabs.getSelectionModel().select(tab); });
@@ -302,6 +331,7 @@ public final class MainController {
             if (tab == gatewayTab) s.gateway().refresh();
             if (tab == sandboxTab) s.stack().refresh();
             if (tab == skillsTab) s.skills().refresh();
+            if (tab == syntaxTab) refreshLanguages();
         });
         navChat.setSelected(true);
         // Each rail item is an icon over a one-word label. Without the label the rail still looks deliberate —
@@ -630,6 +660,226 @@ public final class MainController {
         });
     }
 
+    // ---- syntax colours ----
+
+    /**
+     * The syntax page: the languages on the left, one {@code .syntax} file in the editor on the right, and the
+     * colours it gives underneath — the sample is re-coloured on every keystroke, so what a rule does is seen
+     * before it is saved. Built like the skills page, and for the same reason: a file the user writes by hand
+     * needs the list, the editor and the reason it does not work in one place.
+     *
+     * <p>Saving writes to the user's own folder. A language that came with Lyngvi is not touched: a file of the
+     * same name takes its place, and «Remove» deletes that file and brings the shipped rules back.
+     */
+    private void setupSyntax() {
+        languagePreview = new CodeView(b);
+        languagePreviewBox.getChildren().add(languagePreview);
+        languageNameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().name()));
+        languageFilesColumn.setCellValueFactory(c -> new SimpleStringProperty(
+                c.getValue().problem() == null ? c.getValue().extensions() : m.get("gui.syntax.problem.short")));
+        languageSourceColumn.setCellValueFactory(c -> new SimpleStringProperty(m.get(
+                c.getValue().source() == Languages.Source.BUILT_IN ? "gui.syntax.source.builtin"
+                        : c.getValue().overrides() ? "gui.syntax.source.replaces" : "gui.syntax.source.user")));
+        languageTable.getSelectionModel().selectedItemProperty().addListener((o, previous, selected) -> {
+            if (restoringLanguageSelection) return;
+            // A refresh replaces every row: the selection comes back as a new record for the same language,
+            // which is not the user picking another one and may not take the editor away from them.
+            if (selected == null || selected.id().equals(editingLanguage)) return;
+            if (!confirmLanguageSwitch(previous)) return;
+            openLanguage(selected);
+        });
+        languageEditor.textProperty().addListener((o, a, v) -> {
+            if (editingLanguage == null) return;
+            markLanguageDirty(!v.equals(editingLanguageOriginal));
+            showPreview(v);
+        });
+        KeyCombination save = new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN);
+        languageEditor.setOnKeyPressed(e -> { if (save.match(e)) onSaveLanguage(); });
+        syntaxDirLabel.setText(m.get("gui.syntax.folder", s.languages().directory().toString()));
+        clearLanguageEditor();
+        refreshLanguages();
+    }
+
+    /** Reads the folder again and lists what is there, keeping the language that is open open. */
+    private void refreshLanguages() {
+        s.languages().reload();
+        String open = editingLanguage;
+        restoringLanguageSelection = true;
+        languageTable.getItems().setAll(s.languages().list());
+        if (open != null) {
+            languageTable.getItems().stream().filter(e -> e.id().equals(open)).findFirst()
+                    .ifPresent(e -> languageTable.getSelectionModel().select(e));
+        }
+        restoringLanguageSelection = false;
+        if (open != null && languageTable.getItems().stream().noneMatch(e -> e.id().equals(open))) clearLanguageEditor();
+        else showLanguageProblem();
+        updateRemoveLanguage();
+    }
+
+    private void openLanguage(Languages.Entry entry) {
+        editingLanguage = entry.id();
+        languageNameLabel.setText(entry.name() + "  ·  " + entry.id() + ".syntax");
+        languageEditor.setDisable(false);
+        editingLanguageOriginal = s.languages().text(entry.id());
+        languageEditor.setText(editingLanguageOriginal);
+        markLanguageDirty(false);
+        showPreview(editingLanguageOriginal);
+        updateRemoveLanguage();
+    }
+
+    private void clearLanguageEditor() {
+        editingLanguage = null;
+        editingLanguageOriginal = "";
+        languageEditor.clear();
+        languageEditor.setDisable(true);
+        languageNameLabel.setText(m.get("gui.syntax.none"));
+        languagePreview.show("", null);
+        markLanguageDirty(false);
+        showLanguageProblem();
+        updateRemoveLanguage();
+    }
+
+    private void markLanguageDirty(boolean dirty) {
+        languageDirty = dirty;
+        boolean editing = editingLanguage != null;
+        languageSaveButton.setDisable(!editing || !dirty);
+        languageDiscardButton.setDisable(!editing || !dirty);
+        languageStatusLabel.setText(!editing ? "" : dirty ? m.get("gui.files.modified") : "");
+    }
+
+    /** «Remove» is for the user's own file: a language that came with Lyngvi has none to delete. */
+    private void updateRemoveLanguage() {
+        Languages.Entry selected = languageTable.getSelectionModel().getSelectedItem();
+        removeLanguageButton.setDisable(selected == null || !s.languages().isUser(selected.id()));
+    }
+
+    /**
+     * Colours the sample by the rules as they stand in the editor, saved or not. A file that cannot be read says
+     * why instead, which is the whole feedback loop for writing one: type, see, fix.
+     */
+    private void showPreview(String text) {
+        if (editingLanguage == null) return;
+        try {
+            Syntax syntax = Syntax.parse(editingLanguage, text);
+            languagePreview.show(syntax.preview(), syntax);
+            showProblemText(null);
+        } catch (Syntax.Problem p) {
+            languagePreview.show("", null);
+            showProblemText(p.getMessage());
+        }
+    }
+
+    /** The warning under the editor: why the language in it colours nothing as the file stands on disk. */
+    private void showLanguageProblem() {
+        showProblemText(languageTable.getItems().stream()
+                .filter(e -> e.id().equals(editingLanguage)).findFirst()
+                .map(Languages.Entry::problem).orElse(null));
+    }
+
+    private void showProblemText(String problem) {
+        languageProblemLabel.setText(problem == null ? "" : problem);
+        languageProblemLabel.setVisible(problem != null);
+        languageProblemLabel.setManaged(problem != null);
+    }
+
+    /** Asks before unsaved text is left behind, and puts the selection back when the answer is no. */
+    private boolean confirmLanguageSwitch(Languages.Entry leaving) {
+        if (confirmLanguageDiscard()) return true;
+        if (leaving != null) {
+            restoringLanguageSelection = true;
+            javafx.application.Platform.runLater(() -> {
+                languageTable.getSelectionModel().select(leaving);
+                restoringLanguageSelection = false;
+            });
+        }
+        return false;
+    }
+
+    private boolean confirmLanguageDiscard() {
+        if (!languageDirty || editingLanguage == null) return true;
+        return dialogs.confirm(m.get("gui.skills.discard.title"), m.get("gui.syntax.discard.text", editingLanguage),
+                m.get("gui.files.discard"));
+    }
+
+    @FXML private void onRefreshLanguages() {
+        refreshLanguages();
+    }
+
+    @FXML private void onSaveLanguage() {
+        if (editingLanguage == null || !languageDirty) return;
+        String id = editingLanguage;
+        String text = languageEditor.getText();
+        try {
+            s.languages().save(id, text);
+        } catch (java.io.IOException e) {
+            dialogs.error(Errors.map(e, m));
+            return;
+        }
+        editingLanguageOriginal = text;
+        markLanguageDirty(false);
+        languageStatusLabel.setText(m.get("gui.files.saved"));
+        s.log().info("saved syntax " + s.languages().fileOf(id));
+        refreshLanguages();
+        // the file on disk is what the pane colours by now, so the warning is the one the file earns
+        showLanguageProblem();
+    }
+
+    @FXML private void onDiscardLanguage() {
+        if (editingLanguage == null) return;
+        languageEditor.setText(editingLanguageOriginal);
+        markLanguageDirty(false);
+    }
+
+    @FXML private void onNewLanguage() {
+        if (!confirmLanguageDiscard()) return;
+        dialogs.textInput(m.get("gui.syntax.new.title"), m.get("gui.syntax.new.header"), "")
+                .map(name -> name.strip().toLowerCase(java.util.Locale.ROOT))
+                .filter(name -> !name.isBlank())
+                .ifPresent(name -> {
+                    try {
+                        s.languages().create(name);
+                    } catch (java.io.IOException e) {
+                        dialogs.error(Errors.map(e, m));
+                        return;
+                    }
+                    // a new language is made to be written, so it opens in the editor with the template in it
+                    refreshLanguages();
+                    languageTable.getItems().stream().filter(e -> e.id().equals(name)).findFirst().ifPresent(e -> {
+                        restoringLanguageSelection = true;
+                        languageTable.getSelectionModel().select(e);
+                        restoringLanguageSelection = false;
+                        openLanguage(e);
+                    });
+                    languageEditor.requestFocus();
+                });
+    }
+
+    @FXML private void onRemoveLanguage() {
+        Languages.Entry entry = languageTable.getSelectionModel().getSelectedItem();
+        if (entry == null || !s.languages().isUser(entry.id())) return;
+        boolean shipped = entry.overrides();
+        if (!dialogs.confirm(m.get("gui.syntax.remove.title"),
+                m.get(shipped ? "gui.syntax.remove.replaced" : "gui.syntax.remove.text", entry.name(),
+                        s.languages().fileOf(entry.id()).toString()),
+                m.get("gui.button.remove"))) {
+            return;
+        }
+        try {
+            s.languages().remove(entry.id());
+        } catch (java.io.IOException e) {
+            dialogs.error(Errors.map(e, m));
+            return;
+        }
+        if (entry.id().equals(editingLanguage)) {
+            // a replaced language is still there, with the shipped rules back in it; one of the user's own is gone
+            refreshLanguages();
+            languageTable.getItems().stream().filter(e -> e.id().equals(entry.id())).findFirst()
+                    .ifPresentOrElse(this::openLanguage, this::clearLanguageEditor);
+        } else {
+            refreshLanguages();
+        }
+    }
+
     /** The usage sub-tab: an agent picker that loads on change, and a pane that draws the report. */
     private void setupUsage() {
         usagePane = new UsagePane(m);
@@ -730,6 +980,8 @@ public final class MainController {
         // The skills on screen are the ones of the sandbox this window is leaving; the new one brings its own.
         s.skills().clear();
         clearSkillEditor();
+        // Every page here belongs to a sandbox — except the syntax colours, which are the user's own and the same
+        // in every sandbox, so that one stays open when none is.
         for (Tab t : List.of(sandboxTab, egressTab, chatTab, askTab, setupTab, gatewayTab, agentsTab, skillsTab)) t.setDisable(!open);
         if (!open) return;
         s.settings().setSandboxDir(dir.orElseThrow());

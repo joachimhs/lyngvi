@@ -23,6 +23,24 @@ final class TranscriptCopy {
      */
     record Run(String text, int bubble, int line) {}
 
+    /**
+     * What a range yields over lines of text, one line per run: the part of the first line the range starts in,
+     * every line in between whole, and the part of the last line it ends in. Used by everything that selects over
+     * a virtualised list of lines — the diff and the coloured source view ({@link LineSelection}).
+     */
+    static String selected(List<String> lines, Range range) {
+        if (range == null || range.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = Math.max(0, range.fromRun()); i < lines.size() && i <= range.toRun(); i++) {
+            String line = lines.get(i);
+            int from = range.startIn(i, line.length());
+            int to = range.endIn(i, line.length());
+            if (i > range.fromRun()) sb.append('\n');
+            if (from >= 0 && to > from) sb.append(line, from, to);
+        }
+        return sb.toString();
+    }
+
     /** A range over the runs: where the drag started, and where it is now — in either order. */
     record Range(int fromRun, int fromChar, int toRun, int toChar) {
 

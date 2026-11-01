@@ -54,6 +54,11 @@ import no.syntakserror.lyngvi.gui.Services;
  * «Raw» a click away and the choice remembered for the rest of the session. The rendering is the transcript's
  * ({@link MarkdownArea}), and so is the text selection over it ({@link TranscriptSelection}), so a paragraph in a
  * preview can be marked and copied like one in a reply.
+ *
+ * <p>A source file in a language Lyngvi has rules for ({@link Languages}) opens coloured, in the same two-button
+ * toggle: «Coloured» is {@link CodeView}, read-only because JavaFX's own text controls cannot colour part of their
+ * content, and «Raw» is this editor, which is where writing and saving happen. A file no language claims opens in
+ * the editor with no toggle at all — a guess at the language would be worse than plain text.
  */
 public final class FilesController {
 
@@ -81,6 +86,10 @@ public final class FilesController {
     /** The open file, as a path relative to the volume root. */
     private String currentFile;
     private final TextArea editor = new TextArea();
+    /** The coloured view of the open file; built once, since it is a list that is refilled per file. */
+    private CodeView code;
+    /** The language the open file is coloured by, or null when no language claims it. */
+    private Syntax language;
     private boolean dirty;
     /** Set once the user picks Raw or Preview, after which that choice is kept for every file opened. */
     private boolean viewModeChosen;
@@ -104,6 +113,7 @@ public final class FilesController {
 
     @FXML
     private void initialize() {
+        code = new CodeView(b);
         editor.getStyleClass().add("code-editor");
         editor.textProperty().addListener((o, a, v) -> { if (currentFile != null) { dirty = true; fileStatusLabel.setText(b.getString("gui.files.modified")); saveButton.setDisable(false); } });
         editorHolder.getChildren().setAll(editor);
@@ -159,6 +169,7 @@ public final class FilesController {
         roots.clear();
         opened.clear();
         currentFile = null;
+        language = null;
         dirty = false;
         editor.clear();
         showViewModes(false);
@@ -281,6 +292,7 @@ public final class FilesController {
         currentFile = path;
         fileNameLabel.setText(name(path));
         dirty = false;
+        language = null;  // decided once the bytes are in: an image or a binary is neither source nor markdown
         saveButton.setDisable(true);
         // hidden until the file turns out to be markdown, so an image or a binary does not keep the last file's toggle
         showViewModes(false);
@@ -313,9 +325,13 @@ public final class FilesController {
         saveButton.setDisable(true);
         fileStatusLabel.setText(bytes.length + " B");
         boolean md = isMarkdown(path);
-        showViewModes(md);
+        language = md ? null : s.languages().forPath(path).orElse(null);
+        boolean rendered = md || language != null;
+        // the same two buttons for both: what the right-hand one shows is what this file has to offer
+        previewModeButton.setText(b.getString(md ? "gui.files.preview" : "gui.files.highlight"));
+        showViewModes(rendered);
         // a document is opened to be read: rendered first, unless the user has said which view they want
-        if (md && !viewModeChosen) previewModeButton.setSelected(true);
+        if (rendered && !viewModeChosen) previewModeButton.setSelected(true);
         render();
     }
 
@@ -324,10 +340,17 @@ public final class FilesController {
         viewModeBox.setManaged(show);
     }
 
+    /**
+     * Puts the view the mode asks for in the pane. The text comes from the editor rather than from the file, so
+     * what is shown coloured or rendered is what the user has in front of them, saved or not.
+     */
     private void render() {
         if (currentFile == null) return;
         if (previewModeButton.isSelected() && isMarkdown(currentFile)) {
             editorHolder.getChildren().setAll(preview(editor.getText()));
+        } else if (previewModeButton.isSelected() && language != null) {
+            code.show(editor.getText(), language);
+            editorHolder.getChildren().setAll(code);
         } else {
             editorHolder.getChildren().setAll(editor);
         }

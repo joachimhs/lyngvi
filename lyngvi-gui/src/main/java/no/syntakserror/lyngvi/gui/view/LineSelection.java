@@ -2,6 +2,7 @@ package no.syntakserror.lyngvi.gui.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ListView;
@@ -14,17 +15,21 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.TextFlow;
 
 /**
- * Free text selection over a diff list, the way a page in a browser selects: press and drag over the code and the
- * selection follows the characters, across lines and on past the edge of the viewport; a double click takes the
- * word under it, a third click the line, ⌘/Ctrl+A the whole file, ⌘/Ctrl+C or the context menu copies exactly
+ * Free text selection over a list of text lines, the way a page in a browser selects: press and drag over the code
+ * and the selection follows the characters, across lines and on past the edge of the viewport; a double click takes
+ * the word under it, a third click the line, ⌘/Ctrl+A the whole file, ⌘/Ctrl+C or the context menu copies exactly
  * what is highlighted, and Esc or a plain click clears it.
  *
- * <p>JavaFX gives selectable text only inside text controls, and the diff is a virtualised {@link ListView} whose
- * rows are recycled as it scrolls. So the selection is kept as a range over line numbers and character offsets —
- * which no recycling can invalidate — and every visible row paints its own part of it from
- * {@link TextFlow#getRangeShape}. The arithmetic is {@link TranscriptCopy.Range}, the same the transcript uses.
+ * <p>JavaFX gives selectable text only inside text controls, and both the diff ({@link DiffArea}) and the coloured
+ * source view ({@link CodeView}) are virtualised {@link ListView}s whose rows are recycled as they scroll. So the
+ * selection is kept as a range over line numbers and character offsets — which no recycling can invalidate — and
+ * every visible row paints its own part of it from {@link TextFlow#getRangeShape}. The arithmetic is
+ * {@link TranscriptCopy.Range}, the same the transcript uses.
+ *
+ * <p>{@code codeOf} is all it needs to know about the items: the text of a line, which is what a range is measured
+ * and copied in. The gutter and the +/− sign are outside it, and so never end up in what is copied.
  */
-final class DiffSelection {
+final class LineSelection<T> {
 
     private static final KeyCombination COPY = new KeyCodeCombination(KeyCode.C, KeyCombination.SHORTCUT_DOWN);
     private static final KeyCombination ALL = new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN);
@@ -44,15 +49,17 @@ final class DiffSelection {
         void paintSelection(TranscriptCopy.Range range);
     }
 
-    private final ListView<DiffPaneBuilder.Line> list;
+    private final ListView<T> list;
+    private final Function<T, String> codeOf;
     private final List<Row> rows = new ArrayList<>();
     private int anchorLine = -1;
     private int anchorChar;
     private int focusLine = -1;
     private int focusChar;
 
-    DiffSelection(ListView<DiffPaneBuilder.Line> list) {
+    LineSelection(ListView<T> list, Function<T, String> codeOf) {
         this.list = list;
+        this.codeOf = codeOf;
         list.addEventFilter(MouseEvent.MOUSE_PRESSED, this::onPressed);
         list.addEventFilter(MouseEvent.MOUSE_DRAGGED, this::onDragged);
         // Keeping the press from the cell is what stops the list selecting whole rows underneath the selection.
@@ -76,7 +83,7 @@ final class DiffSelection {
     }
 
     String selectedText() {
-        return DiffPaneBuilder.selectedText(list.getItems(), range());
+        return TranscriptCopy.selected(lines(), range());
     }
 
     void copy() {
@@ -87,7 +94,7 @@ final class DiffSelection {
     void selectAll() {
         if (list.getItems().isEmpty()) return;
         int last = list.getItems().size() - 1;
-        set(0, 0, last, list.getItems().get(last).code().length());
+        set(0, 0, last, codeOf(last).length());
     }
 
     void clear() {
@@ -187,7 +194,12 @@ final class DiffSelection {
         return Math.max(0, Math.min(at, codeOf(row.line()).length()));
     }
 
+    /** Every line of the list, for the text a range yields. */
+    private List<String> lines() {
+        return list.getItems().stream().map(codeOf).toList();
+    }
+
     private String codeOf(int line) {
-        return line < 0 || line >= list.getItems().size() ? "" : list.getItems().get(line).code();
+        return line < 0 || line >= list.getItems().size() ? "" : codeOf.apply(list.getItems().get(line));
     }
 }

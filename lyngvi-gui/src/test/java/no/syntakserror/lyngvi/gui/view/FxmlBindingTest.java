@@ -155,7 +155,7 @@ class FxmlBindingTest {
         List<String> items = new ArrayList<>();
         Matcher bm = Pattern.compile("<ToggleButton\\b[^>]*?styleClass=\"rail-button\".*?</ToggleButton>", Pattern.DOTALL).matcher(xml);
         while (bm.find()) items.add(bm.group());
-        assertThat(items).as("rail items in main.fxml").hasSize(8);
+        assertThat(items).as("rail items in main.fxml").hasSize(9);
         List<String> wrong = new ArrayList<>();
         for (String item : items) {
             String id = FX_ID.matcher(item).results().findFirst().map(r -> r.group(1)).orElse(item);

@@ -1,0 +1,10 @@
+name          = TypeScript
+extensions    = ts tsx mts cts
+line.comment  = //
+block.comment = /* */
+string.quote  = " ' `
+escape        = \\
+annotation    = @
+keywords      = abstract as asserts async await break case catch class const continue declare default delete do else enum export extends finally for from function get if implements import in infer instanceof interface is keyof let namespace new of private protected public readonly return satisfies set static super switch this throw try type typeof var void while yield
+types         = any bigint boolean never number object string symbol undefined unknown void Array Map Partial Promise Readonly Record Set
+constants     = true false null

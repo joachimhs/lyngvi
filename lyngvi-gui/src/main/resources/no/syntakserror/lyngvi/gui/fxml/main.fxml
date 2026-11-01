@@ -150,6 +150,13 @@
         <graphic><Icon fx:value="sliders"/></graphic>
         <tooltip><Tooltip text="%gui.nav.setup"/></tooltip>
       </ToggleButton>
+      <!-- Beside Setup rather than with the sandbox items: the colouring rules are the user's own, the same in
+           every sandbox, and they live in the home directory next to the other GUI settings. -->
+      <ToggleButton fx:id="navSyntax" text="%gui.nav.short.syntax" styleClass="rail-button" contentDisplay="TOP"
+                    maxWidth="Infinity" accessibleText="%gui.nav.syntax">
+        <graphic><Icon fx:value="file-text"/></graphic>
+        <tooltip><Tooltip text="%gui.nav.syntax"/></tooltip>
+      </ToggleButton>
     </VBox>
   </left>
   <center>
@@ -441,6 +448,71 @@
                     <padding><Insets top="8" right="12" bottom="4" left="12"/></padding>
                     <Label fx:id="skillProblemLabel" text="" wrapText="true" styleClass="status-warn" visible="false" managed="false"/>
                     <Label text="%gui.skills.effect" wrapText="true" styleClass="hint"/>
+                  </VBox>
+                </bottom>
+              </BorderPane>
+            </SplitPane>
+          </VBox>
+        </Tab>
+        <!--
+          Syntax colours: the languages on the left, one .syntax file in the editor on the right, and under it the
+          colours it gives — a few lines coloured by the rules as they are being written, so the effect of a change
+          is seen without saving and opening a file of that language. The colours themselves are the theme's; a
+          language only says which words and markers are what.
+        -->
+        <Tab fx:id="syntaxTab" text="%gui.nav.syntax">
+          <VBox spacing="10" styleClass="page">
+            <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+            <Label text="%gui.syntax.help" wrapText="true" styleClass="section-help"/>
+            <Label fx:id="syntaxDirLabel" text="" wrapText="true" styleClass="mono,section-help"/>
+            <SplitPane dividerPositions="0.4" VBox.vgrow="ALWAYS">
+              <VBox spacing="8">
+                <TableView fx:id="languageTable" VBox.vgrow="ALWAYS">
+                  <columns>
+                    <TableColumn fx:id="languageNameColumn" text="%gui.syntax.col.name" prefWidth="140"/>
+                    <TableColumn fx:id="languageFilesColumn" text="%gui.syntax.col.files" prefWidth="170"/>
+                    <TableColumn fx:id="languageSourceColumn" text="%gui.syntax.col.source" prefWidth="110"/>
+                  </columns>
+                </TableView>
+                <HBox spacing="8" styleClass="action-bar">
+                  <Button text="%gui.syntax.new" onAction="#onNewLanguage" styleClass="primary">
+                    <graphic><Icon fx:value="plus"/></graphic>
+                  </Button>
+                  <Button fx:id="removeLanguageButton" text="%gui.syntax.remove" onAction="#onRemoveLanguage">
+                    <graphic><Icon fx:value="trash"/></graphic>
+                    <tooltip><Tooltip text="%gui.syntax.remove.tooltip"/></tooltip>
+                  </Button>
+                  <Button text="%gui.button.refresh" onAction="#onRefreshLanguages">
+                    <graphic><Icon fx:value="refresh"/></graphic>
+                  </Button>
+                </HBox>
+              </VBox>
+              <BorderPane>
+                <top>
+                  <HBox spacing="8" alignment="CENTER_LEFT" styleClass="editor-header">
+                    <padding><Insets top="8" right="10" bottom="8" left="12"/></padding>
+                    <Label fx:id="languageNameLabel" text="%gui.syntax.none" styleClass="section-title"/>
+                    <Label fx:id="languageStatusLabel" text="" styleClass="section-help"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="languageDiscardButton" text="%gui.files.discard" onAction="#onDiscardLanguage">
+                      <graphic><Icon fx:value="undo"/></graphic>
+                    </Button>
+                    <Button fx:id="languageSaveButton" text="%gui.files.save" onAction="#onSaveLanguage" styleClass="primary">
+                      <graphic><Icon fx:value="save"/></graphic>
+                      <tooltip><Tooltip text="%gui.files.save.tooltip"/></tooltip>
+                    </Button>
+                  </HBox>
+                </top>
+                <center>
+                  <TextArea fx:id="languageEditor" styleClass="mono" promptText="%gui.syntax.editor.prompt"/>
+                </center>
+                <bottom>
+                  <VBox spacing="4">
+                    <padding><Insets top="8" right="12" bottom="4" left="12"/></padding>
+                    <Label fx:id="languageProblemLabel" text="" wrapText="true" styleClass="status-warn" visible="false" managed="false"/>
+                    <Label text="%gui.syntax.preview" styleClass="section-help"/>
+                    <StackPane fx:id="languagePreviewBox" prefHeight="150" minHeight="150" styleClass="code-preview"/>
+                    <Label text="%gui.syntax.effect" wrapText="true" styleClass="hint"/>
                   </VBox>
                 </bottom>
               </BorderPane>

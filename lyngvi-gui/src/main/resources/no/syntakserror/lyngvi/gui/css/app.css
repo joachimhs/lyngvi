@@ -52,6 +52,18 @@
     -app-diff-gutter-bg: #f2ede3;
     -app-diff-gutter-fg: #948a79;
 
+    /* syntax colours: one per token kind, so a language says what a word is and the theme says what that looks
+     * like. Taken from the palette above rather than from an editor theme, so coloured code belongs to the app. */
+    -app-syntax-keyword: #8c3a7a;
+    -app-syntax-type: #2f5d7c;
+    -app-syntax-constant: #8a4b1c;
+    -app-syntax-string: #41602f;
+    -app-syntax-number: #a32b26;
+    -app-syntax-comment: #857c6b;
+    -app-syntax-annotation: #8a5a00;
+    -app-syntax-function: #5b4b8a;
+    -app-syntax-punct: #6b6355;
+
     /* ---- Modena hooks: built-in controls pick these up ---- */
     -fx-base: -app-surface;
     -fx-background: -app-bg;
@@ -1090,3 +1102,58 @@
 .wizard-mark-failed { -fx-background-color: -app-danger; -fx-text-fill: white; }
 .wizard-count { -fx-font-size: 11.5px; -fx-text-fill: -app-muted; }
 .wizard-output { -fx-font-family: monospace; -fx-font-size: 11.5px; }
+
+/* =====================================================================
+ * Coloured source (CodeView)
+ *
+ * A line per row in a virtualised list, as the diff is, with the colours on the text itself: .code-text
+ * carries the font, and the kind class after it the colour. The kind rules must stay below .code-text —
+ * they have the same specificity, so the later one wins.
+ * ===================================================================== */
+.code-view { -fx-background-color: -app-surface; }
+.code-list {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+    -fx-fixed-cell-size: 22px;
+    -fx-font-family: monospace;
+    -fx-font-size: 12px;
+}
+.code-list:focused { -fx-background-color: transparent; }
+.code-list .list-cell {
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: -app-surface;
+    -fx-text-fill: -app-text;
+}
+/* no hover and no selected row: a source line is selected by the character, like a diff line */
+.code-line-no {
+    -fx-font-family: monospace;
+    -fx-font-size: 11.5px;
+    -fx-text-fill: -app-diff-gutter-fg;
+    -fx-background-color: -app-diff-gutter-bg;
+    -fx-pref-width: 52px;
+    -fx-min-width: 52px;
+    -fx-max-width: 52px;
+    -fx-alignment: CENTER_RIGHT;
+    -fx-padding: 0 8 0 0;
+}
+.code-text { -fx-font-family: monospace; -fx-font-size: 12px; -fx-fill: -app-text; }
+.code-keyword { -fx-fill: -app-syntax-keyword; }
+.code-type { -fx-fill: -app-syntax-type; }
+.code-constant { -fx-fill: -app-syntax-constant; }
+.code-string { -fx-fill: -app-syntax-string; }
+.code-number { -fx-fill: -app-syntax-number; }
+.code-comment { -fx-fill: -app-syntax-comment; -fx-font-style: italic; }
+.code-annotation { -fx-fill: -app-syntax-annotation; }
+.code-function { -fx-fill: -app-syntax-function; }
+.code-punct { -fx-fill: -app-syntax-punct; }
+/* the sample on the syntax page sits in a box of its own, since it is not the whole of the pane it is in */
+.code-preview {
+    -fx-background-color: -app-border, -app-surface;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 8, 7;
+    -fx-padding: 1;
+}

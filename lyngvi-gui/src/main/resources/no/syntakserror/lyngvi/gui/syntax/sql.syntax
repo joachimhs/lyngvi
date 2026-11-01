@@ -1,0 +1,10 @@
+name          = SQL
+extensions    = sql
+line.comment  = --
+block.comment = /* */
+string.quote  = '
+escape        =
+ignore.case   = true
+keywords      = add all alter and as asc begin between by case cast coalesce column commit constraint create cross default delete desc distinct drop else end exists foreign from full group having if in index inner insert interval into is join key left like limit not null offset on or order outer primary references right rollback select set table then transaction union unique update using values view when where with
+types         = bigint boolean bytea char date decimal double float int integer json jsonb numeric real serial smallint text time timestamp uuid varchar
+constants     = true false null current_date current_timestamp

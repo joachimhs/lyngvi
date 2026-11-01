@@ -26,7 +26,7 @@ import javafx.scene.text.TextFlow;
 /**
  * Unified diff in the GitHub idiom: one card per file with the path and the +/− counts in the header, then the
  * lines with a two-column number gutter, a sign column and the code; added lines green, removed red, hunk headers
- * blue. Text in a file view is selected and copied freely ({@link DiffSelection}); copying yields code only
+ * blue. Text in a file view is selected and copied freely ({@link LineSelection}); copying yields code only
  * (no gutter, no +/-), and the header can offer the whole file as it is after the change.
  */
 public final class DiffArea extends VBox {
@@ -141,7 +141,7 @@ public final class DiffArea extends VBox {
         // The diff is text, not a list of choices: with no selection model a row can never be picked out whole,
         // by mouse or by arrow key, and the only selection on screen is the one over the characters.
         list.setSelectionModel(null);
-        DiffSelection selection = new DiffSelection(list);
+        LineSelection<DiffPaneBuilder.Line> selection = new LineSelection<>(list, DiffPaneBuilder.Line::code);
         list.setCellFactory(v -> new LineCell(selection));
         if (fill) {
             list.setMinHeight(0);
@@ -292,17 +292,17 @@ public final class DiffArea extends VBox {
      * highlight behind the code is the row's share of the list's text selection, drawn from the flow's own shapes
      * so it follows the glyphs exactly.
      */
-    private static final class LineCell extends ListCell<DiffPaneBuilder.Line> implements DiffSelection.Row {
+    private static final class LineCell extends ListCell<DiffPaneBuilder.Line> implements LineSelection.Row {
         private final Label oldNo = gutter();
         private final Label newNo = gutter();
         private final Label sign = new Label();
         private final Text code = new Text();
         private final TextFlow flow;
         private final Path highlight = new Path();
-        private final DiffSelection selection;
+        private final LineSelection<DiffPaneBuilder.Line> selection;
         private final HBox row;
 
-        LineCell(DiffSelection selection) {
+        LineCell(LineSelection<DiffPaneBuilder.Line> selection) {
             this.selection = selection;
             sign.getStyleClass().add("diff-sign");
             sign.setMaxHeight(Double.MAX_VALUE);

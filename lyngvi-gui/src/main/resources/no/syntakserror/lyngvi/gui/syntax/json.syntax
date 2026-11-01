@@ -1,0 +1,8 @@
+name          = JSON
+extensions    = json jsonc
+line.comment  = //
+block.comment = /* */
+string.quote  = "
+escape        = \\
+function.calls = false
+constants     = true false null

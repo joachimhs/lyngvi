@@ -1,0 +1,9 @@
+name          = YAML
+extensions    = yaml yml
+line.comment  = #
+string.quote  = " '
+escape        = \\
+function.calls = false
+keywords      = true false null yes no on off
+constants     = ~
+sample        = # a service\nservices:\n  proxy:\n    image: "squid:latest"\n    ports: [3128]\n    restart: unless-stopped

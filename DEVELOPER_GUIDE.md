@@ -567,6 +567,16 @@ The GUI follows spec §9: viewmodels over the core, FXML views, no logic in view
   and the user's own choice remembered for the rest of the session. `previewOf` caps what is laid out
   (`MAX_PREVIEW_CHARS`, cut at a line break and said so under the text): a 300 kB specification is tens of
   thousands of text nodes, and Raw has all of it.
+  A source file in a language Lyngvi has rules for opens coloured instead: `Languages` reads the `.syntax` files
+  (the shipped ones from `syntax/index` in this module, the user's from `~/.lyngvi-syntax/`, which replace them by
+  name), `Syntax` is one language's rules, `SyntaxScanner` turns a line into spans, and `CodeView` is the
+  virtualised list that shows them — the diff's row arrangement, and `LineSelection` for the selection, which is
+  `DiffSelection` renamed and made generic over the item type so both lists can use it. The whole file is scanned
+  once for one `int` per line (the state the line begins in, so a block comment that opened above the viewport
+  still colours); the spans themselves are worked out per row as it scrolls into sight. Kinds carry style classes
+  only (`code-keyword`, `code-string`, …) and the colours are `-app-syntax-*` in app.css and dark.css, so a
+  language added by a user is themed with everything else. The page that lists and edits the languages is in
+  `MainController` beside the skills page, and is the one page that is not disabled when no sandbox is open.
   `ClipboardImage` writes an image pasted
   into the composer to a PNG in a scratch directory, so it can be attached like any other file;
   it encodes the pixels itself because `javafx.swing` (`SwingFXUtils`) is not one of the modules

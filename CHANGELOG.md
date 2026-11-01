@@ -44,6 +44,23 @@ Nothing in a sandbox has to be rebuilt or re-initialised, and no session is lost
 5. **Then `setup.sh clean`** to see what has accumulated, and `--yes` to reclaim it.
 
 ### Added
+- **Syntax colours in the files pane, and a language is a text file anyone can add.** A source file in the files
+  pane opens coloured instead of as flat text, with «Raw» a click away — the same two-button toggle markdown has,
+  and the choice is remembered. The rules are data, not code: one `.syntax` file per language, naming the comment
+  markers, the string delimiters and the words that are keywords. Fifteen come with Lyngvi (Java, Kotlin,
+  JavaScript, TypeScript, Python, Rust, Go, C/C++, shell, SQL, YAML, JSON, properties, Dockerfile, CSS); your own
+  go in `~/.lyngvi-syntax/`, and one with the same name as a shipped language replaces it, so the rules that come
+  with Lyngvi can be corrected without a build. A new rail item, «Syntax colours», lists them with the file in an
+  editor and the colours it gives underneath, re-coloured on every keystroke, and the reason in plain words when a
+  file cannot be read. It is the one page that works with no sandbox open, since the rules are the user's own and
+  not the sandbox's. The colours themselves belong to the theme (`-app-syntax-*` in both palettes): a language
+  says what a word *is*, never what colour it has, so an added language works in light and dark without saying
+  anything about either. 1.1.2 did this with RichTextFX, which is why it was left out of 2.0.0-M9; the scanner is
+  now Lyngvi's own, and no dependency — RichTextFX and everything under it are automatic modules, which `jlink`
+  cannot link at all. The coloured view is read-only (JavaFX text controls cannot colour part of their content),
+  the editor is where writing happens, and a file no language claims opens plain, since a guess would be worse.
+  What the format deliberately cannot do is anything that needs a parser: JSX, heredocs, code inside interpolated
+  strings, and tag-based languages such as HTML and XML.
 - **Skills: instructions the agent reaches for when it needs them, per sandbox.** A new «Skills» item on the
   nav rail lists the skills of the open sandbox, switches each one on or off, and edits them one at a time in
   an editor beside the list. A skill is a folder under `<sandbox>/skills/` with a `SKILL.md` whose front
