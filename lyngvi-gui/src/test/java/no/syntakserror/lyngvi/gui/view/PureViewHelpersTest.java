@@ -11,8 +11,10 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
+import javafx.scene.control.TreeItem;
 import no.syntakserror.lyngvi.core.agents.LocalModelConfig;
 import no.syntakserror.lyngvi.core.ask.Model;
 import no.syntakserror.lyngvi.core.ask.UsageLimit;
@@ -23,6 +25,7 @@ import no.syntakserror.lyngvi.core.contract.AgentInfo;
 import no.syntakserror.lyngvi.core.contract.AgentUsageReport;
 import no.syntakserror.lyngvi.core.i18n.Messages;
 import no.syntakserror.lyngvi.core.session.Conversation;
+import no.syntakserror.lyngvi.core.stack.SessionVolume;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -126,6 +129,39 @@ class PureViewHelpersTest {
         assertThat(cut.markdown().length()).isLessThanOrEqualTo(FilesController.MAX_PREVIEW_CHARS);
         assertThat(cut.markdown().lines().map(String::length).distinct()).containsExactly(99);
         assertThat(FilesController.previewOf(null).markdown()).isEmpty();
+    }
+
+    @Test
+    void theFileTreeStartsClosedAndOpensTheDirectoriesTheUserHasOpened() {
+        Map<String, List<SessionVolume.Entry>> listing = Map.of(
+                "repo", List.of(new SessionVolume.Entry("README.md", false),
+                        new SessionVolume.Entry("src", true),
+                        new SessionVolume.Entry("src/main/App.java", false)),
+                "empty", List.of());
+        TreeItem<String> closed = FilesController.tree(listing, "", p -> false);
+        // an empty root is left out; nothing is open, so a working copy is one line until it is clicked
+        assertThat(closed.getChildren()).extracting(TreeItem::getValue).containsExactly("repo");
+        assertThat(closed.getChildren().get(0).isExpanded()).isFalse();
+        TreeItem<String> src = closed.getChildren().get(0).getChildren().stream()
+                .filter(i -> i.getValue().equals("repo/src")).findFirst().orElseThrow();
+        assertThat(src.isExpanded()).isFalse();
+        assertThat(src.getChildren()).extracting(TreeItem::getValue).containsExactly("repo/src/main");
+        assertThat(src.getChildren().get(0).isExpanded()).isFalse();
+
+        // the directories the user opened earlier are open again after a rebuild, the ones below them still closed
+        TreeItem<String> reopened = FilesController.tree(listing, "", Set.of("repo", "repo/src")::contains);
+        assertThat(reopened.getChildren().get(0).isExpanded()).isTrue();
+        TreeItem<String> openSrc = reopened.getChildren().get(0).getChildren().stream()
+                .filter(i -> i.getValue().equals("repo/src")).findFirst().orElseThrow();
+        assertThat(openSrc.isExpanded()).isTrue();
+        assertThat(openSrc.getChildren().get(0).isExpanded()).isFalse();
+
+        // a filter leaves hits only, and opens all the way down to them
+        TreeItem<String> filtered = FilesController.tree(listing, "app", p -> true);
+        TreeItem<String> root = filtered.getChildren().get(0);
+        assertThat(root.isExpanded()).isTrue();
+        assertThat(root.getChildren()).extracting(TreeItem::getValue).containsExactly("repo/src");
+        assertThat(root.getChildren().get(0).getChildren().get(0).isExpanded()).isTrue();
     }
 
     @Test

@@ -296,6 +296,13 @@ Nothing in a sandbox has to be rebuilt or re-initialised, and no session is lost
   deletion takes the path out of the index and the deletion still has to reach the commit.
 
 ### Changed
+- **The file tree opens closed.** Every directory in «Files» was expanded when the tree was built, so opening the
+  files on a working copy of any size meant a pane of thousands of lines with `target/`, `node_modules/` and
+  `.github/workflows/` laid out in full, and the file you came for somewhere below them. The tree now comes up
+  with the working copies and `output` closed, and you open what you need — or type in the filter, which still
+  shows the hits all the way down, directories opened to reach them. A directory you open stays open for the rest
+  of the session: a refresh, a save, or a filter typed and cleared again puts the tree back the way you left it
+  rather than closing it. Choosing another session starts over, closed.
 - **«Files» opens the files in a window of their own.** The files pane was a column inside the main window, and
   it took its width from a divider there: wide enough to read a source file meant squeezing the conversation
   beside it, and the pane could never be moved to the other screen the files belong on. Pressing «⧉ Files» (or

@@ -4,11 +4,14 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.function.Predicate;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -43,6 +46,10 @@ import no.syntakserror.lyngvi.gui.Services;
  * it — which also means every one of them is a call off the UI thread. Symlinks, binaries and very large
  * files are refused.
  *
+ * <p>The tree opens closed: a working copy is thousands of files, and the ones worth reading are found by opening
+ * the directory they are in or by typing in the filter, not by scrolling past everything else. A directory the user
+ * opens stays open for the rest of the session, a refresh included.
+ *
  * <p>A markdown file opens rendered rather than as source — a README or a changelog is written to be read — with
  * «Raw» a click away and the choice remembered for the rest of the session. The rendering is the transcript's
  * ({@link MarkdownArea}), and so is the text selection over it ({@link TranscriptSelection}), so a paragraph in a
@@ -68,6 +75,8 @@ public final class FilesController {
     private final ResourceBundle b;
     /** The directories shown at the top of the tree: the working copies and {@code output}. */
     private final List<String> roots = new ArrayList<>();
+    /** The directories the user has opened, by item value, so a rebuild does not close them again. */
+    private final Set<String> opened = new HashSet<>();
     private Conversation session;
     /** The open file, as a path relative to the volume root. */
     private String currentFile;
@@ -133,6 +142,7 @@ public final class FilesController {
         roots.clear();
         roots.addAll(c.repos());
         roots.add("output");
+        opened.clear();  // another session: other working copies, and a tree that starts closed again
         session = c;
         currentFile = null;
         editor.clear();
@@ -147,6 +157,7 @@ public final class FilesController {
     public void clearSession() {
         session = null;
         roots.clear();
+        opened.clear();
         currentFile = null;
         dirty = false;
         editor.clear();
@@ -174,22 +185,47 @@ public final class FilesController {
 
     private void showTree(Map<String, List<SessionVolume.Entry>> entries) {
         String filter = fileFilter.getText() == null ? "" : fileFilter.getText().strip().toLowerCase(Locale.ROOT);
+        // with the filter on, what is left in the tree is hits only, and a closed directory would hide the answer
+        TreeItem<String> root = tree(entries, filter, filter.isEmpty() ? opened::contains : p -> true);
+        remember(root);
+        fileTree.setRoot(root);
+    }
+
+    /**
+     * The tree for a listing: a root per working copy, and under it the files laid out by their paths.
+     * {@code open} says which directories start open — by their item value, the path with the root in front.
+     */
+    static TreeItem<String> tree(Map<String, List<SessionVolume.Entry>> entries, String filter, Predicate<String> open) {
         TreeItem<String> root = new TreeItem<>();
         entries.forEach((rootName, list) -> {
             if (list.isEmpty()) return;
             TreeItem<String> item = new TreeItem<>(rootName);
-            item.setExpanded(true);
-            build(item, rootName, list, filter);
+            item.setExpanded(open.test(rootName));
+            build(item, rootName, list, filter, open);
             root.getChildren().add(item);
         });
-        fileTree.setRoot(root);
+        return root;
+    }
+
+    /**
+     * Keeps track of which directories are open, so that a rebuild — a refresh, a filter typed and cleared again —
+     * puts the tree back the way the user left it instead of closing what they opened.
+     */
+    private void remember(TreeItem<String> item) {
+        for (TreeItem<String> child : item.getChildren()) {
+            if (child.isLeaf()) continue;  // a file: nothing to open
+            child.expandedProperty().addListener((o, a, isOpen) -> {
+                if (isOpen) opened.add(child.getValue()); else opened.remove(child.getValue());
+            });
+            remember(child);
+        }
     }
 
     /**
      * Lays the flat listing out as a tree. Directories are made as the files under them need them, so a
      * directory the filter emptied — or one that holds nothing but what the listing left out — is not shown.
      */
-    private void build(TreeItem<String> parent, String rootName, List<SessionVolume.Entry> entries, String filter) {
+    private static void build(TreeItem<String> parent, String rootName, List<SessionVolume.Entry> entries, String filter, Predicate<String> open) {
         Map<String, TreeItem<String>> dirs = new LinkedHashMap<>();
         dirs.put("", parent);
         List<SessionVolume.Entry> sorted = new ArrayList<>(entries);
@@ -198,19 +234,19 @@ public final class FilesController {
             if (e.directory()) continue;
             if (!filter.isEmpty() && !name(e.path()).toLowerCase(Locale.ROOT).contains(filter)) continue;
             int slash = e.path().lastIndexOf('/');
-            TreeItem<String> above = directory(dirs, rootName, slash < 0 ? "" : e.path().substring(0, slash));
+            TreeItem<String> above = directory(dirs, rootName, slash < 0 ? "" : e.path().substring(0, slash), open);
             above.getChildren().add(new TreeItem<>(rootName + "/" + e.path()));
         }
     }
 
     /** The item for a directory, with the ones above it made first. */
-    private TreeItem<String> directory(Map<String, TreeItem<String>> dirs, String rootName, String path) {
+    private static TreeItem<String> directory(Map<String, TreeItem<String>> dirs, String rootName, String path, Predicate<String> open) {
         TreeItem<String> known = dirs.get(path);
         if (known != null) return known;
         int slash = path.lastIndexOf('/');
-        TreeItem<String> above = directory(dirs, rootName, slash < 0 ? "" : path.substring(0, slash));
+        TreeItem<String> above = directory(dirs, rootName, slash < 0 ? "" : path.substring(0, slash), open);
         TreeItem<String> item = new TreeItem<>(rootName + "/" + path);
-        item.setExpanded(true);
+        item.setExpanded(open.test(item.getValue()));
         above.getChildren().add(item);
         dirs.put(path, item);
         return item;
