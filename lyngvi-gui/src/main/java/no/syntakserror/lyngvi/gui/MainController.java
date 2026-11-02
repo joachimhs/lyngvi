@@ -104,6 +104,10 @@ public final class MainController {
     private Timeline containerPoll;
     /** Built with the window, shown when «Files» is pressed; the pane itself is unchanged by living there. */
     private FilesWindow filesWindow;
+    /** Whether the chat has a conversation on screen, which is what «Files» is for; see {@link #showFiles}. */
+    private boolean conversationOpen;
+    /** True once the window is up: the files window is placed beside it, and cannot be opened before that. */
+    private boolean shown;
     private FilesController filesController;
 
     // toolbar
@@ -940,6 +944,7 @@ public final class MainController {
         KeyCombination toggle = new KeyCodeCombination(KeyCode.B, KeyCombination.SHORTCUT_DOWN);
         javafx.event.EventHandler<javafx.scene.input.KeyEvent> shortcut = e -> {
             if (toggle.match(e)) {
+                if (!conversationOpen) return;  // no conversation, no files: the button is away for the same reason
                 filesToggle.setSelected(!filesToggle.isSelected());
                 onToggleFiles();
             }
@@ -959,7 +964,26 @@ public final class MainController {
 
     private void setupChat() {
         chatController.setFilesController(filesController);
+        chatController.setOnConversation(this::showFiles);
         askController.setEphemeral(true);
+    }
+
+    /**
+     * «Files» belongs to the conversation on screen: the working copies it shows are that conversation's, not the
+     * sandbox's, so with no conversation open there is nothing for the pane to show and the button is away — and
+     * the window with it. What the user last chose is kept (`filesWindow.open` in the settings), so the window
+     * comes back by itself with the next conversation rather than having to be asked for again.
+     */
+    private void showFiles(boolean conversationOpen) {
+        boolean had = this.conversationOpen;
+        this.conversationOpen = conversationOpen;
+        filesToggle.setVisible(conversationOpen);
+        filesToggle.setManaged(conversationOpen);
+        // Only when the answer changes: one conversation after another is still a conversation, and
+        // FilesWindow.open() raises and focuses a window that is already up — which would mean the files
+        // jumping in front of the chat on every click in the conversation list.
+        if (!shown || had == conversationOpen) return;
+        applyFilesVisible(conversationOpen && filesToggle.isSelected());
     }
 
     private void onSandboxChanged() {
@@ -1006,7 +1030,8 @@ public final class MainController {
     /** Called once the window is visible: the container poll and, unless suppressed, the first-run dialogs. */
     void afterShow(boolean dialogs) {
         // Not before now: the files window is placed beside this one, which has no position until it is up.
-        if (filesToggle.isSelected()) applyFilesVisible(true);
+        shown = true;
+        if (conversationOpen && filesToggle.isSelected()) applyFilesVisible(true);
         containerPoll = new Timeline(new KeyFrame(Duration.seconds(5), e -> {
             if (s.ctx().isOpen() && mainTabs.getSelectionModel().getSelectedItem() == sandboxTab) s.stack().refresh();
             if (s.ctx().isOpen() && mainTabs.getSelectionModel().getSelectedItem() == chatTab) s.sessions().refresh();

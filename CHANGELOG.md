@@ -323,6 +323,14 @@ Nothing in a sandbox has to be rebuilt or re-initialised, and no session is lost
   deletion takes the path out of the index and the deletion still has to reach the commit.
 
 ### Changed
+- **«Files» is only offered while a conversation is open.** The working copies the pane shows belong to a
+  conversation, not to the sandbox, so the button invited you to open a window that could only be empty — and
+  with the window remembered as open, that is what came up at every start, before a conversation had been
+  picked. The toolbar button is now away until the window has a conversation on screen, and ⌘/Ctrl+B does
+  nothing while it is. A conversation that goes — the sandbox is switched, or the open conversation is deleted —
+  takes the files window with it, and takes its files out of the pane, which deleting the open conversation used
+  to leave behind. What you last chose is kept, so the window comes back by itself with the next conversation
+  rather than having to be asked for again.
 - **The file tree opens closed.** Every directory in «Files» was expanded when the tree was built, so opening the
   files on a working copy of any size meant a pane of thousands of lines with `target/`, `node_modules/` and
   `.github/workflows/` laid out in full, and the file you came for somewhere below them. The tree now comes up

@@ -1,5 +1,5 @@
 /** Outbound links, in one place so they can be changed without touching the copy. */
-const repo = 'https://github.com/syntakserror/lyngvi';
+const repo = 'https://github.com/joachimhs/lyngvi';
 
 export const links = {
 	repo,

@@ -626,7 +626,7 @@ Rules:
   check warns when they differ and `upgrade` (`SandboxService.upgrade`) rewrites them, refreshes
   `cli/` and `setup.sh`, and re-renders.
 - `version --check` (`ReleaseCheck`) asks the GitHub releases API for the latest tag. The
-  default repository is `syntakserror/lyngvi`; override with `LYNGVI_RELEASE_API`.
+  default repository is `joachimhs/lyngvi`; override with `LYNGVI_RELEASE_API`.
   `scripts/fetch-cli.sh` downloads a release image (override with `LYNGVI_RELEASE_URL`).
 - `migrate` (`Migrate112`) converts a 1.1.2 sandbox in place following spec §12: a profile pack
   in `profiles/migrated/`, conversations from the old locations, the gateway manifest, the

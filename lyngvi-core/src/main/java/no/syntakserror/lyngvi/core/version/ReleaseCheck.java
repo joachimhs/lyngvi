@@ -20,7 +20,7 @@ import no.syntakserror.lyngvi.core.api.SandboxException;
  */
 public final class ReleaseCheck {
 
-    public static final String DEFAULT_API = "https://api.github.com/repos/syntakserror/lyngvi/releases/latest";
+    public static final String DEFAULT_API = "https://api.github.com/repos/joachimhs/lyngvi/releases/latest";
 
     /** {@code assets} are the download URLs of the latest release; {@code upToDate} compares parsed versions. */
     public record ReleaseInfo(String current, String latest, boolean upToDate, String releaseUrl, List<String> assets) {}

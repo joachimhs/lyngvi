@@ -80,7 +80,13 @@
 
 		<div class="below">
 			<p class="origin">
-				<img src={asset('lyngvi-mark-light.png')} alt="" width="26" height="26" />
+				<img
+					src={asset('lyngvi-mark-light-26.png')}
+					srcset="{asset('lyngvi-mark-light-26.png')} 1x, {asset('lyngvi-mark-light-52.png')} 2x"
+					alt=""
+					width="26"
+					height="26"
+				/>
 				<span>{i18n.t.hero.origin}</span>
 			</p>
 			<a class="repo-link mono" href={links.repo} rel="noreferrer noopener"

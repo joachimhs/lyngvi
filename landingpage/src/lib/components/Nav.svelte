@@ -18,8 +18,21 @@
 <header class="bar" class:scrolled class:open>
 	<div class="page inner">
 		<a class="brand" href="#top" aria-label="Lyngvi">
-			<img src={asset('lyngvi-mark-light.png')} alt="" width="34" height="34" />
-			<img class="word" src={asset('lyngvi-wordmark.png')} alt="Lyngvi" width="78" height="19" />
+			<img
+				src={asset('lyngvi-mark-light-32.png')}
+				srcset="{asset('lyngvi-mark-light-32.png')} 1x, {asset('lyngvi-mark-light-64.png')} 2x"
+				alt=""
+				width="32"
+				height="32"
+			/>
+			<img
+				class="word"
+				src={asset('lyngvi-wordmark-18.png')}
+				srcset="{asset('lyngvi-wordmark-18.png')} 1x, {asset('lyngvi-wordmark-36.png')} 2x"
+				alt="Lyngvi"
+				width="73"
+				height="18"
+			/>
 		</a>
 
 		<nav class="links" aria-label="Sections">

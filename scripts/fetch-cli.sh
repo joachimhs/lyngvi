@@ -9,7 +9,7 @@ version=$(cat "$dir/VERSION" 2>/dev/null || echo "")
 os=$(uname -s | tr '[:upper:]' '[:lower:]'); case "$os" in darwin) os=macos ;; esac
 arch=$(uname -m); case "$arch" in x86_64|amd64) arch=x86_64 ;; arm64|aarch64) arch=arm64 ;; esac
 name="lyngvi-cli-$version-$os-$arch"
-base=${LYNGVI_RELEASE_URL:-https://github.com/syntakserror/lyngvi/releases/download}
+base=${LYNGVI_RELEASE_URL:-https://github.com/joachimhs/lyngvi/releases/download}
 url="$base/v$version/$name.tar.gz"
 if [ "$print" = 1 ]; then
   cat <<MSG

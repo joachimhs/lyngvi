@@ -13,13 +13,20 @@
 	<div class="page inner">
 		<div class="top">
 			<div class="brand">
-				<img src={asset('lyngvi-mark-light.png')} alt="" width="48" height="48" />
+				<img
+					src={asset('lyngvi-mark-light-48.png')}
+					srcset="{asset('lyngvi-mark-light-48.png')} 1x, {asset('lyngvi-mark-light-96.png')} 2x"
+					alt=""
+					width="48"
+					height="48"
+				/>
 				<div>
 					<img
 						class="word"
-						src={asset('lyngvi-wordmark.png')}
+						src={asset('lyngvi-wordmark-23.png')}
+						srcset="{asset('lyngvi-wordmark-23.png')} 1x, {asset('lyngvi-wordmark-46.png')} 2x"
 						alt="Lyngvi"
-						width="92"
+						width="94"
 						height="23"
 					/>
 					<p class="tagline">{i18n.t.footer.tagline}</p>

@@ -17,9 +17,9 @@ export default defineConfig({
 		})
 	],
 	define: {
-		// Social cards need absolute URLs; set SITE_URL=https://lyngvi.example when building
-		// for a real host, and the card tags switch from relative to absolute.
-		__SITE_URL__: JSON.stringify((process.env.SITE_URL ?? '').replace(/\/$/, ''))
+		// Social cards need absolute URLs, so the site's own host is the default; set
+		// SITE_URL to build for another host, or SITE_URL= (empty) for relative card tags.
+		__SITE_URL__: JSON.stringify((process.env.SITE_URL ?? 'https://lyngvi.no').replace(/\/$/, ''))
 	},
 	server: { port: 5173 }
 });

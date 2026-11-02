@@ -7,7 +7,7 @@
 	const commands = [
 		[
 			'mkdir -p ~/sandboxes/shop && cd ~/sandboxes/shop',
-			'# setup.sh: github.com/syntakserror/lyngvi/releases',
+			'# setup.sh: github.com/joachimhs/lyngvi/releases',
 			'./setup.sh --download'
 		],
 		['./setup.sh init --repo ~/src/shop'],

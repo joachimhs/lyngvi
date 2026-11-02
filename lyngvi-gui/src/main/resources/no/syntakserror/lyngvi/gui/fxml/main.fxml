@@ -64,7 +64,10 @@
       <Button fx:id="upgradeButton" text="%gui.upgrade.button" onAction="#onUpgrade" visible="false" managed="false" styleClass="primary">
         <graphic><Icon fx:value="arrow-up-circle"/></graphic>
       </Button>
-      <ToggleButton fx:id="filesToggle" text="%gui.toolbar.files" onAction="#onToggleFiles" styleClass="ghost">
+      <!-- Away until a conversation is on screen: the files are that conversation's working copies, and the
+           chat says when there is one (MainController.showFiles). -->
+      <ToggleButton fx:id="filesToggle" text="%gui.toolbar.files" onAction="#onToggleFiles" styleClass="ghost"
+                    visible="false" managed="false">
         <graphic><Icon fx:value="folder"/></graphic>
         <tooltip><Tooltip text="%gui.toolbar.files.tooltip"/></tooltip>
       </ToggleButton>

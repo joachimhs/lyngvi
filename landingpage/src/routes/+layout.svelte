@@ -11,8 +11,8 @@
 
 	let { children } = $props();
 
-	// Relative when the site URL is unknown; absolute when SITE_URL was set at build time,
-	// which is what social cards need.
+	// Absolute against the site URL (https://lyngvi.no by default), which is what social
+	// cards need; relative only when the build cleared SITE_URL.
 	const ogImage = __SITE_URL__ ? `${__SITE_URL__}/og-image.png` : asset('og-image.png');
 
 	onMount(() => i18n.restore());

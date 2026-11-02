@@ -8,10 +8,15 @@ Lyngvi being the island where Fenrir was bound.
 |---|---|
 | `lyngvi-logo.png` | the full lockup (mark + wordmark), 902 × 1151, transparent |
 | `lyngvi-mark.png` | the mark on its own, square, 902 × 903, transparent |
+| `lyngvi-mark-light.png` | the mark with the navy repainted `#c9dfef` and the cyan kept, 256 × 256 — the master the landing page's sizes are cut from, because the navy wolf on a navy page is a dark blob |
+| `lyngvi-wordmark.png` | the wordmark cut off the bottom of `lyngvi-logo.png` and recoloured white through its own alpha, 600 × 147 — the other landing page master |
 
-Both are trimmed to the artwork, so they can be placed without having to crop first. The colours are a
-dark navy and a cyan; the artwork carries no background, which keeps it legible on light surfaces through
-the navy and on dark ones through the cyan.
+The first two are trimmed to the artwork, so they can be placed without having to crop first. The colours
+are a dark navy and a cyan; the artwork carries no background, which keeps it legible on light surfaces
+through the navy and on dark ones through the cyan. The last two are recolourings of the same artwork,
+kept here rather than in `landingpage/static/` because the page serves only the sizes it shows; the recipe
+for the light mark is to map every pixel by how cyan it is — cyan stays, everything else becomes `#c9dfef`
+— at 4× and then downscale once.
 
 ## Derived files
 
@@ -53,5 +58,6 @@ above and the system's folder, so nothing of the mark belongs in the background 
 The artwork carries a stray blob of some 112 pixels outside the ring, bottom right, clipped by the edge
 of the canvas — `lyngvi-mark.png` is trimmed to it, so it is in every file derived from the mark. The
 splash copy and the icons have it erased, the icons since the plate under them turned it from a speck
-on nothing into a speck on a surface. The landing page's files still carry it. Worth removing from the
-source artwork at some point.
+on nothing into a speck on a surface. The landing page's sized files have it erased too, along with two
+single stray pixels — `landingpage/README.md` has that pass. The two masters above still carry it, as
+does the source artwork. Worth removing from the source at some point.

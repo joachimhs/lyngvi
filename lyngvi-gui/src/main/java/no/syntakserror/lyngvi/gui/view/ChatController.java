@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -91,6 +92,8 @@ public final class ChatController {
     private FilesController files;
     private boolean ephemeral;
     private Conversation current;
+    /** The owner of the window, told when a conversation comes on screen or goes: see {@link #setCurrent}. */
+    private Consumer<Boolean> onConversation = open -> {};
     private final Drafts drafts = new Drafts();
     private final List<Path> attachments = new ArrayList<>();
     /**
@@ -328,6 +331,26 @@ public final class ChatController {
         this.files = files;
     }
 
+    /** Told whether the chat has a conversation on screen, every time that changes. */
+    public void setOnConversation(Consumer<Boolean> listener) {
+        this.onConversation = listener;
+        listener.accept(current != null && !ephemeral);
+    }
+
+    /**
+     * The conversation on screen, and everything that follows from it being another one — or none. The files
+     * window shows this conversation's working copies, and the window that owns the chat hides «Files» when
+     * there is no conversation: the working copies belong to one, so without it there is nothing to show.
+     */
+    private void setCurrent(Conversation c) {
+        current = c;
+        if (files != null && !ephemeral) {
+            if (c == null) files.clearSession();
+            else files.showSession(c);
+        }
+        onConversation.accept(c != null && !ephemeral);
+    }
+
     public void setEphemeral(boolean ephemeral) {
         this.ephemeral = ephemeral;
         sidebarBox.setVisible(!ephemeral);
@@ -383,7 +406,7 @@ public final class ChatController {
     public void onSandboxChanged() {
         // A conversation still being made belongs to the sandbox being left; this window will never show it.
         endCreating();
-        current = null;
+        setCurrent(null);
         selection.clear();
         transcriptBox.getChildren().clear();
         sessionTitleLabel.setText("");
@@ -520,7 +543,7 @@ public final class ChatController {
         if (ephemeral && current != null) {
             String id = current.id();
             drafts.clear(id);
-            current = null;
+            setCurrent(null);
             transcriptBox.getChildren().clear();
             s.sessions().remove(id, false);
         }
@@ -552,13 +575,12 @@ public final class ChatController {
         s.sessions().activity().seen(id);
         s.sessions().show(id, c -> {
             if (current != null && !current.id().equals(id)) leaveCurrent();
-            current = c;
+            setCurrent(c);
             sessionTitleLabel.setText(c.title());
             selectOpenConversation();
             renderTranscript(c);
             refreshPendingChanges();
             loadModels(c, keepModel);
-            if (files != null && !ephemeral) files.showSession(c);
             restoreDraft(c.id());
             Optional<LiveTurn> turn = s.sessions().liveTurn(c.id());
             if (turn.isPresent()) {
@@ -1333,7 +1355,7 @@ public final class ChatController {
             MenuItem remove = new MenuItem(b.getString("gui.chat.remove"));
             remove.setOnAction(e -> {
                 if (dialogs.confirm(b.getString("gui.chat.remove"), m.get("gui.chat.remove.text", info.title()), b.getString("gui.button.remove"))) {
-                    if (current != null && current.id().equals(info.id())) { current = null; transcriptBox.getChildren().clear(); }
+                    if (current != null && current.id().equals(info.id())) { setCurrent(null); transcriptBox.getChildren().clear(); }
                     s.sessions().remove(info.id(), false);
                 }
             });
