@@ -8,7 +8,7 @@ Lyngvi being the island where Fenrir was bound.
 |---|---|
 | `lyngvi-logo.png` | the full lockup (mark + wordmark), 902 × 1151, transparent |
 | `lyngvi-mark.png` | the mark on its own, square, 902 × 903, transparent |
-| `lyngvi-mark-light.png` | the mark with the navy repainted `#c9dfef` and the cyan kept, 256 × 256 — the master the landing page's sizes are cut from, because the navy wolf on a navy page is a dark blob |
+| `lyngvi-mark-light.png` | the mark with the navy repainted `#c9dfef` and the cyan kept, 256 × 256 — the master the landing page's sizes are cut from, because the navy wolf on a navy page is a dark blob. The social card needs it larger and cuts its own 600 px copy from `lyngvi-mark.png` with the same recipe; `landingpage/README.md` has that pass |
 | `lyngvi-wordmark.png` | the wordmark cut off the bottom of `lyngvi-logo.png` and recoloured white through its own alpha, 600 × 147 — the other landing page master |
 
 The first two are trimmed to the artwork, so they can be placed without having to crop first. The colours

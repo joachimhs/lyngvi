@@ -51,7 +51,7 @@ All of it comes from `docs/branding/`, and none of it is edited by hand:
 | `lyngvi-wordmark-{36,46}.png`      | the same two at `2x`, 146 × 36 and 188 × 46                                                                      |
 | `favicon.png`, `favicon-dark.png`  | the navy mark and the light one; `app.html` picks by `prefers-color-scheme`                                      |
 | `apple-touch-icon.png`             | the light mark on the brand navy, since iOS fills transparency with black                                        |
-| `og-image.png`                     | the social card: mark and wordmark on the brand navy with a cyan pool of light                                   |
+| `og-image.png`                     | the social card, 1200 × 630: the **light** mark, the wordmark and the hero line on the brand navy (see below)    |
 
 The mark and the wordmark are here at every size they are shown at, and nowhere
 in a size the browser has to scale: fine line work — the segmented ring, the
@@ -68,6 +68,33 @@ fixed CSS height take their width from the master's 600 × 147, rounded, and the
 `2x` file is exactly twice the `1x` one so no size lands on half a pixel. The
 same pass clears the stray speck outside the ring (every blob under 20 px of the
 master's), which at 26 px read as a smudge of dirt beside the mark.
+
+## The social card
+
+`og-image.png` is what Slack, LinkedIn, X and the rest show when the page is
+pasted, so it is seen on their background, not ours — almost always a dark one.
+The mark on it is therefore the **light** one: the navy wolf of
+`docs/branding/lyngvi-mark.png` on the navy card was a cyan ring around a dark
+blob, which is the same failure the app icons have a pale plate to avoid. Beside
+it the card carries the white wordmark, the hero line (Instrument Serif, the
+second line in cyan italic) and one Geist Mono line with the site and the
+one-sentence description, on the page's own background: the navy, a cyan pool of
+light at the top left, a hairline rail down each edge and the corner ticks.
+
+It is made the way the screenshots are, by rendering it rather than drawing it,
+so the type is the page's own: an HTML file at 1200 × 630 that links the
+`@fontsource` packages from `node_modules`, screenshotted with
+`chromium --headless --screenshot --window-size=1200,630 --force-device-scale-factor=2`
+and downscaled from that 2× render to 1200 × 630 with `sharp`
+(`lanczos3`, then `sharpen({ sigma: 0.4, m1: 0.5, m2: 0.8 })`). The light mark it
+places is cut at 600 px from the 902 px master with the recipe in
+`docs/branding/README.md` — map every pixel by how cyan it is, the artwork's cyan
+(42, 216, 242) staying and everything else becoming `#c9dfef` — with the stray
+blobs outside the ring cleared first: the biggest is 112 px and the smallest real
+detail, a sparkle, is 648, so dropping every blob of 200 px or less is safe.
+Keep the card's hero line and description in step with `content.js`; the card is
+English, because that is the language the page prerenders and the one the
+`og:` tags carry.
 
 Text changes belong in `src/lib/content.js`, and both languages have to be kept
 in step — the components read the same keys from either. The three typefaces
