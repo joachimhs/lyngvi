@@ -18,9 +18,9 @@
 
 <main>
 	<Hero />
+	<Screens />
 	<Premises />
 	<Architecture />
-	<Screens />
 	<SandboxView />
 	<Egress />
 	<Delivery />

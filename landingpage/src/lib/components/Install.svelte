@@ -52,29 +52,8 @@
 
 		<p class="req">{i18n.t.install.requirements}</p>
 
-		<h3 class="route">{i18n.t.install.cliTitle}</h3>
-
-		<div class="steps">
-			{#each i18n.t.install.steps as step, idx (step.title)}
-				<Reveal delay={idx * 60}>
-					<article class="step">
-						<div class="copyblock">
-							<span class="n num" aria-hidden="true">{String(idx + 1).padStart(2, '0')}</span>
-							<h3>{step.title}</h3>
-							<p>{step.body}</p>
-						</div>
-						<div class="cmdblock">
-							<button class="copy" type="button" onclick={() => copy(idx)}>
-								{copied === idx ? '✓' : '⧉'}
-							</button>
-							<!-- prettier-ignore -->
-							<pre><code>{#each commands[idx] as line, i (i)}<span class="line" class:comment={line.startsWith('#')}>{line}</span>{/each}</code></pre>
-						</div>
-					</article>
-				</Reveal>
-			{/each}
-		</div>
-
+		<!-- The app is the route most people take, so it comes first; the commands
+		     below are the same sandbox made in a terminal. -->
 		<Reveal delay={60}>
 			<div class="gui frame">
 				<div class="gui-inner">
@@ -107,6 +86,29 @@
 				</div>
 			</div>
 		</Reveal>
+
+		<h3 class="route">{i18n.t.install.cliTitle}</h3>
+
+		<div class="steps">
+			{#each i18n.t.install.steps as step, idx (step.title)}
+				<Reveal delay={idx * 60}>
+					<article class="step">
+						<div class="copyblock">
+							<span class="n num" aria-hidden="true">{String(idx + 1).padStart(2, '0')}</span>
+							<h3>{step.title}</h3>
+							<p>{step.body}</p>
+						</div>
+						<div class="cmdblock">
+							<button class="copy" type="button" onclick={() => copy(idx)}>
+								{copied === idx ? '✓' : '⧉'}
+							</button>
+							<!-- prettier-ignore -->
+							<pre><code>{#each commands[idx] as line, i (i)}<span class="line" class:comment={line.startsWith('#')}>{line}</span>{/each}</code></pre>
+						</div>
+					</article>
+				</Reveal>
+			{/each}
+		</div>
 
 		<Reveal delay={80}>
 			<div class="docs frame">
@@ -278,9 +280,10 @@
 		border-color: var(--cyan);
 	}
 
-	/* The app route: the wizard's steps, in the same panel the documents get. */
+	/* The app route: the wizard's steps, in the same panel the documents get.
+	   It is the first of the two routes, so the spacing is below it. */
 	.gui {
-		margin-top: 2.5rem;
+		margin-bottom: 2.75rem;
 	}
 
 	.gui-inner {

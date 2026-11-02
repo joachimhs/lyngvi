@@ -82,8 +82,9 @@ They are the real JavaFX app, not mock-ups: `chat`, `deliver`, `diff`, `traffic`
 are excerpts of them (the denied-hosts table, the review part of the deliver dialog,
 the session container table). All are WebP at 2× and the components pass the 1× size
 as `width`/`height`. `Shot.svelte` is the frame they sit in; `Screens.svelte` is the
-gallery section, and the Egress, Delivery and Install sections each show one next to
-the thing it illustrates.
+gallery section, the hero opens with `chat` (the app is what the page leads with, and
+the terminal comes under it), and the Egress, Delivery and Install sections each show
+one next to the thing it illustrates.
 
 To retake them: run the GUI (`mvn -pl lyngvi-gui javafx:run`) with
 `-Dglass.gtk.uiScale=2.0` (or on a HiDPI display) against a sandbox named `shop`

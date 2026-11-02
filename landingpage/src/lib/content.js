@@ -13,16 +13,16 @@ export const en = {
 	nav: {
 		links: [
 			{
+				href: '#screens',
+				label: 'The app'
+			},
+			{
 				href: '#premises',
 				label: 'Premises'
 			},
 			{
 				href: '#architecture',
 				label: 'Architecture'
-			},
-			{
-				href: '#screens',
-				label: 'Screens'
 			},
 			{
 				href: '#sandbox',
@@ -57,9 +57,9 @@ export const en = {
 		badge: 'v2.0.0 · MIT · macOS and Linux · Podman',
 		title: 'Give the agent your code.',
 		titleAccent: 'Not your machine.',
-		lead: 'Lyngvi is a hardened, agent-agnostic sandbox for running autonomous coding agents against your own repositories. The agent gets a working copy, a toolchain and a controlled way out. It never gets your credentials, your git history or a route to the internet.',
+		lead: 'Lyngvi is a hardened, agent-agnostic sandbox for running autonomous coding agents against your own repositories. You drive it from a desktop app — the conversation, the diff and the delivery in one window — or from the command line, which is the same product without the window. The agent gets a working copy, a toolchain and a controlled way out. It never gets your credentials, your git history or a route to the internet.',
 		ctaPrimary: 'Get started',
-		ctaSecondary: 'How it is built',
+		ctaSecondary: 'See the app',
 		origin: 'Named after the island in Norse mythology where the wolf Fenrir was bound: a place where great power is kept within defined boundaries.',
 		stats: [
 			{
@@ -75,6 +75,11 @@ export const en = {
 				label: 'buckets every changed file is classified into'
 			}
 		],
+		shot: {
+			alt: 'The Lyngvi desktop app: conversations on the left, and a transcript where the agent’s work is listed as Read, Search, Run and Edit rows with line counts on each edit.',
+			caption: 'The app: a conversation per task, the agent’s work as it happens, and the bar above the composer saying what is waiting to be delivered — three files, one of them held back.'
+		},
+		terminalLead: 'Everything the app does is also a command. The CLI ships inside the app and in a package of its own, and both call the same core:',
 		terminalTitle: 'a first run, start to finish',
 		ticker: [
 			'cap_drop ALL',
@@ -134,7 +139,7 @@ export const en = {
 		nodes: {
 			gui: {
 				title: 'JavaFX GUI',
-				body: 'A thin shell over the core: every button calls a core API, long calls run on virtual threads, and the GUI never runs git or podman itself — an architecture test enforces it.'
+				body: 'A desktop app in its own right — the wizard, the conversation, the diff view, the review and the files window are all its own — with none of the sandbox logic inside it: every button calls a core API, long calls run on virtual threads, and the GUI never starts a process or writes sandbox state itself. An architecture test over the sources enforces it.'
 			},
 			cli: {
 				title: 'setup.sh → lyngvi-cli',
@@ -164,8 +169,8 @@ export const en = {
 	},
 	screens: {
 		kicker: 'The desktop app',
-		title: 'The same core, with a window on it',
-		lead: 'Every screen below is the real JavaFX app, run against a sandbox with one repository, three conversations and a change waiting to be reviewed. No mock-ups, no retouching.',
+		title: 'The whole product, in one window',
+		lead: 'Making a sandbox, talking to the agent, reading the diff and delivering what you approve are all in the app, and none of it needs the terminal. Every screen below is the real JavaFX app, run against a sandbox with one repository, three conversations and a change waiting to be reviewed. No mock-ups, no retouching.',
 		note: 'Lyngvi 2.0.0 · dark theme · sandbox «shop»',
 		items: [
 			{
@@ -468,8 +473,8 @@ export const en = {
 				body: 'One JSON document on stdout, documented exit codes, and a line-delimited event stream from session ask. The CLI contract is the public, language-independent API.'
 			},
 			{
-				title: 'A GUI that is only a shell',
-				body: 'Nav rail, streaming chat with tool calls and usage, a file pane, a diff viewer with whole-file mode, and the same review and apply flow as the CLI.'
+				title: 'A desktop app, not a wrapper',
+				body: 'Nav rail, streaming chat with tool calls and usage, a file pane, a diff viewer with whole-file mode, and the same review and apply flow as the CLI — the flow itself living in the core both of them call.'
 			},
 			{
 				title: 'Pinned and reproducible',
@@ -535,10 +540,10 @@ export const en = {
 	install: {
 		kicker: 'Install',
 		title: 'From nothing to a running sandbox',
-		lead: 'The CLI ships as a jlink image with its own runtime, and the GUI as a jpackage app with the CLI inside it. You do not install Java.',
+		lead: 'The app ships as a jpackage build with the CLI inside it, and the CLI on its own as a jlink image with its own runtime. You do not install Java.',
 		requirements:
 			'Requirements: macOS or Linux · Podman 5+ · Java 25 only if you build from source',
-		cliTitle: 'In the terminal',
+		cliTitle: 'Or in the terminal',
 		steps: [
 			{
 				title: 'Get the CLI',
@@ -557,9 +562,9 @@ export const en = {
 				body: 'A conversation gets a container. Ask, read the diff, deliver what you approve.'
 			}
 		],
-		guiTitle: 'Or in the app',
+		guiTitle: 'In the app',
 		guiLead:
-			'The desktop app covers the same ground in a «New sandbox» wizard, and there is nothing else to install: the CLI ships inside the app, and a sandbox made here links its own cli/ to it — so the same folder is yours to work in from the terminal whenever you want to.',
+			'Install the app, and the «New sandbox» wizard takes you from nothing to a sandbox you can start a conversation in. There is nothing else to install: the CLI ships inside the app, and a sandbox made here links its own cli/ to it — so the same folder is yours to work in from the terminal whenever you want to.',
 		guiSteps: [
 			{
 				title: 'Folder and repositories',
@@ -635,16 +640,16 @@ export const no = {
 	nav: {
 		links: [
 			{
+				href: '#screens',
+				label: 'Appen'
+			},
+			{
 				href: '#premises',
 				label: 'Sikkerhetsprinsipper'
 			},
 			{
 				href: '#architecture',
 				label: 'Arkitektur'
-			},
-			{
-				href: '#screens',
-				label: 'Skjermbilder'
 			},
 			{
 				href: '#sandbox',
@@ -679,9 +684,9 @@ export const no = {
 		badge: 'v2.0.0 · MIT · macOS og Linux · Podman',
 		title: 'Gi agenten koden din.',
 		titleAccent: 'Ikke maskinen din.',
-		lead: 'Lyngvi lar autonome kodeagenter arbeide med repoene dine i en sandkasse med strenge sikkerhetsgrenser. Agenten får en arbeidskopi av koden, utviklingsverktøyene den trenger og kontrollert nettverkstilgang gjennom en proxy. Din Git-historikk og tilgangsnøklene til interne systemer holdes utenfor agentens rekkevidde. Bruk Claude Code, OpenCode eller en agent du selv velger.',
+		lead: 'Lyngvi lar autonome kodeagenter arbeide med repoene dine i en sandkasse med strenge sikkerhetsgrenser. Du styrer det hele fra skrivebordsappen – samtalen, endringene og overføringen i ett vindu – eller fra kommandolinjen, som er det samme produktet uten vindu. Agenten får en arbeidskopi av koden, utviklingsverktøyene den trenger og kontrollert nettverkstilgang gjennom en proxy. Din Git-historikk og tilgangsnøklene til interne systemer holdes utenfor agentens rekkevidde. Bruk Claude Code, OpenCode eller en agent du selv velger.',
 		ctaPrimary: 'Kom i gang',
-		ctaSecondary: 'Slik fungerer Lyngvi',
+		ctaSecondary: 'Se appen',
 		origin: 'Lyngvi er oppkalt etter øya i norrøn mytologi der Fenrisulven ble bundet – et sted der store krefter holdes innenfor klare grenser.',
 		stats: [
 			{
@@ -697,7 +702,12 @@ export const no = {
 				label: 'kategorier for kontroll av endrede filer'
 			}
 		],
-		terminalTitle: 'første kjøring, fra start til slutt',
+		shot: {
+			alt: 'Lyngvis skrivebordsapp med samtaleliste til venstre og en samtalelogg som viser agentens verktøykall: Read, Search, Run og Edit. Hver redigering viser antall linjer som er lagt til og fjernet.',
+			caption: 'Hver oppgave har sin egen samtale, der du kan følge agentens arbeid steg for steg. Over skrivefeltet ser du hvilke endringer som venter på overføring: her tre filer, hvorav én krever ekstra godkjenning.'
+		},
+		terminalLead: 'Alle funksjonene i appen er også tilgjengelige fra kommandolinjen. Kommandolinjeverktøyet følger med appen og kan lastes ned separat. Begge bruker den samme kjernen:',
+		terminalTitle: 'Første kjøring, steg for steg',
 		ticker: [
 			'cap_drop ALL',
 			'no-new-privileges',
@@ -756,7 +766,7 @@ export const no = {
 		nodes: {
 			gui: {
 				title: 'JavaFX-app',
-				body: 'Skrivebordsappen bruker kjernens API-er for alle handlinger. Langvarige kall kjører på virtuelle tråder. En arkitekturtest sikrer at appen aldri kjører Git eller Podman direkte.'
+				body: 'En fullverdig skrivebordsapp: veiviseren, samtalen, diff-visningen, gjennomgangen og filvinduet er appens egne. Selve sandkasselogikken ligger ikke her – alle handlinger går gjennom kjernens API-er, langvarige kall kjører på virtuelle tråder, og appen starter aldri en prosess eller skriver sandkassetilstand selv. En arkitekturtest over kildekoden håndhever det.'
 			},
 			cli: {
 				title: 'setup.sh → lyngvi-cli',
@@ -786,8 +796,8 @@ export const no = {
 	},
 	screens: {
 		kicker: 'Skrivebordsappen',
-		title: 'Full oversikt i skrivebordsappen',
-		lead: 'Skjermbildene viser JavaFX-appen med ett repo, tre samtaler og endringer som venter på gjennomgang. Bildene er hentet direkte fra appen og er ikke retusjert.',
+		title: 'Hele produktet i ett vindu',
+		lead: 'Å opprette en sandkasse, snakke med agenten, lese endringene og overføre det du godkjenner gjøres i appen, og ingenting av det krever terminalen. Skjermbildene viser JavaFX-appen med ett repo, tre samtaler og endringer som venter på gjennomgang. Bildene er hentet direkte fra appen og er ikke retusjert.',
 		note: 'Lyngvi 2.0.0 · mørkt tema · sandkassen «shop»',
 		items: [
 			{
@@ -1157,9 +1167,9 @@ export const no = {
 	install: {
 		kicker: 'Kom i gang',
 		title: 'Kom i gang med din første sandkasse',
-		lead: 'Både kommandolinjeverktøyet og skrivebordsappen leveres med Java inkludert. Kommandolinjeverktøyet pakkes med jlink, og appen pakkes med jpackage og inkluderer kommandolinjeverktøyet. Du trenger bare å installere Java selv hvis du vil bygge Lyngvi fra kildekoden.',
+		lead: 'Både skrivebordsappen og kommandolinjeverktøyet leveres med Java inkludert. Appen pakkes med jpackage og inkluderer kommandolinjeverktøyet, og kommandolinjeverktøyet finnes også alene, pakket med jlink. Du trenger bare å installere Java selv hvis du vil bygge Lyngvi fra kildekoden.',
 		requirements: 'Krav: macOS eller Linux · Podman 5+ · Java 25 kun hvis du bygger fra kildekode',
-		cliTitle: 'I terminalen',
+		cliTitle: 'Eller i terminalen',
 		steps: [
 			{
 				title: 'Last ned kommandolinjeverktøyet',
@@ -1180,7 +1190,7 @@ export const no = {
 		],
 		docsTitle: 'Dokumentasjon',
 		guiLead:
-			'Skrivebordsappen tar de samme stegene i veiviseren «Ny sandkasse», og mer skal ikke installeres: CLI-en ligger inni appen, og en sandkasse laget her peker sin egen cli/ til den — så samme mappe er din å jobbe i fra terminalen når du vil.',
+			'Installer appen, så tar veiviseren «Ny sandkasse» deg fra ingenting til en sandkasse du kan starte en samtale i. Mer skal ikke installeres: CLI-en ligger inni appen, og en sandkasse laget her peker sin egen cli/ til den — så samme mappe er din å jobbe i fra terminalen når du vil.',
 		guiSteps: [
 			{
 				title: 'Mappe og repoer',
@@ -1215,7 +1225,7 @@ export const no = {
 		guiNote:
 			'macOS: en .dmg, åpnet første gang med høyreklikk → Åpne, siden appen ennå ikke er notarisert. Linux: en .deb eller det utpakkede appbildet. Derfra er samtalen, diffen og uttaket vinduene over.',
 		guiLink: 'Appen, skjerm for skjerm',
-		guiTitle: 'Eller i appen',
+		guiTitle: 'I appen',
 		docs: [
 			{
 				label: 'README',

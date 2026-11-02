@@ -3,6 +3,7 @@
 	import { i18n } from '#lib/i18n.svelte.js';
 	import { links } from '#lib/links.js';
 	import Terminal from './Terminal.svelte';
+	import Shot from './Shot.svelte';
 	import Ring from './Ring.svelte';
 
 	const script = [
@@ -60,7 +61,7 @@
 							aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" /></svg
 						>
 					</a>
-					<a class="btn" href="#architecture">{i18n.t.hero.ctaSecondary}</a>
+					<a class="btn" href="#screens">{i18n.t.hero.ctaSecondary}</a>
 				</div>
 			</div>
 
@@ -74,8 +75,24 @@
 			</ul>
 		</div>
 
+		<!-- The app first: it is how Lyngvi is used. The terminal below shows the same
+		     run as commands, for the half of the audience that would rather see that. -->
 		<div class="visual frame">
-			<Terminal lines={script} title={i18n.t.hero.terminalTitle} />
+			<Shot
+				name="chat"
+				width={1280}
+				height={900}
+				title="Lyngvi — Agentic coding"
+				alt={i18n.t.hero.shot.alt}
+				caption={i18n.t.hero.shot.caption}
+			/>
+		</div>
+
+		<div class="second">
+			<p class="second-lead">{i18n.t.hero.terminalLead}</p>
+			<div class="frame">
+				<Terminal lines={script} title={i18n.t.hero.terminalTitle} />
+			</div>
 		</div>
 
 		<div class="below">
@@ -226,6 +243,17 @@
 
 	.visual {
 		margin-top: clamp(2.5rem, 5vw, 4rem);
+	}
+
+	.second {
+		margin-top: clamp(2rem, 4vw, 3rem);
+	}
+
+	.second-lead {
+		margin-bottom: 0.9rem;
+		max-width: 62ch;
+		color: var(--dim);
+		font-size: 0.95rem;
 	}
 
 	.below {
