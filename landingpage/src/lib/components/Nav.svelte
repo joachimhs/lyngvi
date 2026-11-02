@@ -19,16 +19,9 @@
 	<div class="page inner">
 		<a class="brand" href="#top" aria-label="Lyngvi">
 			<img
-				src={asset('lyngvi-mark-light-32.png')}
-				srcset="{asset('lyngvi-mark-light-32.png')} 1x, {asset('lyngvi-mark-light-64.png')} 2x"
-				alt=""
-				width="32"
-				height="32"
-			/>
-			<img
 				class="word"
-				src={asset('lyngvi-wordmark-18.png')}
-				srcset="{asset('lyngvi-wordmark-18.png')} 1x, {asset('lyngvi-wordmark-36.png')} 2x"
+				src={asset('icon-512.png')}
+				srcset="{asset('icon-512.png')} 1x, {asset('icon-512.png')} 2x"
 				alt="Lyngvi"
 				width="73"
 				height="18"
@@ -145,7 +138,7 @@
 	}
 
 	.brand .word {
-		height: 18px;
+		height: 45px;
 		opacity: 0.95;
 	}
 

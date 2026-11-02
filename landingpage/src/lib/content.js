@@ -8,20 +8,46 @@
 export const en = {
 	meta: {
 		title: 'Lyngvi — a hardened sandbox for autonomous coding agents',
-		description:
-			'Lyngvi runs Claude Code, OpenCode or your own agent against your repositories inside a hardened container: no direct network, no access to your .git, secrets behind a gateway, and every change delivered as a reviewed patch.'
+		description: 'Lyngvi runs Claude Code, OpenCode or your own agent against your repositories inside a hardened container: no direct network, no access to your .git, secrets behind a gateway, and every change delivered as a reviewed patch.'
 	},
 	nav: {
 		links: [
-			{ href: '#premises', label: 'Premises' },
-			{ href: '#architecture', label: 'Architecture' },
-			{ href: '#screens', label: 'Screens' },
-			{ href: '#sandbox', label: 'The sandbox' },
-			{ href: '#egress', label: 'Egress' },
-			{ href: '#delivery', label: 'Delivery' },
-			{ href: '#gateway', label: 'Gateway' },
-			{ href: '#features', label: 'Features' },
-			{ href: '#install', label: 'Install' }
+			{
+				href: '#premises',
+				label: 'Premises'
+			},
+			{
+				href: '#architecture',
+				label: 'Architecture'
+			},
+			{
+				href: '#screens',
+				label: 'Screens'
+			},
+			{
+				href: '#sandbox',
+				label: 'The sandbox'
+			},
+			{
+				href: '#egress',
+				label: 'Egress'
+			},
+			{
+				href: '#delivery',
+				label: 'Delivery'
+			},
+			{
+				href: '#gateway',
+				label: 'Gateway'
+			},
+			{
+				href: '#features',
+				label: 'Features'
+			},
+			{
+				href: '#install',
+				label: 'Install'
+			}
 		],
 		source: 'Source',
 		langLabel: 'Norsk',
@@ -34,12 +60,20 @@ export const en = {
 		lead: 'Lyngvi is a hardened, agent-agnostic sandbox for running autonomous coding agents against your own repositories. The agent gets a working copy, a toolchain and a controlled way out. It never gets your credentials, your git history or a route to the internet.',
 		ctaPrimary: 'Get started',
 		ctaSecondary: 'How it is built',
-		origin:
-			'Named after the island in Norse mythology where the wolf Fenrir was bound: a place where great power is kept within defined boundaries.',
+		origin: 'Named after the island in Norse mythology where the wolf Fenrir was bound: a place where great power is kept within defined boundaries.',
 		stats: [
-			{ value: '0', label: 'direct network routes out of the container' },
-			{ value: '1', label: 'container per conversation' },
-			{ value: '3', label: 'buckets every changed file is classified into' }
+			{
+				value: '0',
+				label: 'direct network routes out of the container'
+			},
+			{
+				value: '1',
+				label: 'container per conversation'
+			},
+			{
+				value: '3',
+				label: 'buckets every changed file is classified into'
+			}
 		],
 		terminalTitle: 'a first run, start to finish',
 		ticker: [
@@ -185,12 +219,30 @@ export const en = {
 		seesTitle: 'What the agent sees',
 		seesIntro: 'Mounted into the container, and nothing else from the host:',
 		sees: [
-			{ path: '/work/<repo>', note: 'a working copy with a fresh .git, one mount per repository' },
-			{ path: '/work/output', note: 'files meant for you, outside the repositories' },
-			{ path: '/work/_attachments', note: 'files you sent with a message, read-only' },
-			{ path: '/work/AGENTS.md', note: 'the house rules, generated from the sandbox config' },
-			{ path: 'HTTP_PROXY, HTTPS_PROXY', note: 'the only way out, to the allowlist' },
-			{ path: '<SYSTEM>_GATEWAY_URL', note: 'a hostname per configured internal system' }
+			{
+				path: '/work/<repo>',
+				note: 'a working copy with a fresh .git, one mount per repository'
+			},
+			{
+				path: '/work/output',
+				note: 'files meant for you, outside the repositories'
+			},
+			{
+				path: '/work/_attachments',
+				note: 'files you sent with a message, read-only'
+			},
+			{
+				path: '/work/AGENTS.md',
+				note: 'the house rules, generated from the sandbox config'
+			},
+			{
+				path: 'HTTP_PROXY, HTTPS_PROXY',
+				note: 'the only way out, to the allowlist'
+			},
+			{
+				path: '<SYSTEM>_GATEWAY_URL',
+				note: 'a hostname per configured internal system'
+			}
 		],
 		neverTitle: 'What it never sees',
 		neverIntro: 'Structurally out of reach, not merely discouraged:',
@@ -203,15 +255,20 @@ export const en = {
 			'A default route: unknown hosts fail at the proxy, not at your firewall'
 		],
 		agentsTitle: 'Agents are interchangeable',
-		agentsBody:
-			'Claude Code and OpenCode ship as reference adapters, with subscription login or a token. An adapter is an agent.json plus a command contract, so a third agent is a config file, not a fork. Models running on your own machine (Ollama, LM Studio, MLX) are reached through the proxy on the ports your profile names.',
+		agentsBody: 'Claude Code and OpenCode ship as reference adapters, with subscription login or a token. An adapter is an agent.json plus a command contract, so a third agent is a config file, not a fork. Models running on your own machine (Ollama, LM Studio, MLX) are reached through the proxy on the ports your profile names.',
 		agents: [
 			{
 				name: 'Claude Code',
 				detail: 'subscription, token or API key · streaming · reasoning · attachments'
 			},
-			{ name: 'OpenCode', detail: 'subscription or key · streaming · local and hosted models' },
-			{ name: 'Your own', detail: 'agent.json, or an adapter.sh in any language' }
+			{
+				name: 'OpenCode',
+				detail: 'subscription or key · streaming · local and hosted models'
+			},
+			{
+				name: 'Your own',
+				detail: 'agent.json, or an adapter.sh in any language'
+			}
 		]
 	},
 	egress: {
@@ -228,33 +285,44 @@ export const en = {
 			denied: 'DENIED — not on the allowlist'
 		},
 		reasons: {
-			blocked:
-				'A known exfiltration or tunnelling endpoint. The bundled blocklist covers request-capture services, paste sites, file drops, tunnels and IP reconnaissance, and it is checked before anything else.',
+			blocked: 'A known exfiltration or tunnelling endpoint. The bundled blocklist covers request-capture services, paste sites, file drops, tunnels and IP reconnaissance, and it is checked before anything else.',
 			allowedProfile: 'Allowed by the profile your organisation ships.',
-			allowedAgent:
-				'Allowed because the configured agent needs it — agent allowlists come from agent.json, not from you.',
+			allowedAgent: 'Allowed because the configured agent needs it — agent allowlists come from agent.json, not from you.',
 			allowedUser: 'Allowed because someone added it with ./setup.sh domain add.',
-			gateway:
-				'A gateway hostname. The request never leaves on its own: the sidecar adds the credential, enforces the item allowlist and returns read-only data.',
-			denied:
-				'Not on any list, so the proxy answers with an error and the attempt is recorded. Allow it when you mean to: ./setup.sh domain add <host>.'
+			gateway: 'A gateway hostname. The request never leaves on its own: the sidecar adds the credential, enforces the item allowlist and returns read-only data.',
+			denied: 'Not on any list, so the proxy answers with an error and the attempt is recorded. Allow it when you mean to: ./setup.sh domain add <host>.'
 		},
-		sections: { profile: 'profile', agent: 'agent', user: 'yours' },
+		sections: {
+			profile: 'profile',
+			agent: 'agent',
+			user: 'yours'
+		},
 		listTitle: 'The bundled blocklist, by category',
 		categories: [
 			{
 				name: 'Request capture',
 				hosts: 'webhook.site · pipedream.com · requestbin.com · beeceptor.com'
 			},
-			{ name: 'Paste sites', hosts: 'pastebin.com · hastebin.com · rentry.co · dpaste.org' },
-			{ name: 'File sharing', hosts: 'transfer.sh · file.io · 0x0.st · catbox.moe · gofile.io' },
-			{ name: 'Tunnels', hosts: 'ngrok.io · localtunnel.me · serveo.net · localhost.run' },
-			{ name: 'IP reconnaissance', hosts: 'ipinfo.io · ifconfig.me · icanhazip.com · ipify.org' }
+			{
+				name: 'Paste sites',
+				hosts: 'pastebin.com · hastebin.com · rentry.co · dpaste.org'
+			},
+			{
+				name: 'File sharing',
+				hosts: 'transfer.sh · file.io · 0x0.st · catbox.moe · gofile.io'
+			},
+			{
+				name: 'Tunnels',
+				hosts: 'ngrok.io · localtunnel.me · serveo.net · localhost.run'
+			},
+			{
+				name: 'IP reconnaissance',
+				hosts: 'ipinfo.io · ifconfig.me · icanhazip.com · ipify.org'
+			}
 		],
 		cmdNote: 'Live from the command line:',
 		figure: {
-			caption:
-				'In the GUI the same list is a table: every host the proxy denied, with a count, and an Allow button that adds it to your section of the allowlist and reloads the proxy.',
+			caption: 'In the GUI the same list is a table: every host the proxy denied, with a count, and an Allow button that adds it to your section of the allowlist and reloads the proxy.',
 			alt: 'The Traffic table in the GUI: four denied hosts with status 403 and their counts, and the buttons Allow, Refresh, Follow and Stop.'
 		}
 	},
@@ -271,17 +339,26 @@ export const en = {
 				title: 'Patch',
 				body: 'Built with a throwaway index, so uncommitted, unstaged and agent-committed work all come along.'
 			},
-			{ title: 'Classify', body: 'Three buckets on the host, by rule: apply, hold, reject.' },
-			{ title: 'Review', body: 'File by file, as hunks or whole files, in the GUI or the CLI.' },
+			{
+				title: 'Classify',
+				body: 'Three buckets on the host, by rule: apply, hold, reject.'
+			},
+			{
+				title: 'Review',
+				body: 'File by file, as hunks or whole files, in the GUI or the CLI.'
+			},
 			{
 				title: 'Branch',
 				body: 'Commit or stage on a working branch. Protected branches are refused.'
 			}
 		],
 		tableTitle: 'session review 7f3a2c',
-		tableHint:
-			'Click a held file to include it — held files are only delivered when you name them.',
-		columns: { file: 'File', change: 'Change', bucket: 'Bucket' },
+		tableHint: 'Click a held file to include it — held files are only delivered when you name them.',
+		columns: {
+			file: 'File',
+			change: 'Change',
+			bucket: 'Bucket'
+		},
 		buckets: {
 			apply: 'apply',
 			hold: 'hold',
@@ -290,13 +367,27 @@ export const en = {
 		bucketRules: {
 			apply: 'Ordinary text changes, applied when you approve them.',
 			hold: 'Executables, symlinks, binaries and oversized files. Delivered only when named explicitly.',
-			reject:
-				'Path traversal, absolute paths, .git segments, invalid UTF-8, unparseable patches. Never delivered, whatever you click.'
+			reject: 'Path traversal, absolute paths, .git segments, invalid UTF-8, unparseable patches. Never delivered, whatever you click.'
 		},
 		files: [
-			{ path: 'src/auth.ts', change: 'modified', bucket: 'apply', stat: '+12 −3' },
-			{ path: 'src/session/cookie.ts', change: 'modified', bucket: 'apply', stat: '+4 −1' },
-			{ path: 'tests/auth.spec.ts', change: 'added', bucket: 'apply', stat: '+58 −0' },
+			{
+				path: 'src/auth.ts',
+				change: 'modified',
+				bucket: 'apply',
+				stat: '+12 −3'
+			},
+			{
+				path: 'src/session/cookie.ts',
+				change: 'modified',
+				bucket: 'apply',
+				stat: '+4 −1'
+			},
+			{
+				path: 'tests/auth.spec.ts',
+				change: 'added',
+				bucket: 'apply',
+				stat: '+58 −0'
+			},
 			{
 				path: 'bin/run.sh',
 				change: 'added',
@@ -321,13 +412,10 @@ export const en = {
 		],
 		applyLabel: 'session apply --branch',
 		branch: 'agent/fix-login',
-		summary: (/** @type {number} */ n) =>
-			`${n} file${n === 1 ? '' : 's'} will be committed on agent/fix-login.`,
-		protectedNote:
-			'main, master and develop are refused by the profile; the branch prefix is yours to set.',
+		summary: (/** @type {number} */ n) => `${n} file${n === 1 ? '' : 's'} will be committed on agent/fix-login.`,
+		protectedNote: 'main, master and develop are refused by the profile; the branch prefix is yours to set.',
 		figure: {
-			caption:
-				'The same review in the GUI: what will be applied, what is held back until you tick it, what is rejected — and the diff of the selected file beside it.',
+			caption: 'The same review in the GUI: what will be applied, what is held back until you tick it, what is rejected — and the diff of the selected file beside it.',
 			alt: 'The review part of the Deliver changes dialog: a warning that one of three files is held back, the lists Will be applied, Held back and Rejected, and the diff of src/auth.ts.'
 		}
 	},
@@ -348,8 +436,7 @@ export const en = {
 			'A broken instance fails alone; /healthz reports it as configured: false'
 		],
 		pluginsTitle: 'Every system type is a plugin',
-		pluginsBody:
-			'http is built in and covers any REST API behind a static secret. confluence and jira ship as jars. Your own is a class implementing GatewayPlugin plus a service entry, dropped in with gateway plugin install. The codebase ships with no systems configured — a profile pack adds what your organisation needs.',
+		pluginsBody: 'http is built in and covers any REST API behind a static secret. confluence and jira ship as jars. Your own is a class implementing GatewayPlugin plus a service entry, dropped in with gateway plugin install. The codebase ships with no systems configured — a profile pack adds what your organisation needs.',
 		exchangeTitle: 'What it looks like from inside',
 		allowedComment: 'allowed: space OPS is on the list',
 		deniedComment: 'not allowed yet — the human must add it',
@@ -402,7 +489,10 @@ export const en = {
 		kicker: 'Hardening, in one table',
 		title: 'What is switched off, everywhere',
 		rows: [
-			{ k: 'Network', v: 'Internal network only; no default route from a session container' },
+			{
+				k: 'Network',
+				v: 'Internal network only; no default route from a session container'
+			},
 			{
 				k: 'Capabilities',
 				v: 'cap_drop ALL and no-new-privileges on every container, session containers included'
@@ -446,8 +536,7 @@ export const en = {
 		kicker: 'Install',
 		title: 'From nothing to a running sandbox',
 		lead: 'The CLI ships as a jlink image with its own runtime, and the GUI as a jpackage app with the CLI inside it. You do not install Java.',
-		requirements:
-			'Requirements: macOS or Linux · Podman 5+ · Java 25 only if you build from source',
+		requirements: 'Requirements: macOS or Linux · Podman 5+ · Java 25 only if you build from source',
 		steps: [
 			{
 				title: 'Get the CLI',
@@ -468,18 +557,32 @@ export const en = {
 		],
 		docsTitle: 'Further reading',
 		docs: [
-			{ label: 'README', note: 'commands, layout and the first run' },
-			{ label: 'docs/agents.md', note: 'writing an agent adapter and the event contract' },
-			{ label: 'docs/gateway-plugins.md', note: 'writing and packaging a gateway plugin' },
-			{ label: 'docs/profiles.md', note: 'every section of a profile pack' },
-			{ label: 'acceptance/', note: 'the acceptance suite and checklist' }
+			{
+				label: 'README',
+				note: 'commands, layout and the first run'
+			},
+			{
+				label: 'docs/agents.md',
+				note: 'writing an agent adapter and the event contract'
+			},
+			{
+				label: 'docs/gateway-plugins.md',
+				note: 'writing and packaging a gateway plugin'
+			},
+			{
+				label: 'docs/profiles.md',
+				note: 'every section of a profile pack'
+			},
+			{
+				label: 'acceptance/',
+				note: 'the acceptance suite and checklist'
+			}
 		]
 	},
 	footer: {
 		tagline: 'A hardened, agent-agnostic sandbox for autonomous coding agents.',
 		licence: 'MIT licensed.',
-		origin:
-			'Lyngvi is the island where Fenrir was bound. The wolf in the mark is the agent’s power, the barrier its boundaries, and the three sparkles its artificial intelligence.',
+		origin: 'Lyngvi is the island where Fenrir was bound. The wolf in the mark is the agent’s power, the barrier its boundaries, and the three sparkles its artificial intelligence.',
 		colophon: 'This page is static: no trackers, no analytics, no third-party requests.',
 		status: 'Status: pre-release'
 	}
@@ -487,21 +590,47 @@ export const en = {
 
 export const no = {
 	meta: {
-		title: 'Lyngvi — en herdet sandkasse for autonome kodeagenter',
-		description:
-			'Lyngvi kjører Claude Code, OpenCode eller din egen agent mot repoene dine inne i en herdet container: ingen direkte nettilgang, ingen tilgang til .git, hemmeligheter bak en gateway, og hver endring levert som en gjennomgått patch.'
+		title: 'Lyngvi — en sandkasse med strenge sikkerhetsgrenser for autonome kodeagenter',
+		description: 'La Claude Code, OpenCode eller din egen kodeagent arbeide i en isolert container med kontrollert nettverkstilgang. Din Git-historikk og tilgangsnøklene til interne systemer holdes utenfor, og du gjennomgår endringene før de overføres.'
 	},
 	nav: {
 		links: [
-			{ href: '#premises', label: 'Premisser' },
-			{ href: '#architecture', label: 'Arkitektur' },
-			{ href: '#screens', label: 'Skjermbilder' },
-			{ href: '#sandbox', label: 'Sandkassen' },
-			{ href: '#egress', label: 'Utgående' },
-			{ href: '#delivery', label: 'Uttak' },
-			{ href: '#gateway', label: 'Gateway' },
-			{ href: '#features', label: 'Funksjoner' },
-			{ href: '#install', label: 'Kom i gang' }
+			{
+				href: '#premises',
+				label: 'Sikkerhetsprinsipper'
+			},
+			{
+				href: '#architecture',
+				label: 'Arkitektur'
+			},
+			{
+				href: '#screens',
+				label: 'Skjermbilder'
+			},
+			{
+				href: '#sandbox',
+				label: 'Sandkassen'
+			},
+			{
+				href: '#egress',
+				label: 'Nettverkstilgang'
+			},
+			{
+				href: '#delivery',
+				label: 'Overfør endringer'
+			},
+			{
+				href: '#gateway',
+				label: 'Gateway'
+			},
+			{
+				href: '#features',
+				label: 'Funksjoner'
+			},
+			{
+				href: '#install',
+				label: 'Kom i gang'
+			}
 		],
 		source: 'Kildekode',
 		langLabel: 'English',
@@ -511,278 +640,337 @@ export const no = {
 		badge: 'v2.0.0 · MIT · macOS og Linux · Podman',
 		title: 'Gi agenten koden din.',
 		titleAccent: 'Ikke maskinen din.',
-		lead: 'Lyngvi er en herdet, agentuavhengig sandkasse for å kjøre autonome kodeagenter mot dine egne repoer. Agenten får en arbeidskopi, en verktøykjede og én kontrollert vei ut. Den får aldri legitimasjonen din, git-historikken din eller en rute til internett.',
+		lead: 'Lyngvi lar autonome kodeagenter arbeide med repoene dine i en sandkasse med strenge sikkerhetsgrenser. Agenten får en arbeidskopi av koden, utviklingsverktøyene den trenger og kontrollert nettverkstilgang gjennom en proxy. Din Git-historikk og tilgangsnøklene til interne systemer holdes utenfor agentens rekkevidde. Bruk Claude Code, OpenCode eller en agent du selv velger.',
 		ctaPrimary: 'Kom i gang',
-		ctaSecondary: 'Slik er det bygget',
-		origin:
-			'Oppkalt etter øya i norrøn mytologi der ulven Fenrir ble bundet: et sted der stor kraft holdes innenfor definerte grenser.',
+		ctaSecondary: 'Slik fungerer Lyngvi',
+		origin: 'Lyngvi er oppkalt etter øya i norrøn mytologi der Fenrisulven ble bundet – et sted der store krefter holdes innenfor klare grenser.',
 		stats: [
-			{ value: '0', label: 'direkte nettverksruter ut av containeren' },
-			{ value: '1', label: 'container per samtale' },
-			{ value: '3', label: 'bøtter hver endret fil klassifiseres i' }
+			{
+				value: '0',
+				label: 'direkte forbindelser fra containeren til internett'
+			},
+			{
+				value: '1',
+				label: 'egen container per samtale'
+			},
+			{
+				value: '3',
+				label: 'kategorier for kontroll av endrede filer'
+			}
 		],
-		terminalTitle: 'en første kjøring, fra start til slutt',
+		terminalTitle: 'første kjøring, fra start til slutt',
 		ticker: [
 			'cap_drop ALL',
 			'no-new-privileges',
 			'din UID, aldri root',
 			'ingen standardrute',
-			'blokkliste før allowlist',
-			'en ny .git',
+			'blokkeringsliste før tillatelsesliste',
+			'et nytt Git-repo',
 			'skrivebeskyttet gateway',
-			'minne · cpu · pid-grenser',
-			'apply · hold · reject',
+			'grenser for minne · CPU · prosesser',
+			'klar · krever godkjenning · avvist',
 			'aldri til main'
 		]
 	},
 	premises: {
-		kicker: 'De fire premissene',
-		title: 'Produktet er grensen',
-		lead: 'Alt annet i Lyngvi er skall rundt disse fire. De er grunnen til at en agent kan kjøre uten tilsyn i et repo du bryr deg om.',
+		kicker: 'Fire sikkerhetsprinsipper',
+		title: 'Tydelige grenser for hva agenten får gjøre',
+		lead: 'Lyngvi bygger på fire sikkerhetsprinsipper. Sammen gjør de det mulig å la agenten arbeide selvstendig, samtidig som du beholder kontrollen over kode, tilganger og endringer.',
 		items: [
 			{
 				n: '01',
-				title: 'Ingen direkte nettverkstilgang',
-				body: 'Samtalecontaineren ligger på et internt nett uten default route. All utgående trafikk går gjennom en Squid-proxy med allowlist, og en eksplisitt blocklist over kjente eksfiltrasjonsendepunkter sjekkes først.',
-				chip: 'squid · allowlist + blocklist'
+				title: 'Ingen direkte tilgang til internett',
+				body: 'Hver samtale kjører i en container på et internt nettverk uten standardrute. All utgående trafikk må gjennom en Squid-proxy som bare slipper gjennom godkjente verter. En liste over kjente endepunkter for datalekkasje kontrolleres først.',
+				chip: 'Squid · tillatelsesliste + blokkeringsliste'
 			},
 			{
 				n: '02',
-				title: 'Ingen tilgang til .git-en din',
-				body: 'Agenten jobber i en kopi med en fersk .git — ingen hooks, ingen config, ingen remotes, ingen credential helper. Hele git-angrepsflaten er fjernet strukturelt, ikke med en regel.',
-				chip: 'kopiert arbeidskopi'
+				title: 'Din Git-historikk holdes utenfor',
+				body: 'Agenten arbeider i en kopi av koden med et nytt Git-repo. Dine hooks, innstillinger, eksterne repo-adresser og hjelpere for innloggingsopplysninger følger ikke med. Denne delen av Git-angrepsflaten fjernes gjennom selve oppsettet.',
+				chip: 'egen arbeidskopi'
 			},
 			{
 				n: '03',
-				title: 'Hemmeligheter bor i en gateway-sidecar',
-				body: 'Interne systemer nås gjennom et read-only API med allowlist som holder tokenet. Agenten ser aldri annet enn et vertsnavn. En plugin kan ikke lese hemmeligheten: kjøretiden injiserer den i et låst upstream-objekt.',
-				chip: 'aldri et token i containeren'
+				title: 'Tilgangsnøkler oppbevares i gatewayen',
+				body: 'Agenten får begrenset lesetilgang til godkjent innhold i interne systemer gjennom en separat gateway. Gatewayen håndterer autentiseringen. Kjøremiljøet setter inn tilgangsnøkkelen i et låst objekt for kommunikasjon med systemet, slik at programtilleggene heller ikke får lese nøkkelen.',
+				chip: 'interne tilgangsnøkler holdes utenfor agentcontaineren'
 			},
 			{
 				n: '04',
-				title: 'Validert uttak med menneskelig godkjenning',
-				body: 'Endringer kommer tilbake som en patch, klassifisert på hosten fil for fil, gjennomgått av deg og committet på en arbeidsgren. Aldri på main, aldri i det stille.',
-				chip: 'anvendes · holdes · avvises'
+				title: 'Du godkjenner endringene før de overføres',
+				body: 'Endringene hentes ut som en patch og kontrolleres fil for fil på maskinen din. Du gjennomgår resultatet og velger hva som skal overføres til en arbeidsgren. Endringer legges aldri direkte på main eller overføres uten godkjenning.',
+				chip: 'klar · krever ekstra godkjenning · avvist'
 			}
 		]
 	},
 	architecture: {
 		kicker: 'Arkitektur',
-		title: 'Én kjerne, to front-ender, tre lag med innestenging',
-		lead: 'All logikk ligger i en Java-kjerne som både CLI-en og JavaFX-GUI-et kaller i samme prosess. Kjernen er det eneste som snakker med git og Podman. Velg en del av diagrammet for å se hva den garanterer.',
+		title: 'Én kjerne, to grensesnitt og tre lag med isolasjon',
+		lead: 'Kommandolinjen og skrivebordsappen bruker den samme Java-kjernen, som kjører i samme prosess som grensesnittet. Bare kjernen kommuniserer med Git og Podman. Klikk på en del av diagrammet for å se hvilken rolle den har i sikkerhetsmodellen.',
 		hostLabel: 'Maskinen din',
-		stackLabel: 'Felles stakk (podman compose)',
+		stackLabel: 'Felles tjenester (podman compose)',
 		sessionLabel: 'Én container per samtale',
 		internetLabel: 'Internett',
 		intranetLabel: 'Interne systemer',
-		internalNet: 'internt nett · ingen default route',
+		internalNet: 'internt nettverk · ingen standardrute',
 		detailLabel: 'Valgt',
 		nodes: {
 			gui: {
-				title: 'JavaFX-GUI',
-				body: 'Et tynt skall over kjernen: hver knapp kaller et kjerne-API, lange kall går på virtuelle tråder, og GUI-et kjører aldri git eller podman selv — en arkitekturtest håndhever det.'
+				title: 'JavaFX-app',
+				body: 'Skrivebordsappen bruker kjernens API-er for alle handlinger. Langvarige kall kjører på virtuelle tråder. En arkitekturtest sikrer at appen aldri kjører Git eller Podman direkte.'
 			},
 			cli: {
 				title: 'setup.sh → lyngvi-cli',
-				body: 'Launcheren har ingen egen logikk; den finner en kjøretid og starter CLI-en mot sandkassemappen. Hver kommando tar --json, så hele produktet kan skriptes.'
+				body: 'Oppstartsskriptet finner Java-kjøremiljøet og starter kommandolinjeverktøyet for den valgte sandkassemappen. All funksjonslogikk ligger i verktøyet. Alle kommandoer støtter --json, slik at Lyngvi kan brukes fra skript.'
 			},
 			core: {
 				title: 'lyngvi-core',
-				body: 'Java 25. Eier all tilstand, alle git- og podman-kall, patch-klassifisering, strømming med avbrudd og låsing. Én implementasjon av den sikkerhetskritiske uttaksflyten, delt av begge front-ender.'
+				body: 'Bygget med Java 25. Kjernen håndterer all tilstand, alle kall til Git og Podman, kontroll av patcher, strømming med støtte for avbrudd og låsing. Begge brukergrensesnittene deler den samme implementasjonen av den sikkerhetskritiske overføringen av endringer.'
 			},
 			state: {
 				title: 'state/ og .sessions/',
-				body: 'Samtaler, sesjoner, arbeidskopier, patcher og agentlegitimasjon — på din disk, utenfor containeren, eid av brukeren din. Legitimasjon monteres bare inn i containerne til agenten som eier den.'
+				body: 'Samtaler, sesjoner, arbeidskopier, patcher og agentens innloggingsopplysninger lagres på disken din med din bruker som eier. Innloggingsopplysningene monteres bare inn i containerne til agenten de tilhører.'
 			},
 			proxy: {
 				title: 'Squid-proxy',
-				body: 'Den eneste veien ut. Tre allowlist-seksjoner (profil, agent, dine egne tillegg) pluss en blocklist som sjekkes først. Endringer lastes inn live; nektede verter dukker opp i domain blocked.'
+				body: 'All utgående nettverkstrafikk går gjennom proxyen. Tillatelseslisten har tre deler: profilens oppføringer, agentens oppføringer og dine egne tillegg. Blokkeringslisten kontrolleres først. Regelendringer tas i bruk uten omstart, og avviste verter vises med domain blocked.'
 			},
 			gateway: {
-				title: 'Gateway-sidecar',
-				body: 'Holder legitimasjonen til interne systemer og tilbyr et read-only API med allowlist. Kjører read-only, non-root, cap_drop ALL. Hver systemtype er en plugin-jar lastet via ServiceLoader.'
+				title: 'Separat gateway-container',
+				body: 'Gatewayen oppbevarer tilgangsnøklene til interne systemer og tilbyr et API med begrenset lesetilgang. Den kjører med skrivebeskyttet filsystem, uten root og med cap_drop ALL. Hver systemtype støttes av et programtillegg i en JAR-fil, lastet med ServiceLoader.'
 			},
 			session: {
-				title: 'Samtalecontainer',
-				body: 'cap_drop ALL, no-new-privileges, uprivilegert bruker med din UID, grenser for minne, CPU og prosesser, og ingenting montert utover arbeidskopien, output-mappa, vedleggene og AGENTS.md.'
+				title: 'Container for samtalen',
+				body: 'Containeren kjører med cap_drop ALL, no-new-privileges og en bruker uten administratorrettigheter, med din UID. Minne, CPU og antall prosesser er begrenset. Arbeidskopien, resultatmappen, vedleggene og AGENTS.md monteres inn som arbeidsgrunnlag. Agentens egne innloggingsopplysninger monteres separat.'
 			}
 		}
 	},
 	screens: {
 		kicker: 'Skrivebordsappen',
-		title: 'Samme kjerne, med et vindu på',
-		lead: 'Hvert skjermbilde under er den ekte JavaFX-appen, kjørt mot en sandkasse med ett repo, tre samtaler og en endring som venter på gjennomgang. Ingen mockups, ingen retusj.',
+		title: 'Full oversikt i skrivebordsappen',
+		lead: 'Skjermbildene viser JavaFX-appen med ett repo, tre samtaler og endringer som venter på gjennomgang. Bildene er hentet direkte fra appen og er ikke retusjert.',
 		note: 'Lyngvi 2.0.0 · mørkt tema · sandkassen «shop»',
 		items: [
 			{
 				id: 'chat',
 				label: 'Agentisk koding',
-				title: 'En samtale er en arbeidslogg',
-				body: 'Hvert svar viser hva agenten leste, søkte i, kjørte og redigerte — med +/−-tall på hver redigering — og hva runden kostet i tokens og dollar. Stripen over skrivefeltet sier hva som venter på uttak, og at én fil holdes tilbake.',
-				alt: 'Skjermen Agentisk koding: samtaleliste til venstre og et transkript der agentens verktøykall vises som rader av typen Read, Search, Run og Edit.'
+				title: 'Se hva agenten gjør, steg for steg',
+				body: 'Se hvilke filer agenten leser, hvilke søk og kommandoer den kjører, og hva den endrer. Hver redigering viser antall linjer som er lagt til og fjernet. Du ser også tokenforbruk og kostnad i dollar for hver runde. Feltet over skriveområdet viser hvilke endringer som venter på overføring, og at én fil krever ekstra godkjenning.',
+				alt: 'Visningen for agentisk koding med samtaleliste til venstre og en samtalelogg med verktøykall merket Read, Search, Run og Edit.'
 			},
 			{
 				id: 'deliver',
-				label: 'Lever endringer',
-				title: 'Gjennomgang på din side av muren',
-				body: 'Patchen klassifiseres på din maskin: filer som anvendes, filer som holdes tilbake av policy — her en kjørbar fil, som bare blir med om du krysser den av — og avviste stier som aldri slipper gjennom. Så en arbeidsgren og en commit-melding; beskyttede grener nektes.',
-				alt: 'Dialogen Deliver changes: lister for anvendte, tilbakeholdte og avviste filer, diffen av src/auth.ts, et grenfelt og en commit-melding.'
+				label: 'Overfør endringer',
+				title: 'Gjennomgå endringene på din egen maskin',
+				body: 'Lyngvi kontrollerer patchen på maskinen din og skiller mellom filer som er klare for overføring, filer som krever ekstra godkjenning, og avviste filstier. Den kjørbare filen i eksemplet tas bare med hvis du velger den uttrykkelig. Deretter velger du en arbeidsgren og skriver en commit-melding. Overføring til beskyttede grener avvises.',
+				alt: 'Dialogen Deliver changes med lister over filer som er klare, tilbakeholdte eller avvist, en diff av src/auth.ts, et felt for grennavn og en commit-melding.'
 			},
 			{
 				id: 'diff',
 				label: 'Git Diff',
-				title: 'Hunks, eller hele filen',
-				body: 'Endrede filer til venstre, den valgte til høyre, målt fra sesjonsstart eller fra et hvilket som helst uttak siden. «Whole file» viser hele filen med endringene farget inn.',
-				alt: 'Vinduet Git Diff med tre endrede filer og hunkene i src/auth.ts.'
+				title: 'Se endrede linjer eller hele filen',
+				body: 'Listen over endrede filer vises til venstre, og innholdet i den valgte filen vises til høyre. Du kan sammenligne med starten på sesjonen eller en tidligere overføring. Velg «Whole file» for å se hele filen med endringene markert.',
+				alt: 'Vinduet Git Diff med tre endrede filer og endrede linjer i src/auth.ts.'
 			},
 			{
 				id: 'traffic',
 				label: 'Trafikk',
-				title: 'Det proxyen nektet',
-				body: 'Hver nektede vert med antall, og allowlisten under med opphavet til hver oppføring — profil, agent eller deg. Tillat én, og proxyen laster på nytt uten omstart.',
-				alt: 'Skjermen Traffic: en tabell over nektede verter med status og antall, og allowlisten med kildekolonne.'
+				title: 'Se hvilke forbindelser som ble blokkert',
+				body: 'Oversikten viser avviste verter og antall tilkoblingsforsøk. Under vises tillatte verter og hvor hver oppføring kommer fra: profilen, agenten eller dine egne tillegg. Når du tillater en vert, tas endringen i bruk uten omstart av proxyen.',
+				alt: 'Visningen Traffic med avviste verter, status og antall forsøk, samt tillatelseslisten med kilde for hver oppføring.'
 			},
 			{
 				id: 'sessions',
 				label: 'Sandkasse',
 				title: 'Én container per samtale',
-				body: 'Hver sesjonscontainer med tilstand og image, under den delte stacken. Containere som har stått lenger enn profilen tillater, stoppes mens appen kjører; containere uten samtale fjernes.',
-				alt: 'Tabellen over sesjonscontainere: tre samtaler med containernavn, tilstand og image.'
+				body: 'Se status og containerimage for hver samtale, sammen med de felles tjenestene. Mens appen kjører, stoppes containere som har vært inaktive lenger enn profilen tillater. Containere uten en tilhørende samtale fjernes.',
+				alt: 'Tabell over containere for tre samtaler, med containernavn, status og containerimage.'
 			},
 			{
 				id: 'agents',
 				label: 'Agenter',
-				title: 'Logg inn én gang, per agent',
-				body: 'Påloggingen ligger under sandkassens state-katalog og monteres bare inn i den agentens containere. Fanen Usage ved siden av viser kvoter og forbruk per agent, modell og samtale.',
-				alt: 'Skjermen Agents: Claude Code pålogget med abonnement, OpenCode ikke pålogget.'
+				title: 'Egen innlogging for hver agent',
+				body: 'Innloggingsopplysningene lagres i sandkassens state-mappe og monteres bare inn i containerne til den aktuelle agenten. Fanen Usage viser kvoter og forbruk fordelt på agent, modell og samtale.',
+				alt: 'Visningen Agents med Claude Code innlogget via abonnement og OpenCode uten aktiv innlogging.'
 			}
 		]
 	},
 	sandbox: {
 		kicker: 'Inne i sandkassen',
-		title: 'Et komplett arbeidsmiljø, og ikke noe mer',
-		lead: 'Agenten får et ekte utviklingsmiljø — git, en verktøykjede, et pakkeregister gjennom proxyen — med et strengt avgrenset syn på verden.',
-		seesTitle: 'Det agenten ser',
-		seesIntro: 'Montert inn i containeren, og ellers ingenting fra hosten:',
+		title: 'Alt agenten trenger for å kode',
+		lead: 'Agenten får et komplett utviklingsmiljø med Git, valgte utviklingsverktøy og tilgang til pakkeregistre gjennom proxyen. Tilgangen til resten av systemet er strengt avgrenset.',
+		seesTitle: 'Dette har agenten tilgang til',
+		seesIntro: 'Arbeidsfiler, innstillinger og adresser som er tilgjengelige i containeren:',
 		sees: [
-			{ path: '/work/<repo>', note: 'en arbeidskopi med fersk .git, én mount per repo' },
-			{ path: '/work/output', note: 'filer til deg, utenfor repoene' },
-			{ path: '/work/_attachments', note: 'filer du sendte med en melding, read-only' },
-			{ path: '/work/AGENTS.md', note: 'husreglene, generert fra sandkasseoppsettet' },
-			{ path: 'HTTP_PROXY, HTTPS_PROXY', note: 'den eneste veien ut, til allowlisten' },
-			{ path: '<SYSTEM>_GATEWAY_URL', note: 'ett vertsnavn per konfigurert internt system' }
+			{
+				path: '/work/<repo>',
+				note: 'egen arbeidskopi med et nytt Git-repo, montert separat for hvert repo'
+			},
+			{
+				path: '/work/output',
+				note: 'filer til deg, utenfor repoene'
+			},
+			{
+				path: '/work/_attachments',
+				note: 'vedlegg fra meldingene dine, med kun lesetilgang'
+			},
+			{
+				path: '/work/AGENTS.md',
+				note: 'arbeidsregler generert fra sandkassens konfigurasjon'
+			},
+			{
+				path: 'HTTP_PROXY, HTTPS_PROXY',
+				note: 'proxyen som håndhever hvilke verter agenten får kontakte'
+			},
+			{
+				path: '<SYSTEM>_GATEWAY_URL',
+				note: 'ett vertsnavn per konfigurert internt system'
+			}
 		],
-		neverTitle: 'Det den aldri ser',
-		neverIntro: 'Strukturelt utenfor rekkevidde, ikke bare frarådet:',
+		neverTitle: 'Dette holdes utenfor',
+		neverIntro: 'Tilgangen begrenses av det tekniske oppsettet:',
 		never: [
-			'.git-en din — hooks, config, remotes, credential helpers',
-			'Noe annet på filsystemet ditt; ingen hjemmekatalog, ingen SSH-nøkler',
-			'Hostmaskinen eller tjenester på dens localhost',
-			'Et token til et internt system — gatewayen holder dem',
-			'sudo, nye privilegier eller noen Linux-capability',
-			'En default route: ukjente verter stopper i proxyen, ikke i brannmuren din'
+			'Din opprinnelige .git-mappe med hooks, innstillinger, eksterne repo-adresser og hjelpere for innloggingsopplysninger',
+			'Resten av filsystemet ditt, inkludert hjemmemappen og SSH-nøklene dine',
+			'Direkte tilgang til vertsmaskinen og tjenester på dens localhost',
+			'Tilgangsnøkler til interne systemer – disse oppbevares i gatewayen',
+			'sudo, utvidede rettigheter og Linux-rettigheter av typen capabilities',
+			'En standardrute til internett – verter som ikke er tillatt, avvises av proxyen'
 		],
-		agentsTitle: 'Agenten er utskiftbar',
-		agentsBody:
-			'Claude Code og OpenCode følger med som referanseadaptere, med abonnementsinnlogging eller token. En adapter er en agent.json pluss en kommandokontrakt, så en tredje agent er en konfigfil, ikke en fork. Modeller som kjører på din egen maskin (Ollama, LM Studio, MLX) nås gjennom proxyen på portene profilen navngir.',
+		agentsTitle: 'Velg agenten som passer oppgaven',
+		agentsBody: 'Lyngvi leveres med adaptere for Claude Code og OpenCode, med støtte for innlogging via abonnement eller tilgangstoken. En adapter består av agent.json og et definert kommandogrensesnitt, slik at nye agenter kan legges til gjennom konfigurasjon. Ved behov kan du bruke et eget adapterskript. Lokale modeller i Ollama, LM Studio og MLX nås gjennom proxyen på portene profilen tillater.',
 		agents: [
 			{
 				name: 'Claude Code',
-				detail: 'abonnement, token eller API-nøkkel · strømming · resonnering · vedlegg'
+				detail: 'abonnement, tilgangstoken eller API-nøkkel · strømming · resonnering · vedlegg'
 			},
 			{
 				name: 'OpenCode',
-				detail: 'abonnement eller nøkkel · strømming · lokale og skybaserte modeller'
+				detail: 'abonnement eller API-nøkkel · strømming · lokale og skybaserte modeller'
 			},
-			{ name: 'Din egen', detail: 'agent.json, eller en adapter.sh i hvilket språk du vil' }
+			{
+				name: 'Din egen agent',
+				detail: 'agent.json eller et adapter.sh-skript skrevet i valgfritt språk'
+			}
 		]
 	},
 	egress: {
-		kicker: 'Kontroll på utgående',
-		title: 'Hvert kall agenten gjør, besvart av en liste du eier',
-		lead: 'Blocklisten sjekkes først, så allowlisten; alt som ikke står på noen av dem, nektes. Prøv et vertsnavn og se hva proxyen ville svart.',
-		placeholder: 'prøv et vertsnavn…',
-		inputLabel: 'Vertsnavn å teste mot proxy-reglene',
+		kicker: 'Nettverkstilgang',
+		title: 'Du bestemmer hvilke verter agenten får kontakte',
+		lead: 'Proxyen sjekker først om verten er blokkert, og deretter om den er tillatt. Alle andre forbindelser avvises. Skriv inn et vertsnavn for å se hvordan reglene slår ut.',
+		placeholder: 'Prøv et vertsnavn …',
+		inputLabel: 'Vertsnavn som skal testes mot proxyreglene',
 		examples: 'Eksempler:',
 		verdicts: {
-			blocked: 'NEKTET — står på blocklisten',
-			allowed: 'TILLATT — står på allowlisten',
-			gateway: 'RUTET — til gatewayen, som holder hemmeligheten',
-			denied: 'NEKTET — står ikke på allowlisten'
+			blocked: 'BLOKKERT – står på blokkeringslisten',
+			allowed: 'TILLATT – står på tillatelseslisten',
+			gateway: 'VIA GATEWAYEN – tilgangsnøkkelen håndteres der',
+			denied: 'AVVIST – verten er ikke tillatt'
 		},
 		reasons: {
-			blocked:
-				'Et kjent eksfiltrasjons- eller tunnelendepunkt. Den medfølgende blocklisten dekker request-capture-tjenester, paste-sider, fildeling, tunneler og IP-rekognosering, og sjekkes før alt annet.',
-			allowedProfile: 'Tillatt av profilen organisasjonen din leverer.',
-			allowedAgent:
-				'Tillatt fordi den konfigurerte agenten trenger den — agentallowlister kommer fra agent.json, ikke fra deg.',
-			allowedUser: 'Tillatt fordi noen la den til med ./setup.sh domain add.',
-			gateway:
-				'Et gateway-vertsnavn. Kallet går aldri ut på egen hånd: sidecaren legger på legitimasjonen, håndhever allowlisten for elementer og returnerer read-only data.',
-			denied:
-				'Står ikke på noen liste, så proxyen svarer med en feil og forsøket blir loggført. Tillat den når du mener det: ./setup.sh domain add <vert>.'
+			blocked: 'Verten er et kjent endepunkt for datauthenting eller tunneltrafikk. Den medfølgende blokkeringslisten dekker tjenester for mottak av HTTP-forespørsler, deling av tekst og filer, tunneler og oppslag av offentlig IP-adresse. Listen kontrolleres før tillatelseslisten.',
+			allowedProfile: 'Verten er tillatt i profilen organisasjonen din har satt opp.',
+			allowedAgent: 'Verten er tillatt fordi den konfigurerte agenten trenger tilgang. Oppføringen hentes fra agent.json.',
+			allowedUser: 'Verten er lagt til som et eget unntak med ./setup.sh domain add.',
+			gateway: 'Forespørselen går gjennom gatewayen, som legger til innloggingsopplysningene og kontrollerer hvilke elementer agenten får lese. Agenten får kun lesetilgang til godkjent innhold.',
+			denied: 'Verten er ikke tillatt. Proxyen avviser forespørselen og logger forsøket. Hvis tilgangen er nødvendig, kan du tillate verten med ./setup.sh domain add <vert>.'
 		},
-		sections: { profile: 'profil', agent: 'agent', user: 'dine' },
-		listTitle: 'Den medfølgende blocklisten, etter kategori',
+		sections: {
+			profile: 'profil',
+			agent: 'agent',
+			user: 'egne tillegg'
+		},
+		listTitle: 'Den medfølgende blokkeringslisten, fordelt på kategori',
 		categories: [
 			{
-				name: 'Request capture',
+				name: 'Mottak av HTTP-forespørsler',
 				hosts: 'webhook.site · pipedream.com · requestbin.com · beeceptor.com'
 			},
-			{ name: 'Paste-sider', hosts: 'pastebin.com · hastebin.com · rentry.co · dpaste.org' },
-			{ name: 'Fildeling', hosts: 'transfer.sh · file.io · 0x0.st · catbox.moe · gofile.io' },
-			{ name: 'Tunneler', hosts: 'ngrok.io · localtunnel.me · serveo.net · localhost.run' },
-			{ name: 'IP-rekognosering', hosts: 'ipinfo.io · ifconfig.me · icanhazip.com · ipify.org' }
+			{
+				name: 'Tekstdeling',
+				hosts: 'pastebin.com · hastebin.com · rentry.co · dpaste.org'
+			},
+			{
+				name: 'Fildeling',
+				hosts: 'transfer.sh · file.io · 0x0.st · catbox.moe · gofile.io'
+			},
+			{
+				name: 'Tunneler',
+				hosts: 'ngrok.io · localtunnel.me · serveo.net · localhost.run'
+			},
+			{
+				name: 'Oppslag av offentlig IP-adresse',
+				hosts: 'ipinfo.io · ifconfig.me · icanhazip.com · ipify.org'
+			}
 		],
 		cmdNote: 'Fra kommandolinjen:',
 		figure: {
-			caption:
-				'I GUI-et er den samme listen en tabell: hver vert proxyen nektet, med antall, og en Allow-knapp som legger den til i din del av allowlisten og laster proxyen på nytt.',
-			alt: 'Trafikk-tabellen i GUI-et: fire nektede verter med status 403 og antall, og knappene Allow, Refresh, Follow og Stop.'
+			caption: 'I skrivebordsappen vises avviste verter i en tabell med antall tilkoblingsforsøk. Knappen Allow legger verten til i dine egne tillegg til tillatelseslisten og tar endringen i bruk uten omstart av proxyen.',
+			alt: 'Trafikktabell med fire avviste verter, HTTP-status 403, antall forsøk og knappene Allow, Refresh, Follow og Stop.'
 		}
 	},
 	delivery: {
-		kicker: 'Uttak',
-		title: 'Ingenting forlater sandkassen usett',
-		lead: 'Et uttak måles fra et utgangspunkt — sesjonsstart, forrige uttak, eller et uttak midt imellom — bygges til en patch inne i containeren, og klassifiseres deretter på hosten. Klassifiseringen er din, ikke agentens.',
+		kicker: 'Overfør endringer',
+		title: 'Du bestemmer hvilke endringer som tas inn',
+		lead: 'Velg hvilke endringer du vil gjennomgå: fra starten på sesjonen eller siden en tidligere overføring. Lyngvi lager en patch i containeren og kontrollerer den på maskinen din. Kontrollen utføres av Lyngvi, uavhengig av agenten.',
 		steps: [
 			{
-				title: 'Utgangspunkt',
-				body: 'Velg hvor diffen starter: sesjonsstart, forrige uttak, eller et tidligere ett.'
+				title: 'Velg utgangspunkt',
+				body: 'Sammenlign med starten på sesjonen, forrige overføring eller en tidligere overføring.'
 			},
 			{
-				title: 'Patch',
-				body: 'Bygget med en midlertidig indeks, så ucommitet, uindeksert og agent-committet arbeid blir med.'
+				title: 'Samle endringene',
+				body: 'Lyngvi lager en patch med en midlertidig Git-indeks. Både committede og ucommittede endringer tas med, også endringer som ikke er lagt i stagingområdet.'
 			},
 			{
-				title: 'Klassifiser',
-				body: 'Tre bøtter på hosten, etter regel: anvendes, holdes tilbake, avvises.'
+				title: 'Kontroller filene',
+				body: 'På maskinen din får hver fil en kategori basert på sikkerhetsreglene: klar for overføring, krever ekstra godkjenning eller avvist.'
 			},
 			{
-				title: 'Gjennomgang',
-				body: 'Fil for fil, som hunks eller hele filer, i GUI-et eller CLI-en.'
+				title: 'Gjennomgå resultatet',
+				body: 'Se endrede linjer eller hele filer, fil for fil, i skrivebordsappen eller på kommandolinjen.'
 			},
-			{ title: 'Gren', body: 'Commit eller staging på en arbeidsgren. Beskyttede grener nektes.' }
+			{
+				title: 'Overfør til en arbeidsgren',
+				body: 'Legg godkjente endringer i stagingområdet eller opprett en commit på en arbeidsgren. Overføring til beskyttede grener avvises.'
+			}
 		],
 		tableTitle: 'session review 7f3a2c',
-		tableHint:
-			'Klikk en holdt fil for å ta den med — holdte filer leveres bare når du navngir dem.',
-		columns: { file: 'Fil', change: 'Endring', bucket: 'Bøtte' },
+		tableHint: 'Velg en tilbakeholdt fil for å ta den med. Slike filer overføres bare når du velger dem uttrykkelig.',
+		columns: {
+			file: 'Fil',
+			change: 'Endring',
+			bucket: 'Kategori'
+		},
 		buckets: {
-			apply: 'anvendes',
-			hold: 'holdes',
-			reject: 'avvises'
+			apply: 'klar for overføring',
+			hold: 'krever ekstra godkjenning',
+			reject: 'avvist'
 		},
 		bucketRules: {
-			apply: 'Vanlige tekstendringer, anvendt når du godkjenner dem.',
-			hold: 'Kjørbare filer, symlinker, binærfiler og for store filer. Leveres bare når de navngis eksplisitt.',
-			reject:
-				'Stier med .., absolutte stier, .git-segmenter, ugyldig UTF-8, patcher som ikke kan parses. Leveres aldri, uansett hva du klikker.'
+			apply: 'Vanlige tekstendringer. Overføres når du godkjenner dem.',
+			hold: 'Kjørbare filer, symbolske lenker, binærfiler og filer som overskrider størrelsesgrensen. Overføres bare når du velger dem uttrykkelig.',
+			reject: 'Filstier med .., absolutte filstier, .git som stisegment, ugyldig UTF-8 og patcher som ikke kan tolkes. Disse overføres aldri.'
 		},
 		files: [
-			{ path: 'src/auth.ts', change: 'endret', bucket: 'apply', stat: '+12 −3' },
-			{ path: 'src/session/cookie.ts', change: 'endret', bucket: 'apply', stat: '+4 −1' },
-			{ path: 'tests/auth.spec.ts', change: 'ny', bucket: 'apply', stat: '+58 −0' },
+			{
+				path: 'src/auth.ts',
+				change: 'endret',
+				bucket: 'apply',
+				stat: '+12 −3'
+			},
+			{
+				path: 'src/session/cookie.ts',
+				change: 'endret',
+				bucket: 'apply',
+				stat: '+4 −1'
+			},
+			{
+				path: 'tests/auth.spec.ts',
+				change: 'ny',
+				bucket: 'apply',
+				stat: '+58 −0'
+			},
 			{
 				path: 'bin/run.sh',
 				change: 'ny',
@@ -807,165 +995,179 @@ export const no = {
 		],
 		applyLabel: 'session apply --branch',
 		branch: 'agent/fix-login',
-		summary: (/** @type {number} */ n) =>
-			`${n} fil${n === 1 ? '' : 'er'} blir committet på agent/fix-login.`,
-		protectedNote: 'main, master og develop nektes av profilen; grenprefikset bestemmer du selv.',
+		summary: (/** @type {number} */ n) => `${n} fil${n === 1 ? '' : 'er'} blir committet på agent/fix-login.`,
+		protectedNote: 'Profilen beskytter main, master og develop mot overføring. Du velger selv prefikset for arbeidsgrenen.',
 		figure: {
-			caption:
-				'Samme gjennomgang i GUI-et: det som anvendes, det som holdes tilbake til du krysser det av, det som avvises — og diffen av den valgte filen ved siden av.',
-			alt: 'Gjennomgangsdelen av dialogen Deliver changes: en advarsel om at én av tre filer holdes tilbake, listene Will be applied, Held back og Rejected, og diffen av src/auth.ts.'
+			caption: 'Den samme gjennomgangen i skrivebordsappen viser hvilke filer som er klare for overføring, hvilke som krever ekstra godkjenning, og hvilke som er avvist. Diffen for den valgte filen vises ved siden av.',
+			alt: 'Dialogen Deliver changes med en advarsel om at én av tre filer er tilbakeholdt, listene Will be applied, Held back og Rejected, og en diff av src/auth.ts.'
 		}
 	},
 	gateway: {
 		kicker: 'Gatewayen',
-		title: 'Nå intranettet uten å gi fra deg nøkkelen',
-		lead: 'Noe arbeid trenger wikien, issue-trackeren eller et internt API. Gatewayen er en sidecar som holder legitimasjonen og tilbyr et smalt, read-only utsnitt med allowlist. Agenten får et vertsnavn, og en 403 når den spør om noe du ikke har tillatt.',
-		guaranteesTitle: 'Hva kjøretiden garanterer, uansett hva en plugin gjør',
+		title: 'Bruk interne systemer uten å dele tilgangsnøklene',
+		lead: 'Noen oppgaver krever informasjon fra en intern wiki, et saks- eller oppgavesystem eller et API. Gatewayen kjører i en separat container, håndterer autentiseringen og gir agenten begrenset lesetilgang til godkjent innhold. Forespørsler utenfor den tillatte tilgangen avvises med HTTP 403.',
+		guaranteesTitle: 'Sikkerhetsregler som håndheves av gatewayen',
 		guarantees: [
-			'Ukjent vertsnavn → 404, uten noe upstream-kall i det hele tatt',
-			'Kun GET og HEAD, med mindre både instansen og profilen tillater skriving',
-			'Upstream-objektet er låst til én origin; .. og absolutte URL-er avvises',
-			'Hemmeligheten injiseres av kjøretiden og finnes ikke som streng noe sted en plugin kan lese',
-			'Allowlisten leses på nytt ved hvert oppslag og håndheves før handleren kjører',
-			'Tom allowlist betyr nekt alt',
-			'no-store på hvert svar; set-cookie og hop-by-hop-headere fjernes',
-			'Maskert logging: Authorization-verdier og *_TOKEN-variabler skrives aldri',
-			'En instans som feiler, feiler alene; /healthz viser den som configured: false'
+			'Ukjente vertsnavn gir HTTP 404 uten at det interne systemet kontaktes',
+			'Bare GET og HEAD tillates, med mindre både instansen og profilen tillater skrivetilgang',
+			'Objektet for kommunikasjon med systemet er låst til én origin; .. og absolutte URL-er avvises',
+			'Kjøremiljøet setter inn tilgangsnøkkelen uten å gjøre den tilgjengelig som tekst for programtillegg',
+			'Listen over tillatte elementer leses på nytt ved hver forespørsel og kontrolleres før programtillegget behandler den',
+			'En tom tillatelsesliste betyr at all tilgang avvises',
+			'Alle svar merkes med no-store; set-cookie og hop-by-hop-headere fjernes',
+			'Sensitive loggverdier maskeres; innholdet i Authorization og *_TOKEN-variabler logges aldri',
+			'Feil i én instans påvirker ikke de andre; /healthz rapporterer instansen med configured: false'
 		],
-		pluginsTitle: 'Hver systemtype er en plugin',
-		pluginsBody:
-			'http er innebygd og dekker ethvert REST-API bak en statisk hemmelighet. confluence og jira følger med som jar-er. Din egen er en klasse som implementerer GatewayPlugin pluss en service-oppføring, lagt inn med gateway plugin install. Kodebasen leveres uten konfigurerte systemer — en profilpakke legger til det organisasjonen din trenger.',
-		exchangeTitle: 'Slik ser det ut innenfra',
-		allowedComment: 'tillatt: space OPS står på lista',
-		deniedComment: 'ikke tillatt ennå — mennesket må legge den til',
-		deniedBody: 'gatewayen svarer før noe upstream-kall'
+		pluginsTitle: 'Ett programtillegg for hver systemtype',
+		pluginsBody: 'Det innebygde programtillegget http støtter REST-API-er som bruker en fast tilgangsnøkkel. Programtilleggene confluence og jira følger med som JAR-filer. Du kan lage egne tillegg ved å implementere GatewayPlugin og registrere klassen med en serviceoppføring. Tillegget installeres med gateway plugin install. Lyngvi leveres uten forhåndskonfigurerte systemer; organisasjonens oppsett legges til gjennom en profilpakke.',
+		exchangeTitle: 'Slik ser forespørslene ut fra agentens side',
+		allowedComment: 'tillatt: området OPS står på tillatelseslisten',
+		deniedComment: 'ikke tillatt ennå – du må legge området til i listen',
+		deniedBody: 'gatewayen avviser forespørselen før det interne systemet kontaktes'
 	},
 	features: {
-		kicker: 'Resten av det',
-		title: 'Bygget for å bo i',
-		lead: 'Grensene er poenget, men en sandkasse du unngår, beskytter ingenting.',
+		kicker: 'Flere funksjoner',
+		title: 'Laget for daglig bruk',
+		lead: 'Gode sikkerhetsgrenser må være enkle å bruke i praksis. Lyngvi gir deg verktøyene du trenger for å jobbe med kodeagenter i hverdagen.',
 		items: [
 			{
 				title: 'Én container per samtale',
-				body: 'Sesjoner kan ikke se eller redigere hverandres arbeid, og ressursgrenser betyr noe. Start, stopp, shell inn, rydd bort de inaktive.'
+				body: 'Hver samtale har en egen arbeidskopi og egne grenser for ressursbruk. Du kan starte og stoppe containere, åpne et skall og rydde bort inaktive containere.'
 			},
 			{
 				title: 'Profiler i stedet for hardkoding',
-				body: 'Vertsnavn, allowlister, speil, CA-navn, beskyttede grener, verktøykjeder og språk ligger i profile.json og en profilpakke. Ingen organisasjon er bakt inn i kildekoden.'
+				body: 'Vertsnavn, tillatelseslister, pakkespeil, navn på sertifikatutstedere (CA), beskyttede grener, utviklingsverktøy og språk settes i profile.json og en profilpakke. Organisasjonens oppsett holdes samlet i konfigurasjonen.'
 			},
 			{
-				title: 'Verktøykjeder som fragmenter',
-				body: 'Et slankt Debian-basisimage pluss fragmentene du velger: Java 17/21/25, Node 22, Python 3.12, Go, .NET 8, Maven, Gradle, Kotlin.'
+				title: 'Sett sammen utviklingsmiljøet du trenger',
+				body: 'Start med et lite Debian-basisimage og legg til verktøyene du trenger som egne byggfragmenter: Java 17/21/25, Node 22, Python 3.12, Go, .NET 8, Maven, Gradle og Kotlin.'
 			},
 			{
 				title: 'Ressursprofiler',
-				body: 'review (2g, 1 cpu), dev (8g, 4), build (16g, 6) — eller én utledet fra maskinen din. Valgt per samtale, etter hva samtalen skal gjøre.'
+				body: 'Velg review (2 GB minne, 1 CPU), dev (8 GB, 4 CPU-er), build (16 GB, 6 CPU-er) eller et oppsett tilpasset maskinen din. Ressursprofilen velges for hver sesjon ut fra oppgaven agenten skal løse.'
 			},
 			{
 				title: '--json på hver kommando',
-				body: 'Ett JSON-dokument på stdout, dokumenterte exit-koder, og en linjedelt hendelsesstrøm fra session ask. CLI-kontrakten er det offentlige, språkuavhengige grensesnittet.'
+				body: 'Alle kommandoer kan returnere ett JSON-dokument på stdout og har dokumenterte avslutningskoder. session ask gir en hendelsesstrøm med én hendelse per linje. Kommandolinjegrensesnittet fungerer dermed som et offentlig API som kan brukes fra valgfritt programmeringsspråk.'
 			},
 			{
-				title: 'Et GUI som bare er et skall',
-				body: 'Nav-rail, strømmende chat med verktøykall og forbruk, et filpanel, en diff-visning med helfilsmodus, og samme gjennomgangs- og uttaksflyt som CLI-en.'
+				title: 'Samme funksjoner i appen og på kommandolinjen',
+				body: 'Skrivebordsappen har sidemeny, løpende visning av agentsvar, verktøykall og forbruk, filpanel og diffvisning. Du kan se hele filer og bruke den samme prosessen for gjennomgang og overføring som på kommandolinjen.'
 			},
 			{
-				title: 'Pinnet og reproduserbart',
-				body: 'Basisimage, Squid og gateway-basen er pinnet med digest; agentens CLI-versjon er pinnet i fragmentet. doctor --deep beviser egress-reglene fra en engangscontainer.'
+				title: 'Faste versjoner og reproduserbare miljøer',
+				body: 'Basisimaget, Squid og gatewayens basisimage er låst med digest. Versjonen av agentens kommandolinjeverktøy er fastsatt i byggfragmentet. doctor --deep tester reglene for utgående trafikk fra en midlertidig container.'
 			},
 			{
 				title: 'Vedlegg og lokale modeller',
-				body: 'Slipp filer eller lim inn et bilde i skrivefeltet. Pek sandkassen mot Ollama, LM Studio eller en MLX-server på din egen maskin; proxyen åpner bare de portene.'
+				body: 'Dra filer inn i skrivefeltet eller lim inn et bilde. Du kan koble sandkassen til Ollama, LM Studio eller en MLX-server på maskinen din. Proxyen tillater da tilgang til de angitte portene.'
 			},
 			{
 				title: 'Engelsk og norsk',
-				body: 'Hver brukervendt streng kommer fra en ressursfil, i CLI-en som i GUI-et. --lang velger én per kommando.'
+				body: 'Alle tekster i både kommandolinjeverktøyet og skrivebordsappen hentes fra språkfiler. Bruk --lang for å velge språk for en enkelt kommando.'
 			}
 		]
 	},
 	hardening: {
-		kicker: 'Herding, i én tabell',
-		title: 'Hva som er skrudd av, overalt',
+		kicker: 'Sikkerhetsoppsettet samlet',
+		title: 'Slik begrenses tilgang og rettigheter',
 		rows: [
-			{ k: 'Nett', v: 'Kun internt nett; ingen default route fra en samtalecontainer' },
 			{
-				k: 'Capabilities',
-				v: 'cap_drop ALL og no-new-privileges på alle containere, samtalecontainere inkludert'
+				k: 'Nettverk',
+				v: 'Samtalecontainere bruker bare det interne nettverket og har ingen standardrute'
+			},
+			{
+				k: 'Linux-rettigheter',
+				v: 'Alle containere, også samtalecontainere, kjører med cap_drop ALL og no-new-privileges'
 			},
 			{
 				k: 'Bruker',
-				v: 'Uprivilegert agent-bruker med din UID og GID, så monterte filer beholder eieren'
+				v: 'Agenten kjører uten administratorrettigheter, med din UID og GID, slik at monterte filer beholder riktig eier'
 			},
 			{
 				k: 'Filsystem',
-				v: 'Kopiert arbeidskopi; gatewayen kjører read-only; ellers monteres ingenting fra hosten'
+				v: 'Agenten arbeider i en egen arbeidskopi. Gatewayen har skrivebeskyttet filsystem. Bare mapper og filer som inngår i sandkasseoppsettet, monteres fra vertsmaskinen'
 			},
 			{
 				k: 'Pakkeverktøy',
-				v: 'Livssyklus-skript av: npm_config_ignore_scripts, YARN_ENABLE_SCRIPTS=false'
+				v: 'Automatiske livssyklusskript er deaktivert med npm_config_ignore_scripts og YARN_ENABLE_SCRIPTS=false'
 			},
 			{
-				k: 'git',
-				v: 'Ingen systemconfig, ingen terminalprompt, ingen signering, identitet satt av profilen'
+				k: 'Git',
+				v: 'Ingen systeminnstillinger, interaktive spørsmål eller signering; Git-identiteten bestemmes av profilen'
 			},
 			{
-				k: 'Legitimasjon',
-				v: 'Agentlegitimasjon under state/agents/<id>/, montert bare inn i den agentens containere; ingen tokens i .env'
+				k: 'Innloggingsopplysninger',
+				v: 'Agentens innloggingsopplysninger lagres i state/agents/<id>/ og monteres bare inn i den aktuelle agentens containere. Ingen tilgangstokener lagres i .env'
 			},
 			{
 				k: 'Grener',
-				v: 'Beskyttede grener fra profilen pluss repoets default; uttak lander alltid på en arbeidsgren'
+				v: 'Profilens beskyttede grener og repoets standardgren er beskyttet. Endringer overføres alltid til en arbeidsgren'
 			},
 			{
-				k: 'Images',
-				v: 'Basisimage, Squid og gateway-base pinnet med digest; CI verifiserer pinningen'
+				k: 'Containerimages',
+				v: 'Basisimaget, Squid og gatewayens basisimage er låst med digest. CI kontrollerer at disse bindingene er på plass'
 			}
 		],
-		limitsTitle: 'Og hva det ikke løser',
+		limitsTitle: 'Kjente begrensninger',
 		limits: [
-			'Agentens egen legitimasjon ligger i containeren — en dokumentert begrensning, med token-injeksjon via gatewayen designet inn som fremtidig arbeid.',
-			'Samtalecontainere deler ett internt nett, så en agent som starter en tjeneste kan nås fra en annen sesjon. Ingenting lytter som standard.'
+			'Agentens egne innloggingsopplysninger er tilgjengelige i agentcontaineren. Dette er en dokumentert begrensning. En fremtidig løsning er planlagt der gatewayen setter inn agentens tilgangstoken.',
+			'Samtalecontainerne deler et internt nettverk. Hvis en agent starter en nettverkstjeneste, kan den være tilgjengelig fra andre samtalecontainere. Ingen tjenester lytter som standard.'
 		]
 	},
 	install: {
 		kicker: 'Kom i gang',
-		title: 'Fra ingenting til en kjørende sandkasse',
-		lead: 'CLI-en leveres som et jlink-bilde med egen kjøretid, og GUI-et som en jpackage-app med CLI-en inni. Du installerer ikke Java.',
+		title: 'Kom i gang med din første sandkasse',
+		lead: 'Både kommandolinjeverktøyet og skrivebordsappen leveres med Java inkludert. Kommandolinjeverktøyet pakkes med jlink, og appen pakkes med jpackage og inkluderer kommandolinjeverktøyet. Du trenger bare å installere Java selv hvis du vil bygge Lyngvi fra kildekoden.',
 		requirements: 'Krav: macOS eller Linux · Podman 5+ · Java 25 kun hvis du bygger fra kildekode',
 		steps: [
 			{
-				title: 'Hent CLI-en',
-				body: 'Lag en mappe, legg setup.sh i den, og la den hente kjøretiden for plattformen din. Nedlastingen sjekksumverifiseres.'
+				title: 'Last ned kommandolinjeverktøyet',
+				body: 'Opprett en mappe og legg setup.sh i den. Skriptet laster ned kommandolinjeverktøyet med Java-kjøremiljø for plattformen din og kontrollerer nedlastingen mot en sjekksum.'
 			},
 			{
-				title: 'Lag en sandkasse',
-				body: 'Pek den mot et repo. init skriver sandkassens egen launcher og en kopi av CLI-en.'
+				title: 'Opprett en sandkasse',
+				body: 'Velg repoet agenten skal arbeide med. init oppretter et eget oppstartsskript for sandkassen og kopierer inn kommandolinjeverktøyet.'
 			},
 			{
 				title: 'Bygg og start',
-				body: 'Render konfigurasjonen, bygg imaget, start proxy og gateway, og la doctor sjekke resultatet.'
+				body: 'Generer konfigurasjonen, bygg containerimaget og start proxyen og gatewayen. Kjør deretter doctor for å kontrollere oppsettet.'
 			},
 			{
-				title: 'Jobb',
-				body: 'En samtale får en container. Spør, les diffen, lever det du godkjenner.'
+				title: 'Start en samtale og gjennomgå resultatet',
+				body: 'Hver samtale får en egen container. Gi agenten en oppgave, gjennomgå endringene og overfør det du godkjenner til en arbeidsgren.'
 			}
 		],
-		docsTitle: 'Mer lesing',
+		docsTitle: 'Dokumentasjon',
 		docs: [
-			{ label: 'README', note: 'kommandoer, oppbygning og den første kjøringen' },
-			{ label: 'docs/agents.md', note: 'å skrive en agentadapter og hendelseskontrakten' },
-			{ label: 'docs/gateway-plugins.md', note: 'å skrive og pakke en gateway-plugin' },
-			{ label: 'docs/profiles.md', note: 'hver seksjon i en profilpakke' },
-			{ label: 'acceptance/', note: 'akseptansesuiten og sjekklisten' }
+			{
+				label: 'README',
+				note: 'kommandoer, oppbygning og første kjøring'
+			},
+			{
+				label: 'docs/agents.md',
+				note: 'hvordan du lager en agentadapter, og hvordan hendelsesgrensesnittet fungerer'
+			},
+			{
+				label: 'docs/gateway-plugins.md',
+				note: 'hvordan du lager og pakker et programtillegg for gatewayen'
+			},
+			{
+				label: 'docs/profiles.md',
+				note: 'innholdet i en profilpakke'
+			},
+			{
+				label: 'acceptance/',
+				note: 'akseptansetester og sjekkliste'
+			}
 		]
 	},
 	footer: {
-		tagline: 'En herdet, agentuavhengig sandkasse for autonome kodeagenter.',
+		tagline: 'En sandkasse med strenge sikkerhetsgrenser for autonome kodeagenter.',
 		licence: 'MIT-lisensiert.',
-		origin:
-			'Lyngvi er øya der Fenrir ble bundet. Ulven i merket er agentens kraft, barrieren dens grenser, og de tre glimtene dens kunstige intelligens.',
-		colophon: 'Denne siden er statisk: ingen sporing, ingen analyse, ingen tredjepartskall.',
-		status: 'Status: førlansering'
+		origin: 'Lyngvi er øya der Fenrisulven ble bundet. Ulven i logoen symboliserer agentens kraft, barrieren viser grensene rundt den, og de tre lysglimtene representerer kunstig intelligens.',
+		colophon: 'Siden er statisk, uten sporing, trafikkanalyse eller forespørsler til tredjeparter.',
+		status: 'Status: forhåndsversjon'
 	}
 };
 
