@@ -78,11 +78,12 @@ no outside requests at all.
 ## The screenshots in `static/screens/`
 
 They are the real JavaFX app, not mock-ups: `chat`, `deliver`, `diff`, `traffic` and
-`agents` are whole windows, the `x-*` files are excerpts of them (the denied-hosts
-table, the review part of the deliver dialog, the session container table). All are
-WebP at 2× and the components pass the 1× size as `width`/`height`. `Shot.svelte` is
-the frame they sit in; `Screens.svelte` is the gallery section, and the Egress and
-Delivery sections each show one excerpt next to the thing it illustrates.
+`agents` are whole windows, `wizard` is the «New sandbox» dialog, and the `x-*` files
+are excerpts of them (the denied-hosts table, the review part of the deliver dialog,
+the session container table). All are WebP at 2× and the components pass the 1× size
+as `width`/`height`. `Shot.svelte` is the frame they sit in; `Screens.svelte` is the
+gallery section, and the Egress, Delivery and Install sections each show one next to
+the thing it illustrates.
 
 To retake them: run the GUI (`mvn -pl lyngvi-gui javafx:run`) with
 `-Dglass.gtk.uiScale=2.0` (or on a HiDPI display) against a sandbox named `shop`
@@ -91,6 +92,14 @@ executable, dark theme, window 1280 × 900. Crop to the window and convert with
 `sharp` (`.webp({ quality: 80 })`). The copy in `content.js` under `screens` and the
 `figure` keys describes what is in the pictures, so retake the pictures and the copy
 together.
+
+`wizard` is the one that is not a window of the running app: it is «New sandbox» on
+its first page, 780 × 460, with the folder and the repository filled in as a user
+would have filled them and nothing created yet. The Install section shows it at
+exactly 780 CSS px, so the 2× file lands pixel for pixel. The whole app is in
+English in every picture, including on the Norwegian page — the Norwegian copy
+translates what it describes but quotes the labels as they appear, «Create» and the
+`Read`/`Search`/`Run`/`Edit` rows alike.
 
 Two interactive pieces mirror the real product rather than illustrating it:
 the egress demo applies the bundled block- and allowlists the way Squid would

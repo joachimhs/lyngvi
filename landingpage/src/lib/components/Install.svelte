@@ -3,6 +3,7 @@
 	import { links } from '#lib/links.js';
 	import SectionHead from './SectionHead.svelte';
 	import Reveal from './Reveal.svelte';
+	import Shot from './Shot.svelte';
 
 	const commands = [
 		[
@@ -51,6 +52,8 @@
 
 		<p class="req">{i18n.t.install.requirements}</p>
 
+		<h3 class="route">{i18n.t.install.cliTitle}</h3>
+
 		<div class="steps">
 			{#each i18n.t.install.steps as step, idx (step.title)}
 				<Reveal delay={idx * 60}>
@@ -72,10 +75,43 @@
 			{/each}
 		</div>
 
+		<Reveal delay={60}>
+			<div class="gui frame">
+				<div class="gui-inner">
+					<h3 class="route">{i18n.t.install.guiTitle}</h3>
+					<p class="gui-lead">{i18n.t.install.guiLead}</p>
+					<ol class="wizard">
+						{#each i18n.t.install.guiSteps as step, idx (step.title)}
+							<li>
+								<span class="w-n mono" aria-hidden="true">{idx + 1}</span>
+								<strong>{step.title}</strong>
+								<span>{step.body}</span>
+							</li>
+						{/each}
+					</ol>
+
+					<!-- 780 x 460 is the dialog's own size, so at this width the 2x image is pixel for pixel. -->
+					<div class="gui-shot">
+						<Shot
+							name="wizard"
+							width={780}
+							height={460}
+							title="New sandbox"
+							alt={i18n.t.install.guiShot.alt}
+							caption={i18n.t.install.guiShot.caption}
+						/>
+					</div>
+
+					<p class="gui-note">{i18n.t.install.guiNote}</p>
+					<a class="gui-more" href="#screens">{i18n.t.install.guiLink}</a>
+				</div>
+			</div>
+		</Reveal>
+
 		<Reveal delay={80}>
 			<div class="docs frame">
 				<div class="docs-inner">
-					<h3>{i18n.t.install.docsTitle}</h3>
+					<h3 class="route">{i18n.t.install.docsTitle}</h3>
 					<ul>
 						{#each i18n.t.install.docs as doc (doc.label)}
 							<li>
@@ -115,9 +151,33 @@
 		box-shadow: 0 0 10px 1px rgba(245, 192, 78, 0.5);
 	}
 
+	/* Two routes to the same sandbox: this label sits above the commands, and the
+	   same one heads the app panel below them. */
+	.route {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--cyan);
+	}
+
+	.route::before {
+		content: '';
+		flex: none;
+		width: 6px;
+		height: 6px;
+		background: var(--cyan);
+		box-shadow: 0 0 10px 1px rgba(34, 211, 238, 0.55);
+	}
+
 	.steps {
 		display: grid;
 		gap: 0;
+		margin-top: 0.9rem;
 		border-top: 1px solid var(--line);
 	}
 
@@ -218,6 +278,89 @@
 		border-color: var(--cyan);
 	}
 
+	/* The app route: the wizard's steps, in the same panel the documents get. */
+	.gui {
+		margin-top: 2.5rem;
+	}
+
+	.gui-inner {
+		padding: 1.6rem 1.5rem;
+		border: 1px solid var(--line);
+		background: linear-gradient(180deg, rgba(10, 20, 34, 0.7), rgba(5, 11, 20, 0.4));
+	}
+
+	.gui-lead {
+		margin: 1rem 0 0;
+		max-width: 68ch;
+		color: var(--dim);
+		font-size: 0.9rem;
+	}
+
+	.wizard {
+		margin: 1.4rem 0 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1px;
+		background: var(--line);
+		border: 1px solid var(--line);
+	}
+
+	/* The cards are stretched to the tallest; without this the spare height would be
+	   shared between the title row and the body row instead of falling to the bottom. */
+	.wizard li {
+		display: grid;
+		grid-template-columns: 1.4rem minmax(0, 1fr);
+		align-content: start;
+		row-gap: 0.3rem;
+		padding: 0.9rem 1rem;
+		background: rgba(5, 11, 20, 0.6);
+	}
+
+	.w-n {
+		grid-row: 1 / span 2;
+		font-size: 0.72rem;
+		line-height: 1.35;
+		color: var(--cyan);
+		opacity: 0.75;
+	}
+
+	.wizard strong {
+		font-size: 0.88rem;
+		font-weight: 600;
+	}
+
+	.wizard li span:not(.w-n) {
+		grid-column: 2;
+		color: var(--faint);
+		font-size: 0.82rem;
+		line-height: 1.5;
+	}
+
+	.gui-shot {
+		max-width: 780px;
+		margin: 1.4rem auto 0;
+	}
+
+	.gui-note {
+		margin: 1.2rem 0 0;
+		max-width: 68ch;
+		color: var(--faint);
+		font-size: 0.82rem;
+	}
+
+	.gui-more {
+		display: inline-block;
+		margin-top: 0.9rem;
+		font-size: 0.82rem;
+		text-decoration: none;
+	}
+
+	.gui-more::after {
+		content: ' →';
+	}
+
 	.docs {
 		margin-top: 2.5rem;
 	}
@@ -226,26 +369,6 @@
 		padding: 1.6rem 1.5rem;
 		border: 1px solid var(--line);
 		background: linear-gradient(180deg, rgba(10, 20, 34, 0.7), rgba(5, 11, 20, 0.4));
-	}
-
-	.docs h3 {
-		display: flex;
-		align-items: center;
-		gap: 0.6rem;
-		font-family: var(--mono);
-		font-size: 0.72rem;
-		font-weight: 500;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
-		color: var(--cyan);
-	}
-
-	.docs h3::before {
-		content: '';
-		width: 6px;
-		height: 6px;
-		background: var(--cyan);
-		box-shadow: 0 0 10px 1px rgba(34, 211, 238, 0.55);
 	}
 
 	.docs ul {
@@ -295,6 +418,16 @@
 
 		.n {
 			font-size: 2rem;
+		}
+
+		.wizard {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 520px) {
+		.wizard {
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 </style>

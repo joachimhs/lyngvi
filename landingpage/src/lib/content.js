@@ -536,7 +536,9 @@ export const en = {
 		kicker: 'Install',
 		title: 'From nothing to a running sandbox',
 		lead: 'The CLI ships as a jlink image with its own runtime, and the GUI as a jpackage app with the CLI inside it. You do not install Java.',
-		requirements: 'Requirements: macOS or Linux · Podman 5+ · Java 25 only if you build from source',
+		requirements:
+			'Requirements: macOS or Linux · Podman 5+ · Java 25 only if you build from source',
+		cliTitle: 'In the terminal',
 		steps: [
 			{
 				title: 'Get the CLI',
@@ -555,6 +557,43 @@ export const en = {
 				body: 'A conversation gets a container. Ask, read the diff, deliver what you approve.'
 			}
 		],
+		guiTitle: 'Or in the app',
+		guiLead:
+			'The desktop app covers the same ground in a «New sandbox» wizard, and there is nothing else to install: the CLI ships inside the app, and a sandbox made here links its own cli/ to it — so the same folder is yours to work in from the terminal whenever you want to.',
+		guiSteps: [
+			{
+				title: 'Folder and repositories',
+				body: 'Where the sandbox lives, and which repositories a conversation may be given a copy of.'
+			},
+			{
+				title: 'Base image',
+				body: 'The toolchains the profile asks for and the agents it enables, built once.'
+			},
+			{
+				title: 'Shared stack',
+				body: 'The proxy and the gateway, started and left running while the sandbox is in use.'
+			},
+			{
+				title: 'Check',
+				body: 'The same checks as doctor: the container runtime, the image, the stack, the repositories and the certificate.'
+			},
+			{
+				title: 'Agent',
+				body: 'Log in once, or point the sandbox at a model server of your own. Either can wait until later.'
+			},
+			{
+				title: 'Ready',
+				body: 'The sandbox is made, and the first conversation can open as the wizard closes.'
+			}
+		],
+		guiShot: {
+			alt: 'The New sandbox wizard: the six steps in a rail on the left, and on the first page the fields for the sandbox folder, an optional profile pack and the repositories it may copy.',
+			caption:
+				'Step one of six. Nothing has been made yet — «Create» writes the sandbox folder and renders its configuration, and the wizard moves on to the image.'
+		},
+		guiNote:
+			'macOS: a .dmg, opened the first time with right-click → Open, since the app is not notarised yet. Linux: a .deb or the unpacked app image. Then the conversation, the diff and the delivery are the windows above.',
+		guiLink: 'The app, screen by screen',
 		docsTitle: 'Further reading',
 		docs: [
 			{
@@ -1120,6 +1159,7 @@ export const no = {
 		title: 'Kom i gang med din første sandkasse',
 		lead: 'Både kommandolinjeverktøyet og skrivebordsappen leveres med Java inkludert. Kommandolinjeverktøyet pakkes med jlink, og appen pakkes med jpackage og inkluderer kommandolinjeverktøyet. Du trenger bare å installere Java selv hvis du vil bygge Lyngvi fra kildekoden.',
 		requirements: 'Krav: macOS eller Linux · Podman 5+ · Java 25 kun hvis du bygger fra kildekode',
+		cliTitle: 'I terminalen',
 		steps: [
 			{
 				title: 'Last ned kommandolinjeverktøyet',
@@ -1139,6 +1179,43 @@ export const no = {
 			}
 		],
 		docsTitle: 'Dokumentasjon',
+		guiLead:
+			'Skrivebordsappen tar de samme stegene i veiviseren «Ny sandkasse», og mer skal ikke installeres: CLI-en ligger inni appen, og en sandkasse laget her peker sin egen cli/ til den — så samme mappe er din å jobbe i fra terminalen når du vil.',
+		guiSteps: [
+			{
+				title: 'Mappe og repoer',
+				body: 'Hvor sandkassen bor, og hvilke repoer en samtale kan få en kopi av.'
+			},
+			{
+				title: 'Basisimage',
+				body: 'Verktøykjedene profilen ber om og agentene den slår på, bygget én gang.'
+			},
+			{
+				title: 'Felles stakk',
+				body: 'Proxyen og gatewayen, startet og latt stå mens sandkassen er i bruk.'
+			},
+			{
+				title: 'Sjekk',
+				body: 'De samme sjekkene som doctor: containerkjøretiden, imaget, stakken, repoene og sertifikatet.'
+			},
+			{
+				title: 'Agent',
+				body: 'Logg inn én gang, eller pek sandkassen mot din egen modellserver. Begge kan vente.'
+			},
+			{
+				title: 'Klar',
+				body: 'Sandkassen er laget, og den første samtalen kan åpnes idet veiviseren lukkes.'
+			}
+		],
+		guiShot: {
+			alt: 'Veiviseren Ny sandkasse: de seks stegene i en skinne til venstre, og på første side feltene for sandkassemappen, en valgfri profilpakke og repoene den kan kopiere.',
+			caption:
+				'Steg én av seks. Ingenting er laget ennå — «Create» skriver sandkassemappen og renderer konfigurasjonen, og veiviseren går videre til imaget.'
+		},
+		guiNote:
+			'macOS: en .dmg, åpnet første gang med høyreklikk → Åpne, siden appen ennå ikke er notarisert. Linux: en .deb eller det utpakkede appbildet. Derfra er samtalen, diffen og uttaket vinduene over.',
+		guiLink: 'Appen, skjerm for skjerm',
+		guiTitle: 'Eller i appen',
 		docs: [
 			{
 				label: 'README',
