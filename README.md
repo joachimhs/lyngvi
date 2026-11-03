@@ -103,6 +103,13 @@ mvn -q install -DskipTests            # once, so the modules are in the local re
 mvn -pl lyngvi-gui javafx:run         # opens the window; picks $LYNGVI_HOME or the last sandbox
 ```
 
+Build the GUI app on macOS: 
+
+```sh
+mvn package
+./packaging/build-dmg.sh
+```
+
 Pass a sandbox with `LYNGVI_HOME=/path/to/sandbox` or `--sandbox=/path`.
 
 The desktop app provides its own setup wizard, conversation view, Markdown and
@@ -119,18 +126,19 @@ See more screenshots and a walkthrough in English and Norwegian on [lyngvi.no](h
 
 ## Install
 
-Releases include a desktop app for each platform, built with jpackage and bundled
-with the CLI. Download `lyngvi-gui-<version>-<os>-<arch>.tar.gz` for the macOS `.app`
+Currently only the macOS desktop app is built and publised, however the project is Java-based 
+and can be built on any platform with Java 25 and Maven. The app comes with the Java runtime
+bundled, so you do not need to install Java separately.
+
+The desktop app is by far the easiest way to get started.
+
+Final releases will hopefully include a desktop app for each platform, built with jpackage and 
+bundled with the CLI. Download `lyngvi-gui-<version>-<os>-<arch>.tar.gz` for the macOS `.app`
 or Linux application image. Installers are also available as a `.dmg` on macOS
 and a `.deb` on Linux.
 
-The CLI is available separately as `lyngvi-cli-<version>-<os>-<arch>.tar.gz`.
-It is packaged with jlink and includes its own Java runtime, so you do not need
-to install Java.
-
 The packages are not yet signed or notarised. On macOS, open the app for the
-first time with right-click → Open, or run
-`xattr -dr com.apple.quarantine lyngvi.app`.
+first time with right-click → Open, or run `xattr -dr com.apple.quarantine lyngvi.app`.
 
 - **The app:** unpack it (or install the `.dmg` or `.deb`) and use “New sandbox…” to complete the initial setup;
   `init` from the app links the sandbox's `cli/` to the app's runtime, so the CLI works from the sandbox
